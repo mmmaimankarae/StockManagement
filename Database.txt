@@ -24,6 +24,8 @@ CREATE TABLE PRODUCT (
     PricePerUnit  	DOUBLE(8,2)	NOT NULL,
     CostPerUnit	DOUBLE(8,2)	NOT NULL,
     StockQty 		INT		NOT NULL,
+    Description     CHAR(100) NOT NULL,
+    ImageSource     VARCHAR(255) NOT NULL,
     Status VARCHAR(10) NOT NULL,
     Update_Day DATETIME    NOT NULL;
 );
