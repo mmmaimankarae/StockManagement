@@ -23,7 +23,9 @@ CREATE TABLE PRODUCT (
     ProName 		CHAR(20)	NOT NULL,
     PricePerUnit  	DOUBLE(8,2)	NOT NULL,
     CostPerUnit	DOUBLE(8,2)	NOT NULL,
-    StockQty 		INT		NOT NULL
+    StockQty 		INT		NOT NULL,
+    Status VARCHAR(10) NOT NULL,
+    Update_Day DATETIME    NOT NULL;
 );
 
 CREATE TABLE RECEIVE (
