@@ -173,7 +173,7 @@ function displayCartTable($cartItems)
         echo "</td>";
 
         echo "<td style='font-family:sarabun; '>" . $cart['ProPrice'] * $cart['quantity'] . "</td>";
-        echo "<td><a href='Cart.php?delete=" . urlencode($cart['ProName']) . "'><img src='Asset/BinIcon.png' width='25'></a></td>";
+        echo "<td><a href='Cart.php?delete=" . urlencode($cart['ProName']) . "'><img src='pictures/BinIcon.png' width='25'></a></td>";
         echo "</tr>";
     }
     echo "</table><br><br>";

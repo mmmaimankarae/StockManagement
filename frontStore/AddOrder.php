@@ -66,7 +66,7 @@ foreach ($_SESSION['cart'] as $item) {
 
 <body>
     <center>
-        <img src="Asset/Thank1.png" />
+        <img src="pictures/Thank1.png" />
         <?php
         echo "<div class='headbar'>
             <b class='orderInfo' style='font-family:sarabun; font-size:30px'>Order</b>
