@@ -1,11 +1,13 @@
 <?php
-require '../components/ConnectDB.php';
-require '../components/HeaderStore.html';
-// Create a SQL query
-$sql = "SELECT * FROM product;";
-
-// Execute the query
-$result = mysqli_query($connectDB, $sql);
+session_start();
+if ($_SESSION['State'] == 1) {
+    require '../components/ConnectDB.php';
+    require '../components/HeaderStore.html';
+    $sql = "SELECT * FROM product;";
+    $result = mysqli_query($connectDB, $sql);
+} else {
+    header("Location: ./login.html");
+}
 ?>
 
 <!DOCTYPE html>
@@ -25,7 +27,7 @@ $result = mysqli_query($connectDB, $sql);
         } */
 
         .custom-card .card {
-            width: \px;
+            width: px;
             height: 280px;
             /* margin: 10px; */
         }

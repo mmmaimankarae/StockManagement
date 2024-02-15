@@ -3,6 +3,9 @@ session_start();
 require '../components/ConnectDB.php';
 require '../components/HeaderStore.html';
 
+if (!isset($_SESSION['cart'])) {
+    $_SESSION['cart'] = array();
+}
 ?>
 
 <!DOCTYPE html>
@@ -44,6 +47,10 @@ require '../components/HeaderStore.html';
         align-items: center;
     }
 
+    .backButton:hover {
+        color: red;
+    }
+
     table {
         width: 100%;
         border-collapse: collapse;
@@ -64,7 +71,7 @@ require '../components/HeaderStore.html';
 <?php
 
 echo "<div class='mt-custom'>";
-echo "<a href='Store.php' style='font-family:sarabun; color:green; text-decoration:none;'><b>⬅️ กลับไปหน้าร้านค้า</b></a>";
+echo "<a href='Store.php' class='backButton' style='font-family:sarabun; color:green; text-decoration:none;'><b>⬅️ กลับไปหน้าร้านค้า</b></a>";
 echo "<div class='headbar'>
     <b class='shopping-cart' style='font-family:sarabun; font-size:30px'>Shopping Cart</b>
     <b class='item-count' style='font-family:sarabun; font-size:30px'>" . count($_SESSION['cart']) . " Item</b>
@@ -137,7 +144,7 @@ function displayCartTable($cartItems, $hasItem)
     if ($hasItem) {
         echo "<form action='Checkout.php' method='POST'>";
         echo "<div style='text-align:right; margin-top: 20px'>";
-        echo "<a href='Checkout.php' class='btn btn-success' style='font-family:sarabun; font-size: 20px'>Checkout</a>";
+        echo "<a href='Checkout.php' class='btn btn-success' style='font-family:sarabun; font-size: 20px; width: 15%;'>สั่งซื้อ</a>";
         echo "</div>";
         echo "</form>";
     } else {

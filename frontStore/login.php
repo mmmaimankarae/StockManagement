@@ -1,4 +1,5 @@
 <?php 
+    session_start();
     $msconnect = mysqli_connect("localhost", "root", "", "myStore");
     $userName = $_POST['username'];
     $password = $_POST['password'];
@@ -8,11 +9,13 @@
         if ($userName == 'admin') {
             header("Location: ./admin/DashBoard.php");
         }
-        else { 
+        else {
+            $_SESSION['CusID'] = $row['CusID'];
+            $_SESSION['State'] = 1;
             header("Location: ./Store.php");
         }
     } else {
-        include('./test.html');
+        // include('./test.html');
         echo "<div style='color: #ff0000; margin-top: 25%; position: absolute;'><br><h4>username หรือ password กรุณากรอกใหม่อีกครั้ง</h4> </div>";
     }
     mysqli_close($msconnect);

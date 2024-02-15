@@ -160,9 +160,9 @@ function displayOrderSummary($cartItems)
 
     echo "<tr>";
     echo "<td colspan='2' style='text-align:center;  padding-bottom: 15px;'>";
-    echo "<form action='Checkout.php' method='POST'>";
+    echo "<form action='HisrotyInsert.php' method='POST'>";
     echo "<div style='text-align:center; margin-top: 20px'>";
-    echo "<a href='Checkout.php' class='btn btn-success w-75' style='font-family:sarabun; font-size: 20px'>Checkout</a>";
+    echo "<a href='HisrotyInsert.php' class='btn btn-success w-75' style='font-family:sarabun; font-size: 20px'>ชำระเงิน</a>";
     echo "</div>";
     echo "</form>";
     echo "</td>";
