@@ -8,6 +8,9 @@
         if ($userName == 'admin') {
             header("Location: ./admin/DashBoard.php");
         }
+        else { 
+            header("Location: ./Store.php");
+        }
     } else {
         include('./test.html');
         echo "<div style='color: #ff0000; margin-top: 25%; position: absolute;'><br><h4>username หรือ password กรุณากรอกใหม่อีกครั้ง</h4> </div>";

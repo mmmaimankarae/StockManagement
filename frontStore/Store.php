@@ -1,6 +1,6 @@
 <?php
-require 'ConnectDB.php';
-
+require '../components/ConnectDB.php';
+require '../components/HeaderStore.html';
 // Create a SQL query
 $sql = "SELECT * FROM product;";
 
@@ -12,66 +12,75 @@ $result = mysqli_query($connectDB, $sql);
 <html>
 
 <head>
-    <title>SMiti Shop</title>
+    <title>SMITI Shop</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Sarabun&display=swap" rel="stylesheet">
 
     <style>
-        .container {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            /* Change this line */
-            grid-auto-rows: minmax(200px, auto);
-            gap: 10px;
+        /* .custom-card .card {
+            width: 250px;
+        } */
+
+        .custom-card .card {
+            width: \px;
+            height: 280px;
+            /* margin: 10px; */
         }
 
-        .product-card {
-            border: 1px solid #ddd;
-            border-radius: 15px;
-            padding: 10px;
-            box-sizing: border-box;
-            text-align: center;
+        .custom-card .card:hover {
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-
         }
 
-        .product-card:hover {
-            border: 1px solid #062639;
+        .card-img-top {
+            width: 80%;
+            height: 170px;
+            object-fit: contain;
+            padding: 20px;
+            display: inline-block;
         }
 
-        .product-card img {
-            width: 100px;
-            height: 100px;
+        .card {
+            text-align: center;
         }
+
+        .custom-card {
+            text-align: center;
+        }
+
     </style>
 </head>
 
-<body>
-    <?php require 'Header.html'; ?>
-    <div class="container">
+
+<body style="padding-top: 80px">
+    <!-- <center> -->
+    <div class='row row-cols-1 row-cols-md-4 g-4' style="margin-left: 80px; margin-right: 80px;">
         <?php
-        // Check if there are results
         if ($result->num_rows > 0) {
-            // Output data of each row
             while ($row = mysqli_fetch_array($result)) {
                 $index = $row["ProID"];
+                $index = $row["ProID"];
+                echo "<div class='col custom-card'>";
+                echo "<div class='card h-100'>";
                 echo '<a href="Product_Detail.php?id=' . $row["ProID"] . '" style="text-decoration: none; color: inherit;">';
-                echo '<div class="product-card">';
-                echo '<img src="' . $row["Pimage"] . '">';
-                echo "<h2 style='font-family:Roboto;'>" . $row["ProName"] . "</h2>";
-                // echo '<h2>' . $row["StockQty"] . '</h2>';
-                echo "<p style='font-family:sarabun'>฿" . $row["PricePerUnit"] . "</p>";
-                echo "<u style='font-family:sarabun;'>รายละเอียดสินค้า</u>";
-                echo '</div>';
+                echo "<img src='" . $row["ImageSource"] . "' class='card-img-top' alt='Img Product'>";
+                echo "<div class='card-body'>";
+                echo "<h5 class='card-title' style='font-family:sarabun'><b>ชื่อสินค้า: " . $row["ProName"] . "</b></h5>";
+                echo "<p class='card-text' style='font-family:sarabun'>" . $row["Description"] . "</p>";
+                echo "<h6 class='card-text' style='font-family:sarabun'>฿" . $row["PricePerUnit"] . "</h6>";
+                echo "</div>";
+                echo "<div class='card-footer'>";
+                echo "<small class='text-body-secondary' style='font-family: sarabun;'><u>รายละเอียดสินค้า</u></small>";
+                echo "</div>";
+                echo "</div>";
+                echo "</div>";
             }
-        } else {
-            echo "0 results";
         }
         ?>
     </div>
-
+    <!-- </center> -->
 </body>
 
 </html>

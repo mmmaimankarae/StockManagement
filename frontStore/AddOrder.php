@@ -1,7 +1,7 @@
 <?php
 session_start();
 date_default_timezone_set('Asia/Bangkok');
-require 'ConnectDB.php';
+require '../components/ConnectDB.php';
 require 'Header.html';
 $showProductNameOrder = [];
 $totalPrice = 0;
@@ -66,7 +66,7 @@ foreach ($_SESSION['cart'] as $item) {
 
 <body>
     <center>
-        <img src="pictures/Thank1.png" />
+        <img src="../pictures/Thank1.png" />
         <?php
         echo "<div class='headbar'>
             <b class='orderInfo' style='font-family:sarabun; font-size:30px'>Order</b>

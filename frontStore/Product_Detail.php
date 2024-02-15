@@ -1,96 +1,95 @@
+<?php
+session_start();
+// echo $_SESSION['total'];
+?>
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <title>SMiti Shop</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Sarabun&display=swap" rel="stylesheet">
-    <style>
-        .add-to-cart-button {
-            background-color: red;
-            border: 0px;
-            color: white;
-            width: 120px;
-            height: 40px;
-            border-radius: 15px;
-            font-family: sarabun;
-        }
-
-        .add-to-cart-button:hover {
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        #number {
-            width: 30px;
-            text-align: center;
-        }
-    </style>
-    <script>
-        function incrementValue() {
-            var value = parseInt(document.getElementById('number').value, 10);
-            value = isNaN(value) || value < 1 ? 1 : value;
-            value++;
-            document.getElementById('number').value = value;
-        }
-
-        function decrementValue() {
-            var value = parseInt(document.getElementById('number').value, 10);
-            value = isNaN(value) || value <= 1 ? 1 : value;
-            value--;
-            document.getElementById('number').value = value < 1 ? 1 : value;
-        }
-
-        // function validateForm() {
-        //     var value = parseFloat(document.getElementById('number').value);
-        //     var alertText = document.getElementById('alertText');
-        //     if (isNaN(value) || value < 1) {
-        //         alertText.innerHTML = '<b>โปรดใส่เฉพาะตัวเลขมากกว่า 0!</b>';
-        //         return false;
-        //     } else {
-        //         alertText.textContent = '';
-        //         return true;
-        //     }
-        // }
-    </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Sarabun&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.17.3/dist/xlsx.full.min.js"></script>
+  <title>SMITI Shop:Product Detail</title>
 </head>
 
-<body>
-    <?php
-    require('Header.html');
-    session_start();
-    require('ConnectDB.php');
-    $id =  $_GET['id'];
-    $sql = "SELECT * FROM product WHERE ProID = " . $id;
-    $result = mysqli_query($connectDB, $sql);
-    $row = mysqli_fetch_array($result);
+<style>
+  .product-quantity-input {
+    width: 10%;
+  }
+</style>
 
-    echo "<a href='Store.php'>
-        <button style='background-color:#45a049; color:white; border-radius:10px; width: 60px; height: 40px; border: none; text-align:center;'>
-        Back
-        </button>
-        </a>";
-    echo "<form method='POST' action='Cart.php'>";
-    echo "<center>";
-    echo "<h1 style='font-family:sarabun;'>ชื่อสินค้า : " . $row['ProName'] . "</h1>";
-    echo "<img src='" . $row['Pimage'] . "' style='width: 200px; height: 200px;'>";
-    echo "<p style='font-family:sarabun'><b>ราคา:</b> " . $row['PricePerUnit'] . " บาท</p>";
-    echo "<p style='font-family:sarabun'><b>จำนวนคงเหลือ:</b> " . $row['StockQty'] . " ชิ้น</p>";
-    echo "<p style='font-family:sarabun'><b>รายละเอียดสินค้า:</b> " . $row['Pdetail'] . "</p>";
-    echo '<button type="button" onclick="decrementValue()" value="Decrement Value">-</button>
-        <input id="number" type="text" name="quantity" value="1" readonly/>
-        <button type="button" onclick="incrementValue()" value="Increment Value">+</button><br>';
-    echo "<p id='alertText' style='color:red; font-family:sarabun;' ></p>";
-    echo "<button class='add-to-cart-button' type='submit' name='a1' value=" . $row['ProName'] . "><b>Add to Cart</b></button>";
-    echo "<input type='hidden' name='ProName' value=" . $row['ProName'] . ">";
+<body class="p-3" style="margin-top: 6%">
+  <?php include "../components/HeaderAdmin.html";
+  require '../components/ConnectDB.php';
+  ?>
+  <?php
+  $msquery = "SELECT * FROM PRODUCT WHERE ProID = " . $_GET['id'] . ";";
+  $msresults = mysqli_query($connectDB, $msquery);
+  $row = mysqli_fetch_array($msresults);
+  if ($row) {
+    echo "<form action='AddtoCart.php' method='POST'>";
+    echo "<div class='container'>";
+    echo "<div class='row'>";
+    echo "<div class='col'>";
+    echo "<img src='" . $row['ImageSource'] . "' width='500' height='500' class='img-thumbnail shadow-sm'>";
+    echo "</div>";
+    echo "<div class='col'>";
+    echo "<div class='mb-3'>";
+    echo "<label class='my-2'><b style='font-family:sarabun; font-size: 20px;'>ชื่อสินค้า</b></label>";
+    echo "<h4 style='font-size: 20px; font-family:sarabun;'> " . $row['ProName'] . "</h4>";
+    echo "</div>";
+
+    echo "<div class='mb-3 my-3'>";
+    echo "<label class='my-2'><b style='font-family:sarabun; font-size: 20px;'>คำอธิบายสินค้า</b></label>";
+    echo "<p style='font-size: 20px; font-family:sarabun;'> " . $row['Description'] . "</p>";
+    echo "</div>";
+
+    echo "<div class='row'>";
+    echo "<div class='col'>";
+    echo "<label class='my-2' style='font-family:sarabun; font-size: 20px;'><b>ราคาขายต่อหน่วย (บาท/หน่วย)</b></label>";
+    echo "<h4 style='font-size: 20px; font-family:sarabun;'>฿" . $row['PricePerUnit'] . "</h4>";
+    echo "</div>";
+    echo "</div>";
+
+    echo "<div class='row g-3 align-items-center'>";
+    echo "<div class='row-auto'>";
+    echo "<label class='my-2' style='font-family:sarabun; font-size: 20px;'><b>จำนวนสินค้าที่ต้องการ</b></label>";
+    echo "</div>";
+    echo "<div class='col-auto'>";
+    echo "<input type='number' id='Quantity' name='Quantity' class='form-control' value='1' min='1' max='" . $row['StockQty'] . "'>";
+    echo "</div>";
+    echo "<div class='col-auto'>";
+    echo "<span id='StockQty' class='form-text' style='font-family:sarabun;'>";
+    echo "จำนวนสินค้าคงเหลือ " . $row['StockQty'] . " หน่วย";
+    echo "</span>";
+    echo "</div>";
+    echo "</div>";
+
+    echo "<div class='row mt-5' style='text-align:center;'>";
+    echo "<div class='col'>";
+    echo "<input type='hidden' name='ProName' value='" . $row['ProName'] . "'>";
+    echo "<button class='btn btn-success me-5' type='submit'><i class='fas fa-shopping-cart'></i> เพิ่มสินค้าลงตะกร้า</button>";
+    echo "</div>";
+    echo "</div>";
+
+
+    echo "</div>";
+    echo "</div>";
+    echo "</div>";
     echo "</form>";
-    echo "</center>";
-    ?>
+  }
+  mysqli_close($connectDB);
+  ?>
 </body>
 
 </html>
-
-<?php
-$connectDB->close();
-?>

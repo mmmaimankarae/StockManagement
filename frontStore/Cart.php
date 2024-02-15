@@ -1,7 +1,8 @@
 <?php
 session_start();
-// require 'ConnectDB.php';
-require 'Header.html';
+require '../components/ConnectDB.php';
+require '../components/HeaderStore.html';
+
 ?>
 
 <!DOCTYPE html>
@@ -13,22 +14,23 @@ require 'Header.html';
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Sarabun&display=swap" rel="stylesheet">
-
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
 </head>
 
 <style>
+    .mt-custom {
+        margin-top: 80px;
+        margin-left: 80px;
+        margin-right: 80px;
+    }
+
     .headbar {
         display: flex;
         justify-content: space-between;
         border-bottom: 3px solid black;
         margin-top: 30px;
-        margin-left: 80px;
-        margin-right: 80px;
-    }
-
-    .item-count {
-        margin-right: 0px;
     }
 
     .shopping-cart {
@@ -36,156 +38,113 @@ require 'Header.html';
         padding-bottom: 10px;
     }
 
-    .CheckoutButton {
-        background-color: red;
-        color: white;
-        border-radius: 10px;
-        width: 300px;
-        height: 40px;
-        border: none;
-        text-align: center;
-        font-family: sarabun;
-    }
-
-    .CheckoutButton:hover {
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-
-    .material-symbols-outlined:hover {
-        color: red;
+    .input-group {
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
     table {
-        margin-top: 15px;
-        margin-left: 80px;
-    }
-
-    td {
-        padding-left: 80px;
-        padding-right: 80px;
-    }
-
-    th {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
         font-family: sarabun;
+        text-align: center;
+    }
+
+    th.img {
+        width: 280px;
+    }
+
+    tr.product:hover {
+        background-color: #f5f5f5;
     }
 </style>
 
 <?php
-$productInCart = false;
-$BinIconSize = 25;
 
-if (!isset($_SESSION['cart'])) {
-    $_SESSION['cart'] = array();
-}
-
-echo "<a href='Store.php' style='font-family:sarabun; color:green; text-decoration:none; margin-left: 30px'><b>⬅️ Continue Shopping</b></a>";
+echo "<div class='mt-custom'>";
+echo "<a href='Store.php' style='font-family:sarabun; color:green; text-decoration:none;'><b>⬅️ กลับไปหน้าร้านค้า</b></a>";
 echo "<div class='headbar'>
     <b class='shopping-cart' style='font-family:sarabun; font-size:30px'>Shopping Cart</b>
     <b class='item-count' style='font-family:sarabun; font-size:30px'>" . count($_SESSION['cart']) . " Item</b>
     </div>
     ";
-if (isset($_POST['ProName']) && isset($_POST['quantity'])) {
-    $ProName = $_POST['ProName'];
-    $quantity = $_POST['quantity'];
 
-    foreach ($_SESSION['cart'] as &$item) {
-        if ($item['ProName'] == $ProName) {
-            $item['quantity'] += $quantity;
-            $productInCart = true;
-            break;
-        }
-    }
+displayCartTable($_SESSION['cart'], count($_SESSION['cart']) > 0);
+echo "</div>";
 
-    if (!$productInCart) {
-        $sql = "SELECT * FROM product WHERE ProName = '$ProName'";
-        $result = mysqli_query($connectDB, $sql);
-        $row = mysqli_fetch_array($result);
-        $ProID = $row['ProID'];
-        $ProPrice = $row['PricePerUnit'];
-        $ProPic = $row['Pimage'];
-        $ProTotal = $ProPrice * $quantity;
-        $cart = array(
-            "ProID" => $ProID,
-            "ProName" => $ProName,
-            "ProPrice" => $ProPrice,
-            "ProPic" => $ProPic,
-            "quantity" => $quantity,
-        );
-        array_push($_SESSION['cart'], $cart);
-    }
-}
-
-if (isset($_GET['delete'])) {
-    $ProNameToDelete = $_GET['delete'];
-
-    foreach ($_SESSION['cart'] as $key => $item) {
-        if ($item['ProName'] == $ProNameToDelete) {
-            unset($_SESSION['cart'][$key]);
-            break;
-        }
-    }
-
-    header("Location: Cart.php");
-    exit;
-}
-
-displayCartTable($_SESSION['cart']);
-
-function displayCartTable($cartItems)
+function displayCartTable($cartItems, $hasItem)
 {
     $totalPrice = 0;
     foreach ($cartItems as $cart) {
         $totalPrice += $cart['ProPrice'] * $cart['quantity'];
     }
 
-    echo "<table style='border:0; border-collapse: collapse;'>";
-    echo "<tr>";
-    echo "<th></th>";
-    echo "<th>Product Name</th>";
-    echo "<th>Product Price</th>";
-    echo "<th>Quantity</th>";
-    echo "<th>Total</th>";
-    echo "<th></th>";
-    echo "</tr>";
-    foreach ($cartItems as $cart) {
+    echo "<table>";
+    if ($hasItem) {
         echo "<tr>";
-        echo "<td><img src='" . $cart['ProPic'] . "' width='100'></td>";
-        echo "<td style='font-family:sarabun; '>" . $cart['ProName'] . "</td>";
-        echo "<td style='font-family:sarabun; '>" . $cart['ProPrice'] . "</td>";
-        // echo "<td style='font-family:sarabun; '>
-        //     <span class='material-symbols-outlined' style='font-size: 16px;'>add</span>
-        //     <input type='text' style='width:10px; text-align:center; border:0; font-family:sarabun; font-size: 17px;' id='qty' value='" . $cart['quantity'] . "' readonly>
-        //     <span class='material-symbols-outlined' style='font-size: 18px;'>remove</span>
-        //     </td>";
+        echo "<th class='img'></th>";
+        echo "<th>Name</th>";
+        echo "<th>Price</th>";
+        echo "<th>Quantity</th>";
+        echo "<th>Total</th>";
+        echo "<th></th>";
+        echo "</tr>";
+        foreach ($cartItems as $cart) {
+            echo "<tr class='product'>";
+            echo "<td class='img'><img src='" . $cart['ProPic'] . "' width='100' height='100'></td>";
+            echo "<td>" . $cart['ProName'] . "</td>";
+            echo "<td>฿" . $cart['ProPrice'] . "</td>";
+            // echo "<td>" . $cart['quantity'] . "</td>";
 
-        echo "<td style='font-family:sarabun;'>";
-        echo "<div style='display: flex; align-items: center; justify-content: center;'>";
-        echo "<form method='POST' action='increase_quantity.php' style='display: inline;'>";
-        echo "<input type='hidden' name='ProName' value='" . $cart['ProName'] . "'>";
-        echo "<button type='submit' class='material-symbols-outlined' style='font-size: 16px; border:none; background:none'>add</button>";
-        echo "</form>";
-        echo "<input type='text' style='width:10px; text-align:center; border:0; font-family:sarabun; font-size: 17px;' id='qty' value='" . $cart['quantity'] . "' readonly>";
-        echo "<form method='POST' action='decrease_quantity.php' style='display: inline;'>";
-        echo "<input type='hidden' name='ProName' value='" . $cart['ProName'] . "'>";
-        echo "<button type='submit' class='material-symbols-outlined' style='font-size: 18px; border:none; background:none'>remove</button>";
-        echo "</form>";
-        echo "</div>";
-        echo "</td>";
+            echo "<td>";;
+            echo "<div class='input-group mb-3 w-20'>";
 
-        echo "<td style='font-family:sarabun; '>" . $cart['ProPrice'] * $cart['quantity'] . "</td>";
-        echo "<td><a href='Cart.php?delete=" . urlencode($cart['ProName']) . "'><img src='pictures/BinIcon.png' width='25'></a></td>";
+            echo "<form action='decrease_quantity.php' method='POST'>";
+            echo "<input type='hidden' name='ProName' value='" . $cart['ProName'] . "'>";
+            echo "<input type='hidden' name='ProPrice' value='" . $cart['quantity'] . "'>";
+            echo "<button class='btn btn-outline-secondary' type='submit' id='button-addon1' onclick='decreaseQuantity()'>-</button>";
+            echo "</form>";
+
+            echo "<input type='text' id='quantity' style='border: 10px; text-align:center; width: 50px;' size='1' placeholder='' min='1' aria-label='Example text with button addon' aria-describedby='button-addon1' value='" . $cart['quantity'] . "' readonly>";
+
+            echo "<form action='increase_quantity.php' method='POST'>";
+            echo "<input type='hidden' name='ProName' value='" . $cart['ProName'] . "'>";
+            echo "<input type='hidden' name='ProPrice' value='" . $cart['quantity'] . "'>";
+            echo "<button class='btn btn-outline-secondary' type='submit' id='button-addon2' onclick='increaseQuantity()'>+</button>";
+            echo "</form>";
+
+            echo "</div>";
+            echo "</td>";
+
+            echo "<td>฿" . $cart['ProPrice'] * $cart['quantity'] . "</td>";
+            echo "<td><a href='RemoveFromCart.php?ProName=" . $cart['ProName'] . "'><span class='material-symbols-outlined' style='color: red;'>
+            delete
+            </span></a></td>";
+            echo "</tr>";
+        }
+        echo "<tr>";
+        echo "<td colspan='6' style='text-align:right; font-size: 20px'><b>Total: ฿" . $totalPrice . "</b></td>";
+        echo "</tr>";
+    } else {
+        echo "<tr>";
+        echo "<td colspan='6' style='text-align:center; font-size: 30px'><b>ไม่มีสินค้าในตะกร้า</b></td>";
         echo "</tr>";
     }
-    echo "</table><br><br>";
-    echo "<div style='background-color:#062639; border-radius: 15px; padding-right: 25px; padding-top: 10px; padding-bottom: 20px; margin-left:80px; margin-right:80px;'>";
 
-    echo "<h2 style='text-align:right; color:white; font-family:sarabun; font-size: 20px;'>Total Price : &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" . $totalPrice - 0 . " Bath</h2>";
-    echo "<div style='text-align: right;'>";
-    echo "<a href='Checkout.php'>";
-    echo  "<button class='CheckoutButton'><b>Check Out</b></button></a>";
-    echo "</div>";
-    echo "</div>";
+    echo "</table>";
+    if ($hasItem) {
+        echo "<form action='Checkout.php' method='POST'>";
+        echo "<div style='text-align:right; margin-top: 20px'>";
+        echo "<a href='Checkout.php' class='btn btn-success' style='font-family:sarabun; font-size: 20px'>Checkout</a>";
+        echo "</div>";
+        echo "</form>";
+    } else {
+        echo "<div style='text-align:center; margin-top: 20px'>";
+        echo "<a href='Store.php' class='btn btn-success' style='font-family:sarabun; font-size: 20px' >Go Shopping</a>";
+        echo "</div>";
+    }
 }
 
 ?>
