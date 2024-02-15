@@ -1,6 +1,19 @@
 <?php 
   // session_start();
-  // echo $_SESSION['total'];
+  // if ($_SESSION['update'] == ok) {
+  //   echo "<div class='toast' role='alert' aria-live='assertive' aria-atomic='true'>";
+  //     echo "<div class='toast-header'>";
+  //       echo "<img src='...' class='rounded me-2' alt='...'>";
+  //       echo "<strong class='me-auto'>Bootstrap</strong>";
+  //       echo "<small>11 mins ago</small>";
+  //       echo "<button type='button' class='btn-close' data-bs-dismiss='toast' aria-label='Close'></button>";
+  //     echo "</div>";
+  //     echo "<div class='toast-body'>";
+  //       echo "Hello, world! This is a toast message.";
+  //     echo "</div>";
+  //   echo "</div>";
+  // }
+  session_start();
 ?>
 
 <!DOCTYPE html>
@@ -63,6 +76,7 @@
     }
   ?>
   <button id="exportBtn" class="btn btn-success btn-sm float-end mx-2 my-3">Export to Excel</button>
+  <button id="exportBtn" class="btn btn-success btn-sm float-end mx-2 my-3" onclick="window.location.href='../admin/AddProduct.php'">เพิ่มสินค้าใหม่</button>
   <table id="dataTable" class="table table-striped table-bordered" style="margin-top: 2%">
     <thead class="table-primary">
       <tr class='text-center'>
@@ -84,6 +98,7 @@
       $msconnect = mysqli_connect("localhost", "root", "", "myStore");
       $msresults = mysqli_query($msconnect, $msquery);
       while ($row = mysqli_fetch_array($msresults)) {
+        $proID = $row['ProID']; // จัดเก็บค่า ProID ไว้ก่อนในตัวแปร
         if ($row['Status'] == "OutOfStock") {
           echo "<tr class='table-danger'>";
             echo "<th scope='row' class='text-center'>" . $row['ProID'] . "</th>";
@@ -92,16 +107,25 @@
             echo "<td class='text-center'>" . $row['CostPerUnit'] . "</td>";
             echo "<td class='text-center'>" . $row['StockQty'] . "</td>";
             echo "<td class='text-center'>";
-              echo "<form action='../admin/AddProduct.php' method='post'>";
+              echo "<form action='../admin/UpdateProduct.php' method='post'>";
                 echo "<input type='hidden' name='proID' value='" . $row['ProID'] . "'>";
                 echo "<button type='submit' class='btn btn-primary btn-circle'><i class='fa-solid fa-pen-to-square'></i></button>";
               echo "</form>";
             echo "</td>";
             echo "<td class='text-center'>";
-              echo "<form action='../admin/AddProduct.php' method='post'>";
-                echo "<input type='hidden' name='proID' value='" . $row['ProID'] . "'>";
-                echo "<button type='button' class='btn btn-danger btn-circle'><i class='fa-solid fa-trash'></i></button>";
-              echo "</form>";
+            echo "<button type='button' class='btn btn-danger btn-circle' data-bs-toggle='modal' data-bs-target='#deleteModal" . $proID . "'><i class='fa-solid fa-trash'></i></button>";
+            echo "<div class='modal fade' id='deleteModal" . $proID . "' tabindex='-1' aria-labelledby='deleteLabel' aria-hidden='true'>";
+                echo "<div class='modal-dialog'>";
+                  echo "<div class='modal-content'>";
+                    echo "<div class='modal-body'> คุณแน่ใจว่าจะลบสินค้าตัวนี้?</div>";
+                    echo "<form id='deleteForm" . $proID . "' action='../admin/DeleteProduct.php' method='post'>";
+                      echo "<input type='hidden' name='proID' id='proIDToDelete' value='" . $row['ProID'] . "'>";
+                      echo "<button type='submit' class='btn btn-danger btn-sm mx-2'>ตกลง</button>";
+                      echo "<button type='button' class='btn btn-success btn-sm' data-bs-dismiss='modal'>ยกเลิก</button>";
+                    echo "</form>";
+                  echo "</div>";
+                echo "</div>";
+              echo "</div>";
             echo "</td>";
           echo "</tr>";
         } elseif ($row['Status'] == "Pending") {
@@ -113,19 +137,28 @@
             echo "<td class='text-center'>" . $row['CostPerUnit'] . "</td>";
             echo "<td class='text-center'>" . $row['StockQty'] . "</td>";
             echo "<td class='text-center'>";
-              echo "<form action='../admin/AddProduct.php' method='post'>";
+              echo "<form action='../admin/UpdateProduct.php' method='post'>";
                 echo "<input type='hidden' name='proID' value='" . $row['ProID'] . "'>";
                 echo "<button type='submit' class='btn btn-primary btn-circle'><i class='fa-solid fa-pen-to-square'></i></button>";
               echo "</form>";
             echo "</td>";
             echo "<td class='text-center'>";
-              echo "<form action='../admin/AddProduct.php' method='post'>";
-                echo "<input type='hidden' name='proID' value='" . $row['ProID'] . "'>";
-                echo "<button type='button' class='btn btn-danger btn-circle'><i class='fa-solid fa-trash'></i></button>";
-              echo "</form>";
+            echo "<button type='button' class='btn btn-danger btn-circle' data-bs-toggle='modal' data-bs-target='#deleteModal" . $proID . "'><i class='fa-solid fa-trash'></i></button>";
+            echo "<div class='modal fade' id='deleteModal" . $proID . "' tabindex='-1' aria-labelledby='deleteLabel' aria-hidden='true'>";
+                echo "<div class='modal-dialog'>";
+                  echo "<div class='modal-content'>";
+                    echo "<div class='modal-body'> คุณแน่ใจว่าจะลบสินค้าตัวนี้?</div>";
+                    echo "<form id='deleteForm" . $proID . "' action='../admin/DeleteProduct.php' method='post'>";
+                      echo "<input type='hidden' name='proID' id='proIDToDelete' value='" . $row['ProID'] . "'>";
+                      echo "<button type='submit' class='btn btn-danger btn-sm mx-2'>ตกลง</button>";
+                      echo "<button type='button' class='btn btn-success btn-sm' data-bs-dismiss='modal'>ยกเลิก</button>";
+                    echo "</form>";
+                  echo "</div>";
+                echo "</div>";
+              echo "</div>";
             echo "</td>";
           echo "</tr>";
-        } else {
+        } elseif ($row['Status'] == "Active") {
           echo "<tr>";
           echo "<th scope='row' class='text-center'>" . $row['ProID'] . "</th>";
             echo "<td>" . $row['ProName'] . "</td>";
@@ -133,16 +166,27 @@
             echo "<td class='text-center'>" . $row['CostPerUnit'] . "</td>";
             echo "<td class='text-center'>" . $row['StockQty'] . "</td>";
             echo "<td class='text-center'>";
-              echo "<form action='../admin/AddProduct.php' method='post'>";
+              echo "<form action='../admin/UpdateProduct.php' method='post'>";
                 echo "<input type='hidden' name='proID' value='" . $row['ProID'] . "'>";
                 echo "<button type='submit' class='btn btn-primary btn-circle'><i class='fa-solid fa-pen-to-square'></i></button>";
               echo "</form>";
             echo "</td>";
             echo "<td class='text-center'>";
-              echo "<form action='../admin/AddProduct.php' method='post'>";
-                echo "<input type='hidden' name='proID' value='" . $row['ProID'] . "'>";
-                echo "<button type='button' class='btn btn-danger btn-circle'><i class='fa-solid fa-trash'></i></button>";
-              echo "</form>";
+            echo "<button type='button' class='btn btn-danger btn-circle' data-bs-toggle='modal' data-bs-target='#deleteModal" . $proID . "'><i class='fa-solid fa-trash'></i></button>";
+              echo "<div class='modal fade' id='deleteModal" . $proID . "' tabindex='-1' aria-labelledby='deleteLabel' aria-hidden='true'>";
+                echo "<div class='modal-dialog'>";
+                  echo "<div class='modal-content'>";
+                    echo "<div class='modal-body'> คุณแน่ใจว่าจะลบสินค้าตัวนี้?</div>";
+                    echo "<div class='modal-footer'>";
+                      echo "<form id='deleteForm" . $proID . "' action='../admin/DeleteProduct.php' method='post'>";
+                        echo "<input type='hidden' name='proID' id='proIDToDelete' value='" . $row['ProID'] . "'>";
+                        echo "<button type='submit' class='btn btn-danger btn-sm mx-2'>ตกลง</button>";
+                        echo "<button type='button' class='btn btn-success btn-sm' data-bs-dismiss='modal'>ยกเลิก</button>";
+                      echo "</form>";
+                    echo "</div>";
+                  echo "</div>";
+                echo "</div>";
+              echo "</div>";
             echo "</td>";
           echo "</tr>";
         }
