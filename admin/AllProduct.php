@@ -98,7 +98,7 @@
       $msconnect = mysqli_connect("localhost", "root", "", "myStore");
       $msresults = mysqli_query($msconnect, $msquery);
       while ($row = mysqli_fetch_array($msresults)) {
-        $proID = $row['ProID']; // จัดเก็บค่า ProID ไว้ก่อนในตัวแปร
+        $proID = $row['ProID'];
         if ($row['Status'] == "OutOfStock") {
           echo "<tr class='table-danger'>";
             echo "<th scope='row' class='text-center'>" . $row['ProID'] . "</th>";
