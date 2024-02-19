@@ -18,15 +18,19 @@ $sql = "INSERT INTO `receive`(`RecID`, `Period`, `CusID`) VALUES ('$id','$period
 $msresults = mysqli_query($connectDB, $sql);
 
 if ($msresults) {
-    // ดึงข้อมูลจาก history_order
     $sql = "SELECT `NumID`, `ProID`, `Qty` FROM `history_order` WHERE `HisID` = '$id'";
     $result = mysqli_query($connectDB, $sql);
     while ($row = mysqli_fetch_assoc($result)) {
-        $numID = $row['NumID'];
         $proID = $row['ProID'];
         $qty = $row['Qty'];
 
-        // ใส่ข้อมูลลงใน receive_order
+        $sql = "SELECT MAX(`NumID`) AS `MaxNumID` FROM `receive_order`";
+        $maxNumIDResult = mysqli_query($connectDB, $sql);
+        $maxNumIDRow = mysqli_fetch_assoc($maxNumIDResult);
+        $maxNumID = $maxNumIDRow['MaxNumID'];
+
+        $numID = $maxNumID + 1;
+
         $sql = "INSERT INTO `receive_order`(`RecID`, `NumID`, `ProID`, `Qty`) VALUES ('$id', '$numID', '$proID', '$qty')";
         $msresults = mysqli_query($connectDB, $sql);
         if (!$msresults) {
