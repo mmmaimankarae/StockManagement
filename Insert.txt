@@ -19,9 +19,9 @@ INSERT INTO RECEIVER (RecvFName, RecvLName, Sex, Tel, Address) VALUES ('Tan', 'T
 INSERT INTO RECEIVER_LIST (CusID, RecvID, NumID) VALUES (1, 1, 1);
 
 -- Insert ข้อมูลสินค้า --
-INSERT INTO PRODUCT (ProID, ProFName, PricePerUnit, CostPerUnit, StockQty, Description, ImageSource, Status, Update_Day) VALUES (1, 'Laptop', 1500.00, 1200.00, 50, 'Powerful laptop', 'laptop.jpg', 'Active', NOW());
-INSERT INTO PRODUCT (ProFName, PricePerUnit, CostPerUnit, StockQty, Description, ImageSource, Status, Update_Day) VALUES ('iPad', 1500.00, 1200.00, 50, 'Pastal Case', 'iPad.jpg', 'Active', NOW());
-INSERT INTO PRODUCT (ProFName, PricePerUnit, CostPerUnit, StockQty, Description, ImageSource, Status, Update_Day) VALUES ('PHP Book', 200.00, 100.00, 0, 'PHP language Programming', '../picture/PHP.png', 'Pending', '2024-03-15 00:00:00');
+INSERT INTO PRODUCT (ProID, ProName, PricePerUnit, CostPerUnit, StockQty, Description, ImageSource, Status, Update_Day) VALUES (1, 'Laptop', 1500.00, 1200.00, 50, 'Powerful laptop', 'laptop.jpg', 'Active', NOW());
+INSERT INTO PRODUCT (ProName, PricePerUnit, CostPerUnit, StockQty, Description, ImageSource, Status, Update_Day) VALUES ('iPad', 1500.00, 1200.00, 50, 'Pastal Case', 'iPad.jpg', 'Active', NOW());
+INSERT INTO PRODUCT (ProName, PricePerUnit, CostPerUnit, StockQty, Description, ImageSource, Status, Update_Day) VALUES ('PHP Book', 200.00, 100.00, 0, 'PHP language Programming', '../picture/PHP.png', 'Pending', '2024-03-15 00:00:00');
 
 -- Insert ข้อมูลใบเสร็จ --
 INSERT INTO RECEIPT (RecID, PayTime, CusID, TaxID, RecvID) VALUES ('R123456', NOW(), 1, '1234567890123', 1);

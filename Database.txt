@@ -52,7 +52,7 @@ CREATE TABLE RECEIVER_LIST (
 -- ตารางเก็บข้อมูลของสินค้า --
 CREATE TABLE PRODUCT (
      ProID		INT	AUTO_INCREMENT	PRIMARY KEY,
-     ProFName       CHAR(20)	     NOT NULL,
+     ProName        CHAR(20)	     NOT NULL,
      PricePerUnit	DOUBLE(8,2)	NOT NULL,
      CostPerUnit	DOUBLE(8,2)	NOT NULL,
      StockQty	     INT            NOT NULL,
