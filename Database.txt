@@ -1,64 +1,100 @@
-﻿CREATE TABLE CUSTOMER (
-    CusID	INT AUTO_INCREMENT PRIMARY KEY,
-    CusFName	VARCHAR(20)	NOT NULL,
-    CusLName  VARCHAR(20)	NOT NULL,
-    Sex		CHAR(1)		,
-    Tel		CHAR(10)	NOT NULL,
-    Address	VARCHAR(100)	NOT NULL,
-    UserName	VARCHAR(20) DEFAULT UUID()
+﻿CREATE DATABASE myStore;
+-- ตารางเก็บข้อมูลลูกค้า (ผู้ส่ง) --
+CREATE TABLE CUSTOMER (
+     CusID	INT	AUTO_INCREMENT	PRIMARY KEY,
+     CusFName	VARCHAR(20)	NOT NULL,
+     CusLName	VARCHAR(20)	NOT NULL,
+     Sex		VARCHAR(1),
+     Tel		CHAR(10)	NOT NULL
 );
-
+-- ตารางบัญชี --
 CREATE TABLE CUSTOMER_ACCOUNT (
-    UserName	VARCHAR(20) PRIMARY KEY DEFAULT UUID(),
-    Password 	VARCHAR(255) NOT NULL,
-    CusID	INT		NOT NULL,
-    FOREIGN KEY (CusID) REFERENCES CUSTOMER(CusID)
+     UserName	VARCHAR(20)	PRIMARY KEY,
+     Password 	VARCHAR(255)	NOT NULL,
+     CusID	INT		     NOT NULL,
+     FOREIGN KEY (CusID) REFERENCES CUSTOMER(CusID)
 );
-
-ALTER TABLE CUSTOMER
-ADD CONSTRAINT UserName FOREIGN KEY (UserName) REFERENCES CUSTOMER_ACCOUNT(UserName);
-
+-- ตารางเก็บข้อมูลคนจ่ายเงิน --
+CREATE TABLE PAYER (
+     TaxID		CHAR(13)	PRIMARY KEY,
+     PayerFName	VARCHAR(20)	NOT NULL,
+     PayerLName	VARCHAR(20)	NOT NULL,
+     Sex			VARCHAR(1),
+     Tel			CHAR(10)	     NOT NULL
+);
+-- ตารางเก็บข้อรายชื่อผู้จ่ายเงิน (สำหรับลูกค้า) --
+CREATE TABLE PAYER_LIST (
+     CusID			INT		NOT NULL,
+     NumID			INT		NOT NULL,
+     TaxID			CHAR(13)	NOT NULL,
+     FOREIGN KEY (CusID) REFERENCES CUSTOMER(CusID),
+     FOREIGN KEY (TaxID) REFERENCES PAYER(TaxID),
+     CONSTRAINT PayerList PRIMARY KEY (CusID, NumID)
+);
+-- ตารางเก็บข้อมูลผู้รับ --
+CREATE TABLE RECEIVER (
+     RecvID		INT	AUTO_INCREMENT PRIMARY KEY,
+     RecvFName		VARCHAR(20)	NOT NULL,
+     RecvLName		VARCHAR(20)	NOT NULL,
+     Sex			VARCHAR(1),
+     Tel			CHAR(10)	     NOT NULL,
+     Address		VARCHAR(80)	NOT NULL
+);
+-- ตารางเก็บข้อรายชื่อผู้รับ (สำหรับลูกค้า) --
+CREATE TABLE RECEIVER_LIST (
+     CusID			INT	NOT NULL,
+     RecvID			INT	NOT NULL,
+     NumID			INT	NOT NULL,
+     FOREIGN KEY (CusID) REFERENCES CUSTOMER(CusID),
+     FOREIGN KEY (RecvID) REFERENCES RECEIVER(RecvID),
+     CONSTRAINT ReceiverList PRIMARY KEY (CusID, NumID)
+);
+-- ตารางเก็บข้อมูลของสินค้า --
 CREATE TABLE PRODUCT (
-    ProID		INT AUTO_INCREMENT PRIMARY KEY,
-    ProName 		CHAR(20)	NOT NULL,
-    PricePerUnit  	DOUBLE(8,2)	NOT NULL,
-    CostPerUnit	DOUBLE(8,2)	NOT NULL,
-    StockQty 		INT		NOT NULL,
-    Description     CHAR(100) NOT NULL,
-    ImageSource     VARCHAR(255) NOT NULL,
-    Status VARCHAR(10) NOT NULL,
-    Update_Day DATETIME    NOT NULL;
+     ProID		INT	AUTO_INCREMENT	PRIMARY KEY,
+     ProFName       CHAR(20)	     NOT NULL,
+     PricePerUnit	DOUBLE(8,2)	NOT NULL,
+     CostPerUnit	DOUBLE(8,2)	NOT NULL,
+     StockQty	     INT            NOT NULL,
+     Description    CHAR(100)      NOT NULL,
+     ImageSource	VARCHAR(255)	NOT NULL,
+     Status		VARCHAR(10)	NOT NULL,
+     Update_Day	DATETIME       NOT NULL
 );
-
-CREATE TABLE RECEIVE (
-    RecID	CHAR(10) PRIMARY KEY DEFAULT UUID(),
-    Period	DATETIME	NOT NULL,
-    CusID	INT		NOT NULL,
-    FOREIGN KEY (CusID) REFERENCES CUSTOMER(CusID)
+-- ตารางเก็บข้อมูลของใบเสร็จ --
+CREATE TABLE RECEIPT (
+     RecID	CHAR(10)	PRIMARY KEY,
+     PayTime	DATETIME	NOT NULL,
+     CusID	INT		NOT NULL,
+     TaxID	CHAR(13)	NOT NULL,
+     RecvID	INT		NOT NULL,
+    FOREIGN KEY (CusID) REFERENCES CUSTOMER(CusID),
+    FOREIGN KEY (TaxID) REFERENCES PAYER(TaxID),
+    FOREIGN KEY (RecvID) REFERENCES RECEIVER(RecvID)
 );
-
-CREATE TABLE RECEIVE_ORDER (
-    RecID	CHAR(10)	NOT NULL,
-    NumID	INT		NOT NULL,
-    ProID	INT		NOT NULL, 
-    Qty		INT		NOT NULL,
-    FOREIGN KEY (RecID) REFERENCES RECEIVE(RecID)
+-- ตารางเก็บข้อมูลรายละเอียดของใบเสร็จ --
+CREATE TABLE RECEIPT_LIST (
+     RecID	CHAR(10)	NOT NULL,
+     NumID	INT	     NOT NULL,
+     ProID	INT	     NOT NULL,
+     Qty	     INT	     NOT NULL,
+    FOREIGN KEY (RecID) REFERENCES RECEIPT(RecID),
     CONSTRAINT OrderList PRIMARY KEY (RecID, NumID)
 );
-
+-- ตารางเก็บข้อมูลของคำสั่งซื้อ (ยังอยู่ในตะกร้า On-hand) --
 CREATE TABLE HISTORY (
-    HisID	CHAR(10) PRIMARY KEY DEFAULT UUID(),
-    Period	DATETIME	NOT NULL,
-    CusID	INT		NOT NULL,
-    Status	VARCHAR(20)	NOT NULL,
+     HisID		CHAR(10)	PRIMARY KEY,
+     UpdateTime	DATETIME	     NOT NULL,
+     CusID		INT		     NOT NULL,
+     Status		VARCHAR(20)	NOT NULL,
     FOREIGN KEY (CusID) REFERENCES CUSTOMER(CusID)
 );
-
-CREATE TABLE HISTORY_ORDER (
-    HisID	CHAR(10)	NOT NULL,
-    NumID	INT		NOT NULL,
-    ProID	INT		NOT NULL, 
-    Qty		INT		NOT NULL,
-    FOREIGN KEY (HisID) REFERENCES HISTORY(HisID)
+-- ตารางเก็บข้อมูลรายละเอียดของคำสั่งซื้อ (ยังอยู่ในตะกร้า On-hand) --
+CREATE TABLE HISTORY_LIST (
+     HisID		CHAR(10)	NOT NULL,
+     NumID		INT		NOT NULL,
+     ProID		INT		NOT NULL, 
+     Qty		     INT		NOT NULL,
+    FOREIGN KEY (HisID) REFERENCES HISTORY(HisID),
     CONSTRAINT HistoryList PRIMARY KEY (HisID, NumID)
 );
