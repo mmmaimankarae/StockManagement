@@ -112,13 +112,14 @@
                 echo "<button type='submit' class='btn btn-primary btn-circle'><i class='fa-solid fa-pen-to-square'></i></button>";
               echo "</form>";
             echo "</td>";
-            echo "<td class='text-center'>";
+
+            echo "<td class='text-center' id='modal'>";
             echo "<button type='button' class='btn btn-danger btn-circle' data-bs-toggle='modal' data-bs-target='#deleteModal" . $proID . "'><i class='fa-solid fa-trash'></i></button>";
             echo "<div class='modal fade' id='deleteModal" . $proID . "' tabindex='-1' aria-labelledby='deleteLabel' aria-hidden='true'>";
                 echo "<div class='modal-dialog'>";
                   echo "<div class='modal-content'>";
                     echo "<div class='modal-body'> คุณแน่ใจว่าจะลบสินค้าตัวนี้?</div>";
-                    echo "<form id='deleteForm" . $proID . "' action='../admin/DeleteProduct.php' method='post'>";
+                    echo "<form id='deleteForm" . $proID . "' action='../admin/DBdeleteProduct.php' method='post'>";
                       echo "<input type='hidden' name='proID' id='proIDToDelete' value='" . $row['ProID'] . "'>";
                       echo "<button type='submit' class='btn btn-danger btn-sm mx-2'>ตกลง</button>";
                       echo "<button type='button' class='btn btn-success btn-sm' data-bs-dismiss='modal'>ยกเลิก</button>";
@@ -127,6 +128,7 @@
                 echo "</div>";
               echo "</div>";
             echo "</td>";
+            
           echo "</tr>";
         } elseif ($row['Status'] == "Pending") {
           echo "<tr class='table-warning'>";
@@ -142,7 +144,7 @@
                 echo "<button type='submit' class='btn btn-primary btn-circle'><i class='fa-solid fa-pen-to-square'></i></button>";
               echo "</form>";
             echo "</td>";
-            echo "<td class='text-center'>";
+            echo "<td class='text-center' id='modal'>";
             echo "<button type='button' class='btn btn-danger btn-circle' data-bs-toggle='modal' data-bs-target='#deleteModal" . $proID . "'><i class='fa-solid fa-trash'></i></button>";
             echo "<div class='modal fade' id='deleteModal" . $proID . "' tabindex='-1' aria-labelledby='deleteLabel' aria-hidden='true'>";
                 echo "<div class='modal-dialog'>";
@@ -171,7 +173,7 @@
                 echo "<button type='submit' class='btn btn-primary btn-circle'><i class='fa-solid fa-pen-to-square'></i></button>";
               echo "</form>";
             echo "</td>";
-            echo "<td class='text-center'>";
+            echo "<td class='text-center' id='modal'>";
             echo "<button type='button' class='btn btn-danger btn-circle' data-bs-toggle='modal' data-bs-target='#deleteModal" . $proID . "'><i class='fa-solid fa-trash'></i></button>";
               echo "<div class='modal fade' id='deleteModal" . $proID . "' tabindex='-1' aria-labelledby='deleteLabel' aria-hidden='true'>";
                 echo "<div class='modal-dialog'>";
@@ -195,6 +197,21 @@
       ?>
     </tbody>
   </table>
+  <script>
+    $(document).ready(function () {
+      $('#exportBtn').click(function () {
+        var csvContent = "\uFEFFรหัสสินค้า,ชื่อสินค้า,ราคาขายต่อหน่วย(บาท/หน่วย),ต้นทุนต่อหน่วย(บาท/หน่วย),จำนวนสินในคลัง\n";
+        $('#dataTable tbody tr').each(function () {
+          var rowData = $(this).find('th,td:not([id^="modal"])').map(function () {
+            return $(this).text();
+          }).get().join(",");
+          csvContent += rowData + "\n";
+        });
+        var blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        saveAs(blob, 'Product.csv');
+      });
+    });
+  </script>
 </body>
 
 </html>

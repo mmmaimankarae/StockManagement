@@ -1,8 +1,3 @@
-<?php 
-  // session_start();
-  // echo $_SESSION['total'];
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -14,12 +9,13 @@
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.17.3/dist/xlsx.full.min.js"></script>
+  <script src="https://mozilla.github.io/pdf.js/build/pdf.js"></script>
   <title>Document</title>
 </head>
 
 <body class="p-3" style="margin-top: 6%">
   <?php include "../components/HeaderAdmin.html"; ?>
-  <h3>คำสั่งซื้อที่ดำเนินการเสร็จสิ้น</h3><br>
+  <h3>คำสั่งซื้อใหม่</h3><br>
   <form method="get">
     <div class="row">
       <div class="col">
@@ -42,7 +38,9 @@
       <th scope="col" class='text-center'>วันที่ออกใบเสร็จ</th>
       <th scope="col" class='text-center'>ราคาทั้งหมด</th>
       <th scope="col" class='text-center'>ชื่อผู้สั่ง</th>
-      <th scope="col" class='text-center'>ดูรายละเอียด</th>
+      <th scope="col" class='text-center'>รายละเอียดคำสั่งซื้อ</th>
+      <th scope="col" class='text-center'>พิมพ์ที่อยู่การจัดส่ง</th>
+      <th scope="col" class='text-center'>จัดส่งแล้ว</th>
       </tr>
     </thead>
 
@@ -54,7 +52,7 @@
       $msconnect = mysqli_connect("localhost", "root", "", "myStore");
       $start = "SELECT R.RecID AS ReceiptID, R.PayTime AS ReceiptDate, SUM(RO.Qty * P.PricePerUnit) AS TotalPrice,
                 CONCAT(C.CusFName, ' ', C.CusLName) AS CustomerName FROM RECEIPT R JOIN RECEIPT_LIST RO ON R.RecID = RO.RecID
-                JOIN PRODUCT P ON RO.ProID = P.ProID JOIN CUSTOMER C ON R.CusID = C.CusID WHERE R.Status = 'Delivered'";
+                JOIN PRODUCT P ON RO.ProID = P.ProID JOIN CUSTOMER C ON R.CusID = C.CusID WHERE R.Status = 'Pending'";
       $medial = "";
       $id = isset($_GET['search']) ? $_GET['search'] : "";
       if ($id != ''){
@@ -72,10 +70,34 @@
         echo "<td class='text-center'>" . $row['TotalPrice'] . "</td>";
         echo "<td class='text-center'>" . $row['CustomerName'] . "</td>";
         echo "<td class='text-center'>";
-        echo "<form action='../admin/UpdateProduct.php' method='post'>";
+        echo "<form action='' method='post'>";
             echo "<input type='hidden' name='proID' value='" . $row['ProID'] . "'>";
             echo "<button type='submit' class='btn btn-primary btn-circle'><i class='fa-solid fa-magnifying-glass'></i></button>";
           echo "</form>";
+        echo "</td>";
+        echo "<td class='text-center'>";
+        echo "<form action='' method='post'>";
+            echo "<input type='hidden' name='recID' value='" . $row['ReceiptID'] . "'>";
+            echo "<button type='submit' class='btn btn-info btn-circle'><i class='fa-solid fa-print'></i></button>";
+          echo "</form>";
+        echo "</td>";
+
+        echo "<td class='text-center'>";
+          echo "<button type='button' class='btn btn-success' data-bs-toggle='modal' data-bs-target='#updateModal" . $row['ReceiptID'] . "'>ยืนยัน</button>";
+          echo "<div class='modal fade' id='updateModal" . $row['ReceiptID'] . "' tabindex='-1' aria-labelledby='updateLabel' aria-hidden='true'>";
+            echo "<div class='modal-dialog'>";
+              echo "<div class='modal-content'>";
+                echo "<div class='modal-body'> คุณแน่ใจว่าสินค้านี้กำลังจัดส่งแล้ว?</div>";
+                echo "<div class='modal-footer'>";
+                  echo "<form id='updateForm" . $row['ReceiptID'] . "' action='../admin/DBupdateOrder.php' method='post'>";
+                    echo "<input type='hidden' name='recID' id='recID' value='" . $row['ReceiptID'] . "'>";
+                    echo "<button type='button' class='btn btn-danger btn-sm' data-bs-dismiss='modal'>ยกเลิก</button>";
+                    echo "<button type='submit' class='btn btn-success btn-sm mx-2'>ตกลง</button>";
+                  echo "</form>";
+                echo "</div>";
+              echo "</div>";
+            echo "</div>";
+          echo "</div>";
         echo "</td>";
         echo "</tr>";
       }
@@ -94,7 +116,7 @@
           csvContent += rowData + "\n";
         });
         var blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-        saveAs(blob, 'sales_data.csv');
+        saveAs(blob, 'NewOrder.csv');
       });
     });
   </script>
