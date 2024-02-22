@@ -39,6 +39,9 @@
     function goToCart() {
       window.location.href = "../frontStore/Cart.php";
     }
+    function goToLogin() {
+      window.location.href = "../frontStore/login.html";
+    }
     function goToStore() {
       window.location.href = "../frontStore/Store.php";
     }
@@ -68,7 +71,7 @@
               <span class="visually-hidden">unread messages</span>
             </span>
           </button>
-          <button type="button" class="btn btn-outline-light border-0 btn-circle">
+          <button type="button" class="btn btn-outline-light border-0 btn-circle" onclick="goToLogin()">
             <i class="fas fa-user-circle fa-lg" title="Login"></i>
           </button>
         </form>

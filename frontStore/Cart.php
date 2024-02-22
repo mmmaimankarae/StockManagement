@@ -142,9 +142,9 @@ function displayCartTable($cartItems, $hasItem)
 
     echo "</table>";
     if ($hasItem) {
-        echo "<form action='Checkout.php' method='POST'>";
+        echo "<form action='OrderSummary.php' method='POST'>";
         echo "<div style='text-align:right; margin-top: 20px'>";
-        echo "<a href='Checkout.php' class='btn btn-success' style='font-family:sarabun; font-size: 20px; width: 15%;'>สั่งซื้อ</a>";
+        echo "<a href='OrderSummary.php' class='btn btn-success' style='font-family:sarabun; font-size: 20px; width: 15%;'>สั่งซื้อ</a>";
         echo "</div>";
         echo "</form>";
     } else {

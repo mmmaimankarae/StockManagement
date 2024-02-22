@@ -11,7 +11,7 @@
         }
         else {
             $_SESSION['CusID'] = $row['CusID'];
-            $_SESSION['State'] = 1;
+            $_SESSION['userType'] = "member";
             header("Location: ./Store.php");
         }
     } else {

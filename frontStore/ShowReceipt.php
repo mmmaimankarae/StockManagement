@@ -2,114 +2,180 @@
 session_start();
 require '../components/ConnectDB.php';
 
-$sql = "SELECT r.RecID, r.Period, r.CusID, ro.NumID, ro.ProID, ro.Qty 
-        FROM receive r 
-        JOIN receive_order ro ON r.RecID = ro.RecID";
+$RecvID = $_SESSION['RecvID'];
+
+$receiptCode = $_SESSION['ReceiptCode'];
+$sql = "SELECT r.RecvID, r.RecvFName, r.RecvLName, r.Sex, r.Tel, r.Address, ro.CusID
+        FROM receiver r 
+        JOIN receiver_list ro ON r.RecvID = '$RecvID' AND r.RecvID = ro.RecvID";
 
 $result = mysqli_query($connectDB, $sql);
 ?>
 
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Receipt</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Sarabun&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Sarabun', sans-serif;
+            font-family: sarabun;
+            ;
         }
-        th, td {
+
+        th,
+        td {
             text-align: center;
         }
+
         .left {
             text-align: left;
         }
+
         .right {
             text-align: right;
         }
+
         .no-border {
             border-bottom: none !important;
         }
+
         .logo {
             float: left;
             width: 100px;
             height: auto;
         }
+
         .button-container {
             text-align: center;
         }
     </style>
 </head>
+
 <body>
-    <div class="container"> 
+    <div class="container">
         <?php
         if (mysqli_num_rows($result) > 0) {
             $row = mysqli_fetch_assoc($result);
             $cusID = $row["CusID"];
-            $sql = "SELECT * FROM `customer` WHERE `CusID` = '$cusID'";
-            $customerResult = mysqli_query($connectDB, $sql);
-            $customerRow = mysqli_fetch_assoc($customerResult);
-            $cusFName = $customerRow['CusFName'];
-            $cusLName = $customerRow['CusLName'];
-            $cusAddress = $customerRow['Address'];
-            $cusTel = $customerRow['Tel'];
+            $cusAddress = $row['Address'];
+            $cusFName = $row['RecvFName'];
+            $cusLName = $row['RecvLName'];
+            $cusSex = $row['Sex'];
+            $cusTel = $row['Tel'];
 
-            echo "<img src='../Pictures/logo.png' class='logo'>";
-            echo "<h1 style='text-align: right;'><b>Receipt</b></h1>";
+            $sql = "SELECT paytime FROM receipt WHERE RecID = '$receiptCode'";
+            $result = mysqli_query($connectDB, $sql);
+            $row = mysqli_fetch_assoc($result);
+            $payTime = $row['paytime'];
+            $payDate = date('Y-m-d', strtotime($payTime));
 
-            echo "<table class='table'>";
-            echo "<tr><td class='left no-border'><b>Ship to</b></td><td class='right no-border'><b>Reciept</b></td></tr>";
-            echo "<tbody>";
+            echo "<div style='margin: 15px;'>";
 
-            echo "<tr><td class='left no-border'>" . $cusFName . " " . $cusLName . "</td><td class='right no-border'><b>Receipt ID: </b>" . $row["RecID"] . "</td></tr>";
-            echo "<tr><td class='left no-border'>" . $cusAddress . "</td><td class='right no-border'><b>Period: </b>" . $row["Period"] . "</td></tr>";
-            echo "<tr><td class='left no-border'><b>Tel: </b>" . $cusTel . "</td><td class='right no-border'></td></tr>";
-
-            echo "</tbody></table>";
-
-            echo "<table class='table'>";
-            echo "<thead class='thead-dark'><tr><th>Quantity</th><th>Product Name</th><th>Quantity</th><th>Price</th><th>Amount</th></tr></thead>";
-            echo "<tbody>";
-            $total = 0;
-            do {
-                $proID = $row["ProID"];
-                $sql = "SELECT * FROM `product` WHERE `ProID` = '$proID'";
-                $productResult = mysqli_query($connectDB, $sql);
-                $productRow = mysqli_fetch_assoc($productResult);
-                $proName = $productRow['ProName'];
-                $price = $row['Qty'] * $productRow['PricePerUnit'];
-
-                $amount = $row["Qty"] * $price;
-                $total += $amount;
-
-                echo "<tr><td>" . $row["Qty"] . "</td><td>" . $proName . "</td><td>" . $row["Qty"] . "</td><td>฿" . $productRow['PricePerUnit'] . "</td><td>฿" . $price . "</td></tr>";
-            } while($row = mysqli_fetch_assoc($result));
-
-            $discount = $total * 0.05; // 5% discount
-            $totalAfterDiscount = $total - $discount;
-            $vat = $totalAfterDiscount * 0.07; // 7% VAT
-            $grandTotal = $totalAfterDiscount + $vat;
-
-            echo "<tr><td colspan='4'><b>Subtotal</b></td><td>฿" . $total . "</td></tr>";
-            echo "<tr><td colspan='4'><b>Discount (5%)</b></td><td>฿" . $discount . "</td></tr>";
-            echo "<tr><td colspan='4'><b>VAT (7%)</b></td><td>฿" . $vat . "</td></tr>";
-            echo "<tr><td colspan='4'><b>Grand Total</b></td><td>฿" . $grandTotal . "</td></tr>";
-            echo "</tbody></table>";
-
-            echo "<div class='button-container'>";
-            echo "<a href='shop.php' style='margin-right: 20px' class='btn btn-primary'>Back to Shop</a>";
-            echo "<a href='export.php' class='btn btn-secondary'>Export to PDF</a>";
+            echo "<div class='d-flex justify-content-between' style=''>";
+            echo "<div class='d-flex flex-column flex-grow-1 me-3 justify-content-left' style=''>";
+            echo "<img src='../pictures/logo.png' class='logo'>";
+            echo "<h5 class='text-start'><b>บริษัท เอสมิติช้อป จำกัด(สำนักงานใหญ่)</b></h5>";
+            echo "<h6 class='text-start'>999 หมู่ 999 ถ.ฉลองกรุง 9999 แขวงลาดกระบัง</h6>";
+            echo "<h6 class='text-start'>เขตลาดกระบัง กรุงเทพมหานคร 10500</h6>";
+            echo "<h6 class='text-start'>เลขประจำตัวผู้เสียภาษี 12345678909999</h6>";
+            echo "<h6 class='text-start'>โทร. 0123456789 อีเมล smiti@test.com</h6>";
             echo "</div>";
 
-            echo "<br>";
-            echo "<br>";
+            echo "<div class='d-flex flex-column flex-grow-1 ms-3 justify-content-center align-items-center' style=''>";
+            echo "<h3 class='text-center recepDetail'><b>ใบเสร็จรับเงิน/ใบกำกับภาษี</b></h3>";
+            echo "<h5 class='text-center recepDetail'>Receipt/Tax Invoice</h5>";
+            echo "<h5 class='text-center recepDetail'><b>ต้นฉบับ</b></h5>";
+            echo "</div>";
+            echo "</div>";
 
-        } else {
-            echo "No results";
+            /* --------------------------------------------------------------------------------------------------- */
+
+            echo "<div class='d-flex justify-content-between' style='margin-top: 15px'>";
+            echo "<div class='d-flex flex-column flex-grow-1 me-3 justify-content-left' style=''>";
+            echo "<h8 class='text-start'><b>ลูกค้า</b> " . $cusFName . " " . $cusLName . " </h8>";
+            echo "<h8 class='text-start'><b>ที่อยู่</b> " . $cusAddress . "</h8>";
+            echo "<h8 class='text-start'><b>เลขประจำตัวผู้เสียภาษี</b> 123456789123</h8>";
+            echo "<h8 class='text-start'><b>โทร</b> " . $cusTel  . " <b>อีเมล </b> testuser@test.com </h8>";
+            echo "</div>";
+
+            echo "<div class='d-flex flex-column flex-grow-1 ms-3 ' >";
+            echo "<h8 class='text-start' style='margin-left: 150px'><b>เลขที่</b> " . $receiptCode . "</h8>";
+            echo "<h8 class='text-start' style='margin-left: 150px'><b>วันที่</b> " . $payDate . "</h8>";
+            echo "</div>";
+            echo "</div>";
+
+            /* --------------------------------------------------------------------------------------------------- */
+
+            echo "<div class='d-flex justify-content-center' style='margin-top: 15px;'>";
+            echo "<table class='table table-bordered' style='width: 100%;'>";
+            echo "<tr>";
+            echo "<th style='width: 5%'>ลำดับ</th>";
+            echo "<th style='width: 40%'>รายการสินค้า</th>";
+            echo "<th style='width: 10%'>จำนวน</th>";
+            echo "<th style='width: 15%'>ราคาต่อหน่วย</th>";
+            echo "<th style='width: 15%'>จำนวนเงิน</th>";
+            echo "</tr>";
+
+            $sql = "SELECT r.NumID, r.ProID, r.Qty, p.ProName, p.PricePerUnit 
+                    FROM receipt_list r 
+                    JOIN product p ON r.ProID = p.ProID 
+                    WHERE r.RecID = '$receiptCode'";
+            $result = mysqli_query($connectDB, $sql);
+
+            $totalPrice = 0;
+
+            while ($orderProductRow = mysqli_fetch_array($result)) {
+                $i = 1;
+                echo "<tr>";
+                echo "<td>" . $i . "</td>";
+                echo "<td>" . $orderProductRow['ProName'] . "</td>";
+                echo "<td>" . $orderProductRow['Qty'] . "</td>";
+                echo "<td>฿" . $orderProductRow['PricePerUnit'] . "</td>";
+                echo "<td>" . $orderProductRow['PricePerUnit'] * $orderProductRow['Qty'] . " บาท</td>";
+                $totalPrice += $orderProductRow['PricePerUnit'] * $orderProductRow['Qty'];
+                echo "</tr>";
+            }
+
+            echo "</table>";
+            echo "</div>";
+
+            /* --------------------------------------------------------------------------------------------------- */
+
+            $vat = $totalPrice * 0.07;
+
+            echo "<div class='d-flex justify-content-between' style='margin-top: 15px'>";
+            echo "<div class='d-flex flex-column flex-grow-1 me-3' style=''>";
+            echo "<h8 class='text-start' style='justify-content: left;'><b>หมายเหตุ</b> </h8>";
+            echo "<h8 class='text-start' style='justify-content: flex-end; margin-top: 130px;'><b>ผู้รับเงิน บริษัท เอสมิติช้อป จำกัด(สำนักงานใหญ่)</b> </h8>";
+            echo "</div>";
+            
+            echo "<div class='d-flex flex-column flex-grow-1 ms-3 ' >";
+            echo "<table class='table table-borderless'>";
+            echo "<tr><td><b>ส่วนลด</b></td><td>0</td><td> บาท</td></tr>";
+            echo "<tr><td><b>รวมเป็นเงิน</b></td><td>" . $totalPrice . "</td><td> บาท</td></tr>";
+            echo "<tr><td><b>ภาษีมูลค่าเพิ่ม 7%</b></td><td>" . $vat . "</td><td> บาท</td></tr>";
+            echo "<tr><td><b>จำนวนเงินทั้งสิ้น</b></td><td>" . ($totalPrice + $vat) . "</td><td> บาท</td></tr>";
+            echo "</table>";
+            echo "</div>";
+            echo "</div>";
+
+            echo "</div>";
+            echo "</div>";
         }
+        echo "<CENTER>";
+        echo "<a href='ExportToPDF.php' class='btn btn-primary' style='margin-top: 15px;'>แปลงเป็น PDF</a>";
+        echo "<a href='Store.php' class='btn btn-primary' style='margin-top: 15px;'>กลับไปหน้าร้านค้า</a>";
+        echo "</CENTER>";
         ?>
     </div>
 </body>
+
 </html>
 
 <?php

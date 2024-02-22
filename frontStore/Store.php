@@ -1,12 +1,12 @@
 <?php
 session_start();
-if ($_SESSION['State'] == 1) {
-    require '../components/ConnectDB.php';
-    require '../components/HeaderStore.html';
-    $sql = "SELECT * FROM product;";
-    $result = mysqli_query($connectDB, $sql);
-} else {
-    header("Location: ./login.html");
+require '../components/ConnectDB.php';
+require '../components/HeaderStore.html';
+$sql = "SELECT * FROM product;";
+$result = mysqli_query($connectDB, $sql);
+if (!isset($_SESSION['userType'])) {
+    $_SESSION['userType'] = "guest";
+    $_SESSION['userID'] = "0";
 }
 ?>
 
@@ -15,7 +15,7 @@ if ($_SESSION['State'] == 1) {
 
 <head>
     <title>SMITI Shop</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootsxtrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun&display=swap" rel="stylesheet">
@@ -51,7 +51,6 @@ if ($_SESSION['State'] == 1) {
         .custom-card {
             text-align: center;
         }
-
     </style>
 </head>
 
@@ -62,7 +61,6 @@ if ($_SESSION['State'] == 1) {
         <?php
         if ($result->num_rows > 0) {
             while ($row = mysqli_fetch_array($result)) {
-                $index = $row["ProID"];
                 $index = $row["ProID"];
                 echo "<div class='col custom-card'>";
                 echo "<div class='card h-100'>";

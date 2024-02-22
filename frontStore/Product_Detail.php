@@ -29,10 +29,11 @@ session_start();
 </style>
 
 <body class="p-3" style="margin-top: 6%">
-  <?php include "../components/HeaderAdmin.html";
+  <?php include "../components/HeaderStore.html";
   require '../components/ConnectDB.php';
   ?>
   <?php
+  echo "<a href='Store.php' class='backButton' style='margin-left: 7%;font-family:sarabun;  color:green; text-decoration:none;'><b>⬅️ กลับไปหน้าร้านค้า</b></a>";
   $msquery = "SELECT * FROM PRODUCT WHERE ProID = " . $_GET['id'] . ";";
   $msresults = mysqli_query($connectDB, $msquery);
   $row = mysqli_fetch_array($msresults);

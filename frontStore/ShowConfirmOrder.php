@@ -61,9 +61,21 @@ require '../components/HeaderStore.html';
         $result = mysqli_query($connectDB, $sql);
         $row = mysqli_fetch_array($result);
         $orderNo = $row['HisID'];
-        $custID = $row['CusID'];
+        $statusOrder = $row['Status'];
+        $updateTime = $row['UpdateTime'];
+        $time = date("H:i", strtotime($updateTime));
+        $date = date("d-m-Y", strtotime($updateTime));
 
-        $sql = "SELECT * FROM history_order WHERE HisID = '" . $HisID ."';";
+        if ($_SESSION['userType'] == "guest") {
+            $custID = $_SESSION['userID'];
+        }
+        else if ($_SESSION['userType'] == "customer") {
+            $custID = $row['CusID'];
+        }
+        
+        $RecvID = $_SESSION['RecvID'];
+
+        $sql = "SELECT * FROM history_list WHERE HisID = '" . $HisID ."';";
         $result = mysqli_query($connectDB, $sql);
         $row = mysqli_fetch_array($result);
 
@@ -88,12 +100,23 @@ require '../components/HeaderStore.html';
             $productTotal += $details['qty'];
         }
 
+        if ($_SESSION['userType'] == "guest") {
+            $customerName = $_SESSION['Fname'];
+            $customerLName = $_SESSION['Lname'];
+        }
+        else if ($_SESSION['userType'] == "member") {
+            $sql = "SELECT * FROM customer WHERE CusID = $custID;";
+            $result = mysqli_query($connectDB, $sql);
+            $row = mysqli_fetch_array($result);
+            $customerName = $row['CusFName'];
+            $customerLName = $row['CusLName'];
+        }
+ 
 
-        $sql = "SELECT * FROM customer WHERE CusID = $custID;";
+        $sql = "SELECT Address FROM receiver WHERE RecvID = $RecvID;";
         $result = mysqli_query($connectDB, $sql);
         $row = mysqli_fetch_array($result);
-        $customerName = $row['CusFName'];
-        $customerLName = $row['CusLName'];
+
         $customerAddress = $row['Address'];
 
         echo "<div class='headbar'>
@@ -104,7 +127,11 @@ require '../components/HeaderStore.html';
         echo "<h3 style='font-family:sarabun;'>ได้รับคำสั่งซื้อเรียบร้อยแล้ว</h3>";
         echo "<div class='orderDetail'>
             <b class='orderInfo'>วันที่ทำการสั่งซื้อ</b>
-            <b class='orderNo'>วันที่: " . date("d-m-" . date('Y') + 543) . "</b>
+            <b class='orderNo'>" . $date . "</b>
+            </div>";
+        echo "<div class='orderDetail'>
+            <b class='orderInfo'>เวลา</b>
+            <b class='orderNo'>" . $time . "</b>
             </div>";
         echo "<div class='orderDetail'>
             <b class='orderInfo'>ชื่อ-นามสกุล</b>
@@ -130,13 +157,13 @@ require '../components/HeaderStore.html';
         echo "</div>";
         echo "<div class='orderDetail'>";
         echo "<b class='orderInfo'>สถานะคำสั่งซื้อ</b>";
-        echo "<b class='orderNo'>กำลังตรวจสอบการสั่งซื้อ</b>";
+        echo "<b class='orderNo'>" . $statusOrder ."</b>";
         echo "</div>";
         ?>
         <br>
         <br>
         <a href="Store.php" style="font-family:sarabun; color:red; text-decoration:none; margin-left: 30px; font-size:20px;"><b>🧺 กลับไปหน้าร้านค้า</b></a>
-        <a href="AddReciept.php" style="font-family:sarabun; color:ฺblue; text-decoration:none; margin-left: 30px; font-size:20px;"><b>🧾 ดูใบเสร็จ</b></a>
+        <a href="InsertReceipt.php" style="font-family:sarabun; color:ฺblue; text-decoration:none; margin-left: 30px; font-size:20px;"><b>🧾 ดูใบเสร็จ</b></a>
 
     </center>
     <table>
