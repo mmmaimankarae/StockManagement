@@ -57,7 +57,7 @@ require '../components/HeaderStore.html';
         <img src="../pictures/Thank1.png" style="padding-top: 100px;" />
         <?php
         $HisID = $_SESSION['HisID'];
-        $sql = "SELECT * FROM history WHERE HisID = '" . $HisID ."';";
+        $sql = "SELECT * FROM history WHERE HisID = '" . $HisID . "';";
         $result = mysqli_query($connectDB, $sql);
         $row = mysqli_fetch_array($result);
         $orderNo = $row['HisID'];
@@ -68,21 +68,20 @@ require '../components/HeaderStore.html';
 
         if ($_SESSION['userType'] == "guest") {
             $custID = $_SESSION['userID'];
-        }
-        else if ($_SESSION['userType'] == "customer") {
+        } else if ($_SESSION['userType'] == "member") {
             $custID = $row['CusID'];
         }
-        
+
         $RecvID = $_SESSION['RecvID'];
 
-        $sql = "SELECT * FROM history_list WHERE HisID = '" . $HisID ."';";
+        $sql = "SELECT * FROM history_list WHERE HisID = '" . $HisID . "';";
         $result = mysqli_query($connectDB, $sql);
         $row = mysqli_fetch_array($result);
 
         foreach ($result as $row) {
             $productQTY[$row['ProID']]['qty'] = $row['Qty'];
         }
-        
+
         foreach ($productQTY as $ProID => $details) {
             $sql = "SELECT * FROM product WHERE ProID = " . $ProID . ";";
             $result = mysqli_query($connectDB, $sql);
@@ -103,15 +102,14 @@ require '../components/HeaderStore.html';
         if ($_SESSION['userType'] == "guest") {
             $customerName = $_SESSION['Fname'];
             $customerLName = $_SESSION['Lname'];
-        }
-        else if ($_SESSION['userType'] == "member") {
+        } else if ($_SESSION['userType'] == "member") {
             $sql = "SELECT * FROM customer WHERE CusID = $custID;";
             $result = mysqli_query($connectDB, $sql);
             $row = mysqli_fetch_array($result);
             $customerName = $row['CusFName'];
             $customerLName = $row['CusLName'];
         }
- 
+
 
         $sql = "SELECT Address FROM receiver WHERE RecvID = $RecvID;";
         $result = mysqli_query($connectDB, $sql);
@@ -157,13 +155,21 @@ require '../components/HeaderStore.html';
         echo "</div>";
         echo "<div class='orderDetail'>";
         echo "<b class='orderInfo'>สถานะคำสั่งซื้อ</b>";
-        echo "<b class='orderNo'>" . $statusOrder ."</b>";
+        echo "<b class='orderNo'>" . $statusOrder . "</b>";
         echo "</div>";
         ?>
         <br>
+        <?php
+        echo "<div class='d-flex justify-content-center'>
+        <a href='Store.php' class='btn btn-danger' style='font-family:sarabun; margin-right: 10px; font-size:20px;'><b>🧺 กลับไปหน้าร้านค้า</b></a>
+        <form method='POST' action='InsertReceipt.php'>
+            <input type='hidden' name='recvID' value='" . $RecvID . "'>
+            <button type='submit' class='btn btn-primary' style='font-family:sarabun; font-size:20px;'><b>🧾 ดูใบเสร็จ</b></button>
+        </form>
+    </div>";
+        ?>
+
         <br>
-        <a href="Store.php" style="font-family:sarabun; color:red; text-decoration:none; margin-left: 30px; font-size:20px;"><b>🧺 กลับไปหน้าร้านค้า</b></a>
-        <a href="InsertReceipt.php" style="font-family:sarabun; color:ฺblue; text-decoration:none; margin-left: 30px; font-size:20px;"><b>🧾 ดูใบเสร็จ</b></a>
 
     </center>
     <table>

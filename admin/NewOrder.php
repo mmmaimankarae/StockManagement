@@ -76,7 +76,7 @@
           echo "</form>";
         echo "</td>";
         echo "<td class='text-center'>";
-        echo "<form action='' method='post'>";
+        echo "<form action='../frontStore/ExportToPDF.php' method='post'>";
             echo "<input type='hidden' name='recID' value='" . $row['ReceiptID'] . "'>";
             echo "<button type='submit' class='btn btn-info btn-circle'><i class='fa-solid fa-print'></i></button>";
           echo "</form>";

@@ -10,7 +10,7 @@
             header("Location: ./admin/DashBoard.php");
         }
         else {
-            $_SESSION['CusID'] = $row['CusID'];
+            $_SESSION['userID'] = $row['CusID'];
             $_SESSION['userType'] = "member";
             header("Location: ./Store.php");
         }

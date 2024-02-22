@@ -20,6 +20,8 @@ $result = mysqli_query($connectDB, $sql);
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
     <link href="https://fonts.googleapis.com/css2?family=Sarabun&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Sarabun&display=swap" rel="stylesheet">
     <style>
@@ -129,9 +131,9 @@ $result = mysqli_query($connectDB, $sql);
             $result = mysqli_query($connectDB, $sql);
 
             $totalPrice = 0;
+            $i = 1;
 
             while ($orderProductRow = mysqli_fetch_array($result)) {
-                $i = 1;
                 echo "<tr>";
                 echo "<td>" . $i . "</td>";
                 echo "<td>" . $orderProductRow['ProName'] . "</td>";
@@ -140,6 +142,7 @@ $result = mysqli_query($connectDB, $sql);
                 echo "<td>" . $orderProductRow['PricePerUnit'] * $orderProductRow['Qty'] . " บาท</td>";
                 $totalPrice += $orderProductRow['PricePerUnit'] * $orderProductRow['Qty'];
                 echo "</tr>";
+                $i++;
             }
 
             echo "</table>";
@@ -154,7 +157,7 @@ $result = mysqli_query($connectDB, $sql);
             echo "<h8 class='text-start' style='justify-content: left;'><b>หมายเหตุ</b> </h8>";
             echo "<h8 class='text-start' style='justify-content: flex-end; margin-top: 130px;'><b>ผู้รับเงิน บริษัท เอสมิติช้อป จำกัด(สำนักงานใหญ่)</b> </h8>";
             echo "</div>";
-            
+
             echo "<div class='d-flex flex-column flex-grow-1 ms-3 ' >";
             echo "<table class='table table-borderless'>";
             echo "<tr><td><b>ส่วนลด</b></td><td>0</td><td> บาท</td></tr>";
@@ -168,11 +171,13 @@ $result = mysqli_query($connectDB, $sql);
             echo "</div>";
             echo "</div>";
         }
-        echo "<CENTER>";
-        echo "<a href='ExportToPDF.php' class='btn btn-primary' style='margin-top: 15px;'>แปลงเป็น PDF</a>";
-        echo "<a href='Store.php' class='btn btn-primary' style='margin-top: 15px;'>กลับไปหน้าร้านค้า</a>";
-        echo "</CENTER>";
+
+        echo "<div class='d-flex justify-content-center' style='margin-top: 15px;'>
+        <a href='Store.php' class='btn btn-danger' style='font-family:sarabun; margin-right: 10px; font-size:20px;'><b>🧺 กลับไปหน้าร้านค้า</b></a>
+        <a href='ExportToPDF.php' class='btn btn-primary' style='font-family:sarabun; margin-left: 10px; font-size:20px;'>📁 <b>PDF FILE</b></a>
+    </div>";
         ?>
+        <br>
     </div>
 </body>
 

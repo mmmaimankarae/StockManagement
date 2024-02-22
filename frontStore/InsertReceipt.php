@@ -6,7 +6,7 @@ date_default_timezone_set('Asia/Bangkok');
 
 $userTaxID = $_SESSION['TaxID'];
 $HisID = $_SESSION['HisID'];
-$RecvID = $_SESSION['RecvID'];
+$RecvID = $_POST['recvID'];
 $CustID = $_SESSION['userID'];
 
 $sql = "SELECT * FROM payer WHERE TaxID = '$userTaxID';";
@@ -21,13 +21,11 @@ $row = mysqli_fetch_assoc($result);
 $lastRecID = $row['RecID'];
 $lastNumID = $row['NumID'];
 
-$number = (int) substr($lastRecID, 3);
+$number = (int) substr($lastRecID, 1);
 $newNumber = $number + 1;
 
-// สร้าง HisID ใหม่
-$newRecID = 'REC' . str_pad($newNumber, 2, '0', STR_PAD_LEFT);
+$newRecID = 'R' . $newNumber;
 
-// สร้าง NumID ใหม่
 $newNumID = (int) $lastNumID + 1;
 
 $sql = "INSERT INTO `receipt`(`RecID`, `PayTime`, `CusID`, `TaxID`, `RecvID`) VALUES ('$newRecID','$payDate','$CustID','$userTaxID','$RecvID');";
@@ -42,6 +40,8 @@ while ($row = mysqli_fetch_array($result)) {
 
     $sql = "INSERT INTO `receipt_list`(`RecID`, `NumID`, `ProID`, `Qty`) VALUES ('$newRecID','$newNumID','$ProID','$Qty')";
     $msresults = mysqli_query($connectDB, $sql);
+
+    $newNumID++;
 }
 
 $_SESSION['ReceiptCode'] = $newRecID;
