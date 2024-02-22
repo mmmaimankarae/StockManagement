@@ -22,7 +22,7 @@
       $status = array("Active", "OutOfStock", "Pending", "Inactive");
       $statusT = array("กำลังขายอยู่", "คลังสินค้าหมด", "รอดำเนินการ", "ยกเลิกการขาย");
       $index = 0;
-      echo "<form action='../admin/DBupdate.php' method='post'>";
+      echo "<form action='../admin/DBupdateProduct.php' method='post'>";
         echo "<div class='container'>";
           echo "<div class='row'>";
             echo "<div class='col'>";

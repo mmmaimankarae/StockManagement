@@ -19,7 +19,7 @@
 
 <body class="p-3" style="margin-top: 6%">
   <?php include "../components/HeaderAdmin.html"; ?>
-  <h3>คำสั่งซื้อที่ดำเนินการเสร็จสิ้น</h3><br>
+  <h3>คำสั่งซื้อที่ดำเนินการอยู่</h3><br>
   <form method="get">
     <div class="row">
       <div class="col">
@@ -42,7 +42,8 @@
       <th scope="col" class='text-center'>วันที่ออกใบเสร็จ</th>
       <th scope="col" class='text-center'>ราคาทั้งหมด</th>
       <th scope="col" class='text-center'>ชื่อผู้สั่ง</th>
-      <th scope="col" class='text-center'>ดูรายละเอียด</th>
+      <th scope="col" class='text-center'>รายละเอียดคำสั่งซื้อ</th>
+      <th scope="col" class='text-center'>รายละเอียดการจัดส่ง</th>
       </tr>
     </thead>
 
@@ -53,8 +54,9 @@
       $totalOfMonth = 0;
       $msconnect = mysqli_connect("localhost", "root", "", "myStore");
       $start = "SELECT R.RecID AS ReceiptID, R.PayTime AS ReceiptDate, SUM(RO.Qty * P.PricePerUnit) AS TotalPrice,
-                CONCAT(C.CusFName, ' ', C.CusLName) AS CustomerName FROM RECEIPT R JOIN RECEIPT_LIST RO ON R.RecID = RO.RecID
-                JOIN PRODUCT P ON RO.ProID = P.ProID JOIN CUSTOMER C ON R.CusID = C.CusID WHERE R.Status = 'Delivered'";
+                CONCAT(C.CusFName, ' ', C.CusLName) AS CustomerName, R.Status AS Process FROM RECEIPT R 
+                JOIN RECEIPT_LIST RO ON R.RecID = RO.RecID JOIN PRODUCT P ON RO.ProID = P.ProID 
+                JOIN CUSTOMER C ON R.CusID = C.CusID WHERE R.Status = 'Shipped'";
       $medial = "";
       $id = isset($_GET['search']) ? $_GET['search'] : "";
       if ($id != ''){
@@ -72,11 +74,17 @@
         echo "<td class='text-center'>" . $row['TotalPrice'] . "</td>";
         echo "<td class='text-center'>" . $row['CustomerName'] . "</td>";
         echo "<td class='text-center'>";
-        echo "<form action='../admin/UpdateProduct.php' method='post'>";
+          echo "<form action='../admin/UpdateProduct.php' method='post'>";
             echo "<input type='hidden' name='proID' value='" . $row['ProID'] . "'>";
             echo "<button type='submit' class='btn btn-primary btn-circle'><i class='fa-solid fa-magnifying-glass'></i></button>";
           echo "</form>";
         echo "</td>";
+        echo "<td class='text-center'>";
+        echo "<form action='' method='post'>";
+          echo "<input type='hidden' name='proID' value='" . $row['ProID'] . "'>";
+          echo "<button type='submit' class='btn btn-warning btn-circle'><i class='fa-solid fa-truck'></i></button>";
+        echo "</form>";
+      echo "</td>";
         echo "</tr>";
       }
       mysqli_close($msconnect);
@@ -94,7 +102,7 @@
           csvContent += rowData + "\n";
         });
         var blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-        saveAs(blob, 'sales_data.csv');
+        saveAs(blob, 'OnProcessOrder.csv');
       });
     });
   </script>

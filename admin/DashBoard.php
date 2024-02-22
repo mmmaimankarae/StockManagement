@@ -19,7 +19,8 @@
     $totalOfMonth = 0;
     $msconnect = mysqli_connect("localhost", "root", "", "myStore");
     $msquery = "SELECT P.ProID, P.ProName, SUM(RO.Qty) AS TotalQty, SUM(RO.Qty * P.PricePerUnit) AS TotalSales
-                FROM PRODUCT P JOIN RECEIPT_LIST RO ON P.ProID = RO.ProID GROUP BY P.ProID, P.ProName;";
+                FROM PRODUCT P JOIN RECEIPT_LIST RO ON P.ProID = RO.ProID JOIN RECEIPT R ON RO.RecID = R.RecID
+                WHERE R.Status = 'Delivered' GROUP BY P.ProID, P.ProName;";
     $msresults = mysqli_query($msconnect, $msquery);
     while ($row = mysqli_fetch_array($msresults)) {
       $totalSales += $row['TotalSales'];
@@ -27,7 +28,8 @@
 
     $msquery = "SELECT P.ProID, P.ProName, SUM(RO.Qty) AS TotalQty, SUM(RO.Qty * P.PricePerUnit) AS TotalSales
                 FROM PRODUCT P JOIN RECEIPT_LIST RO ON P.ProID = RO.ProID JOIN RECEIPT R ON RO.RecID = R.RecID
-                WHERE YEAR(R.PayTime) = YEAR(CURRENT_DATE) AND MONTH(R.PayTime) = MONTH(CURRENT_DATE) GROUP BY P.ProID, P.ProName;";
+                WHERE YEAR(R.PayTime) = YEAR(CURRENT_DATE) AND MONTH(R.PayTime) = MONTH(CURRENT_DATE) 
+                AND R.Status = 'Delivered' GROUP BY P.ProID, P.ProName;";
     $msresults = mysqli_query($msconnect, $msquery);
     while ($row = mysqli_fetch_array($msresults)) {
       $totalOfMonth += $row['TotalSales'];
