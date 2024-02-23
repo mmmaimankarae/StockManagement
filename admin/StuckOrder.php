@@ -55,7 +55,7 @@
       $msconnect = mysqli_connect("localhost", "root", "", "myStore");
       $start = "SELECT R.RecID AS ReceiptID, R.PayTime AS ReceiptDate, SUM(RO.Qty * P.PricePerUnit) AS TotalPrice,
                 CONCAT(C.CusFName, ' ', C.CusLName) AS CustomerName FROM RECEIPT R JOIN RECEIPT_LIST RO ON R.RecID = RO.RecID
-                JOIN PRODUCT P ON RO.ProID = P.ProID JOIN CUSTOMER C ON R.CusID = C.CusID WHERE R.Status = 'Pending'";
+                JOIN PRODUCT P ON RO.ProID = P.ProID JOIN CUSTOMER C ON R.CusID = C.CusID WHERE R.Status = 'Returned'";
       $medial = "";
       $id = isset($_GET['search']) ? $_GET['search'] : "";
       if ($id != ''){
@@ -73,14 +73,14 @@
         echo "<td class='text-center'>" . $row['TotalPrice'] . "</td>";
         echo "<td class='text-center'>" . $row['CustomerName'] . "</td>";
         echo "<td class='text-center'>";
-        echo "<form action='../admin/UpdateProduct.php' method='post'>";
-            echo "<input type='hidden' name='proID' value='" . $row['ProID'] . "'>";
+        echo "<form action='../frontStore/ExportToPDF.php' method='post'>";
+            echo "<input type='hidden' name='recID' value='" . $row['ReceiptID'] . "'>";
             echo "<button type='submit' class='btn btn-primary btn-circle'><i class='fa-solid fa-magnifying-glass'></i></button>";
           echo "</form>";
         echo "</td>";
         echo "<td class='text-center'>";
         echo "<form action='../admin/UpdateProduct.php' method='post'>";
-            echo "<input type='hidden' name='proID' value='" . $row['ProID'] . "'>";
+            // echo "<input type='hidden' name='proID' value='" . $row['ProID'] . "'>";
             echo "<button type='submit' class='btn btn-danger btn-circle'><i class='fa-solid fa-flag'></i></button>";
           echo "</form>";
         echo "</td>";

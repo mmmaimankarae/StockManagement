@@ -6,8 +6,8 @@
     $msquery = "SELECT * FROM CUSTOMER_ACCOUNT WHERE UserName = '$userName' AND Password = '$password';";
     $msresults = mysqli_query($msconnect, $msquery);
     if ($row = mysqli_fetch_array($msresults)) {
-        if ($userName == 'admin') {
-            header("Location: ./admin/DashBoard.php");
+        if ($userName == 'mmmaimankarae') {
+            header("Location: ../admin/DashBoard.php");
         }
         else {
             $_SESSION['userID'] = $row['CusID'];

@@ -74,14 +74,14 @@
         echo "<td class='text-center'>" . $row['TotalPrice'] . "</td>";
         echo "<td class='text-center'>" . $row['CustomerName'] . "</td>";
         echo "<td class='text-center'>";
-          echo "<form action='../admin/UpdateProduct.php' method='post'>";
-            echo "<input type='hidden' name='proID' value='" . $row['ProID'] . "'>";
+          echo "<form action='../frontStore/ExportToPDF.php' method='post'>";
+            echo "<input type='hidden' name='recID' value='" . $row['ReceiptID'] . "'>";
             echo "<button type='submit' class='btn btn-primary btn-circle'><i class='fa-solid fa-magnifying-glass'></i></button>";
           echo "</form>";
         echo "</td>";
         echo "<td class='text-center'>";
         echo "<form action='' method='post'>";
-          echo "<input type='hidden' name='proID' value='" . $row['ProID'] . "'>";
+          // echo "<input type='hidden' name='proID' value='" . $row['ProID'] . "'>";
           echo "<button type='submit' class='btn btn-warning btn-circle'><i class='fa-solid fa-truck'></i></button>";
         echo "</form>";
       echo "</td>";

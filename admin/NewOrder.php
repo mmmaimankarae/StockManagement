@@ -70,19 +70,19 @@
         echo "<td class='text-center'>" . $row['TotalPrice'] . "</td>";
         echo "<td class='text-center'>" . $row['CustomerName'] . "</td>";
         echo "<td class='text-center'>";
-        echo "<form action='' method='post'>";
-            echo "<input type='hidden' name='proID' value='" . $row['ProID'] . "'>";
+        echo "<form action='../frontStore/ExportToPDF.php' method='post'>";
+            echo "<input type='hidden' name='proID' value='" . $row['ReceiptID'] . "'>";
             echo "<button type='submit' class='btn btn-primary btn-circle'><i class='fa-solid fa-magnifying-glass'></i></button>";
           echo "</form>";
         echo "</td>";
         echo "<td class='text-center'>";
-        echo "<form action='../frontStore/ExportToPDF.php' method='post'>";
+        echo "<form action='' method='post'>";
             echo "<input type='hidden' name='recID' value='" . $row['ReceiptID'] . "'>";
             echo "<button type='submit' class='btn btn-info btn-circle'><i class='fa-solid fa-print'></i></button>";
           echo "</form>";
         echo "</td>";
 
-        echo "<td class='text-center'>";
+        echo "<td class='text-center' id='remove'>";
           echo "<button type='button' class='btn btn-success' data-bs-toggle='modal' data-bs-target='#updateModal" . $row['ReceiptID'] . "'>ยืนยัน</button>";
           echo "<div class='modal fade' id='updateModal" . $row['ReceiptID'] . "' tabindex='-1' aria-labelledby='updateLabel' aria-hidden='true'>";
             echo "<div class='modal-dialog'>";
@@ -110,7 +110,7 @@
       $('#exportBtn').click(function () {
         var csvContent = "\uFEFFเลขที่ใบเสร็จ,วันที่ออกใบเสร็จ,ราคาทั้งหมด,ชื่อผู้สั่ง\n";
         $('#dataTable tbody tr').each(function () {
-          var rowData = $(this).find('th,td').map(function () {
+          var rowData = $(this).find('th,td:not([id^="remove"])').map(function () {
             return $(this).text();
           }).get().join(",");
           csvContent += rowData + "\n";
