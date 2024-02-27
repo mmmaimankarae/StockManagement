@@ -78,3 +78,5 @@
     INSERT INTO HISTORY_LIST (HisID, NumID, ProID, Qty) VALUES ('H3', 1, 5, 4);
     INSERT INTO HISTORY_LIST (HisID, NumID, ProID, Qty) VALUES ('H4', 1, 1, 7);
     
+-- Insert log --
+    INSERT INTO ACCESS_LOG (CusID, NumID, Action, Period) VALUES (3, 1, 'add to cart', NOW());
