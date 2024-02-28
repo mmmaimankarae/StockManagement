@@ -5,7 +5,8 @@ CREATE TABLE CUSTOMER (
      CusFName	VARCHAR(20)	NOT NULL,
      CusLName	VARCHAR(20)	NOT NULL,
      Sex		VARCHAR(1),
-     Tel		CHAR(10)	NOT NULL
+     Tel		CHAR(10)	     NOT NULL,
+     Address	VARCHAR(80)	NOT NULL
 );
 -- ตารางบัญชี --
 CREATE TABLE CUSTOMER_ACCOUNT (
@@ -20,7 +21,8 @@ CREATE TABLE PAYER (
      PayerFName	VARCHAR(20)	NOT NULL,
      PayerLName	VARCHAR(20)	NOT NULL,
      Sex			VARCHAR(1),
-     Tel			CHAR(10)	     NOT NULL
+     Tel			CHAR(10)	     NOT NULL,
+     Address		VARCHAR(80)	NOT NULL 
 );
 -- ตารางเก็บข้อรายชื่อผู้จ่ายเงิน (สำหรับลูกค้า) --
 CREATE TABLE PAYER_LIST (
@@ -43,13 +45,19 @@ CREATE TABLE RECEIVER (
 -- ตารางเก็บข้อรายชื่อผู้รับ (สำหรับลูกค้า) --
 CREATE TABLE RECEIVER_LIST (
      CusID			INT	NOT NULL,
-     RecvID			INT	NOT NULL,
      NumID			INT	NOT NULL,
+     RecvID			INT	NOT NULL,
      FOREIGN KEY (CusID) REFERENCES CUSTOMER(CusID),
      FOREIGN KEY (RecvID) REFERENCES RECEIVER(RecvID),
      CONSTRAINT ReceiverList PRIMARY KEY (CusID, NumID)
 );
 -- ตารางเก็บข้อมูลของสินค้า --
+-- มีสถานะดังนี้
+     -- Active = ขายอยู่
+     -- Inactive = เลิกขาย
+     -- Pending = รอลงขาย
+     -- OutStock = Out Of Stock = ของหมด = stock ต้องเป็น 0
+--
 CREATE TABLE PRODUCT (
      ProID		INT	AUTO_INCREMENT	PRIMARY KEY,
      ProName        CHAR(20)	     NOT NULL,
@@ -62,6 +70,16 @@ CREATE TABLE PRODUCT (
      Update_Day	DATETIME       NOT NULL
 );
 -- ตารางเก็บข้อมูลของใบเสร็จ --
+-- มีสถานะดังนี้
+     -- Pending = ชำระเงินแล้วรอการตรวจสอบ
+     -- Paid = ชำระเงินแล้ว รอการจัดส่ง
+     -- COD = Cash on Delivery = เก็บเงินปลายทางรอการจัดส่ง
+     -- Delivered = จัดส่งแล้ว
+     -- DI = Deferred Income = จัดส่งแล้วรอเงินเข้าจากการเก็บเงินปลายทาง
+     -- Completed = กระบวนการทั้งหมดเสร็จสิ้น
+     -- Returned = สินค้าถูกส่งคืน
+     -- Cancel = ยกเลิก
+--
 CREATE TABLE RECEIPT (
      RecID	CHAR(10)	PRIMARY KEY,
      PayTime	DATETIME	NOT NULL,
@@ -83,11 +101,16 @@ CREATE TABLE RECEIPT_LIST (
     CONSTRAINT OrderList PRIMARY KEY (RecID, NumID)
 );
 -- ตารางเก็บข้อมูลของคำสั่งซื้อ (ยังอยู่ในตะกร้า On-hand) --
+-- มีสถานะดังนี้
+     -- OnHand = เพิ่มสินค้าลงในตะกร้า
+     -- Ordered = กดสั่งของแล้ว
+     -- Cancel = ลบออกจากตะกร้า
+--
 CREATE TABLE HISTORY (
      HisID		CHAR(10)	PRIMARY KEY,
      UpdateTime	DATETIME	     NOT NULL,
      CusID		INT		     NOT NULL,
-     Status		VARCHAR(20)	NOT NULL,
+     Status		VARCHAR(10)	DEFAULT 'onHand',
     FOREIGN KEY (CusID) REFERENCES CUSTOMER(CusID)
 );
 -- ตารางเก็บข้อมูลรายละเอียดของคำสั่งซื้อ (ยังอยู่ในตะกร้า On-hand) --
@@ -98,4 +121,12 @@ CREATE TABLE HISTORY_LIST (
      Qty		     INT		NOT NULL,
     FOREIGN KEY (HisID) REFERENCES HISTORY(HisID),
     CONSTRAINT HistoryList PRIMARY KEY (HisID, NumID)
+);
+CREATE TABLE ACCESS_LOG (
+     CusID		INT	          NOT NULL,
+     NumID		INT		     NOT NULL,
+     Action		VARCHAR(80)	NOT NULL, 
+     Period	     DATETIME       NOT NULL,
+    FOREIGN KEY (CusID) REFERENCES CUSTOMER(CusID),
+    CONSTRAINT AccessList PRIMARY KEY (CusID, NumID)
 );
