@@ -2,12 +2,12 @@
   require '../components/connectDB.php';
   $where = "";
   $count = 0;
-  if ($_POST['status'] != "") {
+  if (isset($_POST['status'])) {
     $where = " WHERE Status = '" . $_POST['status'] . "'";
     $count++;
   }
 
-  if ($_POST['detail'] != "") {
+  if (isset($_POST['detail'])) {
     $detail = $_POST['detail'];
     if ($count == 0) $where = "WHERE ";
     else $where .= " AND ";
