@@ -1,6 +1,29 @@
 <?php
 session_start();
-// echo $_SESSION['total'];
+require '../components/ConnectDB.php';
+include "../components/HeaderStore.html";
+
+$prodID = $_GET['id'];
+$userID = $_SESSION['userID'];
+
+
+// -------------------------------------- Insert Access Log --------------------------------------
+$sql = "SELECT `NumID` FROM `access_log` WHERE `CusID` = '$userID' ORDER BY `NumID` DESC LIMIT 1";
+$result = mysqli_query($connectDB, $sql);
+$row = mysqli_fetch_assoc($result);
+
+if ($row) {
+  $NumID = $row['NumID'];
+  $NumID += 1;
+} else {
+  $NumID = 1;
+}
+
+$sql = "INSERT INTO `access_log`(`CusID`, `NumID`, `Action`, `Period`) VALUES ('$userID','$NumID', 'access product detail id $prodID', NOW())";
+$result = mysqli_query($connectDB, $sql);
+
+// -------------------------------------- Insert Access Log --------------------------------------
+
 ?>
 
 <!DOCTYPE html>
@@ -29,16 +52,13 @@ session_start();
 </style>
 
 <body class="p-3" style="margin-top: 6%">
-  <?php include "../components/HeaderStore.html";
-  require '../components/ConnectDB.php';
-  ?>
   <?php
   echo "<a href='Store.php' class='backButton' style='margin-left: 7%;font-family:sarabun;  color:green; text-decoration:none;'><b>⬅️ กลับไปหน้าร้านค้า</b></a>";
-  $msquery = "SELECT * FROM PRODUCT WHERE ProID = " . $_GET['id'] . ";";
+  $msquery = "SELECT * FROM PRODUCT WHERE ProID = " . $prodID . ";";
   $msresults = mysqli_query($connectDB, $msquery);
   $row = mysqli_fetch_array($msresults);
   if ($row) {
-    echo "<form action='AddtoCart.php' method='POST'>";
+    echo "<form id='add-to-cart-form' action='AddtoCart.php' method='POST'>";
     echo "<div class='container'>";
     echo "<div class='row'>";
     echo "<div class='col'>";
@@ -79,7 +99,9 @@ session_start();
     echo "<div class='row mt-5' style='text-align:center;'>";
     echo "<div class='col'>";
     echo "<input type='hidden' name='ProName' value='" . $row['ProName'] . "'>";
-    echo "<button class='btn btn-success me-5' type='submit'><i class='fas fa-shopping-cart'></i> เพิ่มสินค้าลงตะกร้า</button>";
+    // echo "<button class='btn btn-success me-5' type='submit'><i class='fas fa-shopping-cart'></i> เพิ่มสินค้าลงตะกร้า</button>";
+    echo "<button class='btn btn-success me-5' type='button' onclick='insertLog()'><i class='fas fa-shopping-cart'></i> เพิ่มสินค้าลงตะกร้า</button>";
+
     echo "</div>";
     echo "</div>";
 
@@ -91,6 +113,32 @@ session_start();
   }
   mysqli_close($connectDB);
   ?>
+
+  <script>
+    function insertLog() {
+
+      var quantity = parseInt(document.getElementById('Quantity').value);
+      var stockQty = parseInt('<?php echo $row['StockQty']; ?>');
+
+      if (quantity > stockQty) {
+        alert('จำนวนสินค้าที่คุณเลือกมากกว่าจำนวนสินค้าในสต็อก');
+        return;
+      }
+
+      $.ajax({
+        type: "POST",
+        url: "Insert_log.php", // URL of the PHP file that will insert the log
+        data: {
+          userID: '<?php echo $userID; ?>',
+          insertType: 'add to cart product id <?php echo $prodID; ?>'
+        },
+        success: function(data) {
+          document.getElementById('add-to-cart-form').submit();
+        }
+      });
+    }
+  </script>
+
 </body>
 
 </html>

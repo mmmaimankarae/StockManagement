@@ -1,12 +1,16 @@
 <?php
 require '../components/ConnectDB.php';
 
+var_dump($_POST['ProName']);
+var_dump($_POST['Quantity']);
+
 session_start();
 $productInCart = false;
 
 if (!isset($_SESSION['cart'])) {
     $_SESSION['cart'] = array();
 }
+
 
 if (isset($_POST['ProName']) && isset($_POST['Quantity'])) {
     $ProName = $_POST['ProName'];

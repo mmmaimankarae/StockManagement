@@ -1,4 +1,6 @@
 <?php
+require 'Insert_log.php';
+
 session_start();
 
 if (isset($_POST['ProName'])) {
@@ -10,6 +12,8 @@ if (isset($_POST['ProName'])) {
             break;
         }
     }
+
+    InsertLog($_SESSION['userID'], 'increase quantity of product name ' . $ProName . ' to ' . $item['quantity']);
 }
 
 header("Location: Cart.php");

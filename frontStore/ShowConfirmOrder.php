@@ -4,6 +4,7 @@ date_default_timezone_set('Asia/Bangkok');
 require '../components/ConnectDB.php';
 require '../components/HeaderStore.html';
 
+$userID = $_SESSION['userID'];
 ?>
 
 <!DOCTYPE html>
@@ -55,22 +56,35 @@ require '../components/HeaderStore.html';
 <body>
     <center>
         <img src="../pictures/Thank1.png" style="padding-top: 100px;" />
+
         <?php
         $HisID = $_SESSION['HisID'];
-        $sql = "SELECT * FROM history WHERE HisID = '" . $HisID . "';";
+        $payment_Method = $_SESSION['paymentMethod'];
+        $payerTaxID = $_SESSION['PayerTaxID'];
+
+        $sql = "SELECT HisID, UpdateTime, CusID, Status FROM history WHERE HisID = '" . $HisID . "';";
         $result = mysqli_query($connectDB, $sql);
         $row = mysqli_fetch_array($result);
         $orderNo = $row['HisID'];
         $statusOrder = $row['Status'];
         $updateTime = $row['UpdateTime'];
-        $time = date("H:i", strtotime($updateTime));
+        $time = date("h:i A", strtotime($updateTime));
         $date = date("d-m-Y", strtotime($updateTime));
 
-        if ($_SESSION['userType'] == "guest") {
-            $custID = $_SESSION['userID'];
-        } else if ($_SESSION['userType'] == "member") {
-            $custID = $row['CusID'];
-        }
+        // if ($_SESSION['userType'] == "guest") {
+        //     $custID = $_SESSION['userID'];
+
+        //     $payer_FName = $_POST['payerFirstName'];
+        //     $payer_LName = $_POST['payerLastname'];
+        // } else if ($_SESSION['userType'] == "member") {
+        //     $custID = $row['CusID'];
+
+        //     $sql = "SELECT * FROM customer WHERE CusID = $custID;";
+        //     $result = mysqli_query($connectDB, $sql);
+        //     $row = mysqli_fetch_array($result);
+        //     $payer_FName = $row['CusFName']; 
+        //     $payer_LName = $row['CusLName'];
+        // }
 
         $RecvID = $_SESSION['RecvID'];
 
@@ -94,28 +108,32 @@ require '../components/HeaderStore.html';
         foreach ($product as $productName => $details) {
             $totalPrice += $details['qty'] * $details['price'];
         }
+        $vat = $totalPrice * 0.07;
+        $totalPrice = $totalPrice + $vat;
+        $totalPrice = number_format($totalPrice, 2);
+
         $productTotal = 0;
         foreach ($product as $productName => $details) {
             $productTotal += $details['qty'];
         }
 
-        if ($_SESSION['userType'] == "guest") {
-            $customerName = $_SESSION['Fname'];
-            $customerLName = $_SESSION['Lname'];
-        } else if ($_SESSION['userType'] == "member") {
-            $sql = "SELECT * FROM customer WHERE CusID = $custID;";
-            $result = mysqli_query($connectDB, $sql);
-            $row = mysqli_fetch_array($result);
-            $customerName = $row['CusFName'];
-            $customerLName = $row['CusLName'];
-        }
-
-
-        $sql = "SELECT Address FROM receiver WHERE RecvID = $RecvID;";
+        $sql = "SELECT * FROM payer WHERE TaxID = '$payerTaxID';";
         $result = mysqli_query($connectDB, $sql);
         $row = mysqli_fetch_array($result);
 
-        $customerAddress = $row['Address'];
+        $payerFname = $row['PayerFName'];
+        $payerLname = $row['PayerLName'];
+        $payerTel = $row['Tel'];
+        $payerAddr = $row['Address'];
+
+        $sql = "SELECT * FROM receiver WHERE RecvID = $RecvID;";
+        $result = mysqli_query($connectDB, $sql);
+        $row = mysqli_fetch_array($result);
+
+        $receiverFname = $row['RecvFName'];
+        $receiverLname = $row['RecvLName'];
+        $receiverTel = $row['Tel'];
+        $receiverAddr = $row['Address'];
 
         echo "<div class='headbar'>
             <b class='orderInfo' style='font-family:sarabun; font-size:30px'>Order</b>
@@ -132,12 +150,16 @@ require '../components/HeaderStore.html';
             <b class='orderNo'>" . $time . "</b>
             </div>";
         echo "<div class='orderDetail'>
-            <b class='orderInfo'>ชื่อ-นามสกุล</b>
-            <b class='orderNo'>" . $customerName . " " . $customerLName . "</b>
+            <b class='orderInfo'>ชื่อ-นามสกุลผู้รับ</b>
+            <b class='orderNo'>" . $receiverFname . " " . $receiverLname . "</b>
             </div>";
         echo "<div class='orderDetail'>
             <b class='orderInfo'>ที่อยู่การจัดส่ง</b>
-            <b class='orderNo'>" . $customerAddress . "</b>
+            <b class='orderNo'>" . $receiverAddr . "</b>
+            </div>";
+        echo "<div class='orderDetail'>
+            <b class='orderInfo'>เบอร์โทรศัพท์</b>
+            <b class='orderNo'>" . $receiverTel . "</b>
             </div>";
         echo "<div class='orderDetail'>
             <b class='orderInfo'>จำนวนสินค้า</b>
@@ -146,12 +168,20 @@ require '../components/HeaderStore.html';
         foreach ($product as $productName => $details) {
             echo "<div class='orderDetail'>";
             echo "<b class='orderInfo'></b>";
-            echo "<b class='orderNo'>• " . $productName . " x" . $details['qty'] . "</b>";
+            echo "<b class='orderNo'>• " . $productName . " " . $details['qty'] . " เล่ม</b>";
             echo "</div>";
         }
         echo "<div class='orderDetail'>";
+        echo "<b class='orderInfo'>Vat 7%</b>";
+        echo "<b class='orderNo'>" . $vat . " บาท</b>";
+        echo "</div>";
+        echo "<div class='orderDetail'>";
         echo "<b class='orderInfo'>ราคาสุทธิ</b>";
         echo "<b class='orderNo'>" . $totalPrice . " บาท</b>";
+        echo "</div>";
+        echo "<div class='orderDetail'>";
+        echo "<b class='orderInfo'>ช่องทางการชำระเงิน</b>";
+        echo "<b class='orderNo'>" . $payment_Method . "</b>";
         echo "</div>";
         echo "<div class='orderDetail'>";
         echo "<b class='orderInfo'>สถานะคำสั่งซื้อ</b>";
@@ -162,7 +192,7 @@ require '../components/HeaderStore.html';
         <?php
         echo "<div class='d-flex justify-content-center'>
         <a href='Store.php' class='btn btn-danger' style='font-family:sarabun; margin-right: 10px; font-size:20px;'><b>🧺 กลับไปหน้าร้านค้า</b></a>
-        <form method='POST' action='InsertReceipt.php'>
+        <form id='show-receipt' method='POST' action='InsertReceipt.php'>
             <input type='hidden' name='recvID' value='" . $RecvID . "'>
             <button type='submit' class='btn btn-primary' style='font-family:sarabun; font-size:20px;'><b>🧾 ดูใบเสร็จ</b></button>
         </form>
@@ -172,9 +202,23 @@ require '../components/HeaderStore.html';
         <br>
 
     </center>
-    <table>
-
-    </table>
 </body>
+<script>
+    function insertLog() {
+        var userID = <?php echo $_SESSION['userID'] ?>;
+        var insertType = "Show Receipt";
+        $.ajax({
+            type: "POST",
+            url: "Insert_log.php",
+            data: {
+                userID: userID,
+                insertType: insertType
+            },
+            success: function(response) {
+                document.getElementById('show-receipt').submit();
+            }
+        });
+    }
+</script>
 
 </html>

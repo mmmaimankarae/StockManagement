@@ -1,0 +1,68 @@
+<!-- components Date Picker -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="/resources/demos/style.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+  <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+  <style>
+    .ui-datepicker-header {
+      background-color: #007bff; /* สีพื้นหลังส่วนหัวของปฏิทิน */
+      color: #fff; /* สีตัวอักษรส่วนหัวของปฏิทิน */
+    }
+  </style>
+  
+</head>
+<body> 
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <label for="from">ช่วงวันที่ตั้งแต่</label>
+        <input class="form-control mx-2 my-1" type="text" id="from" name="from" readonly placeholder="คลิกเลือกวันที่" style="background-color: #fff;">
+      </div>
+      <div class="col">
+        <label for="to">ถึง</label>
+        <input class="form-control mx-2 my-1" type="text" id="to" name="to" readonly placeholder="คลิกเลือกวันที่" style="background-color: #fff;">
+      </div>
+    </div>
+  </div>
+</body>
+
+<script>
+  $( function() {
+    /* ตั้งค่า Format วันที่ */
+    var dateFormat = "dd/mm/yy",
+      from = $( "#from" )
+        .datepicker({
+          changeMonth: true,
+          minDate: "-3m", /* วันย้อนหลังไม่เกิน 3 เดือน */
+          maxDate: 0, /* วันมากสุดไม่เกินวันที่ปัจจุบัน */
+          dateFormat: dateFormat, /* เลือกformat */
+        })
+        .on( "change", function() { /* ถ้าเปลี่ยนวัน จะเรียก function get*/
+          to.datepicker( "option", "minDate", getDate( this ) );
+        }),
+      to = $( "#to" ).datepicker({
+        changeMonth: true,
+        minDate: "-3m", /* วันย้อนหลังไม่เกิน 3 เดือน */
+        maxDate: 0, /* วันมากสุดไม่เกินวันที่ปัจจุบัน */
+        dateFormat: dateFormat, /* เลือกformat */
+      })
+      .on( "change", function() { /* ถ้าเปลี่ยนวัน จะเรียก function get*/
+        from.datepicker( "option", "maxDate", getDate( this ) );
+      });
+ 
+    function getDate( element ) {
+      var date;
+      try { /* set ค่าvalue ให้ element ที่กด */
+        date = $.datepicker.parseDate( dateFormat, element.value );
+      } catch( error ) {
+        date = null;
+      }
+      return date;
+    }
+  } );
+  </script>
+</html>

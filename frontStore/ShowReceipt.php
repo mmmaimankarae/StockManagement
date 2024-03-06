@@ -3,11 +3,12 @@ session_start();
 require '../components/ConnectDB.php';
 
 $RecvID = $_SESSION['RecvID'];
-
 $receiptCode = $_SESSION['ReceiptCode'];
-$sql = "SELECT r.RecvID, r.RecvFName, r.RecvLName, r.Sex, r.Tel, r.Address, ro.CusID
-        FROM receiver r 
-        JOIN receiver_list ro ON r.RecvID = '$RecvID' AND r.RecvID = ro.RecvID";
+$payerTaxID = $_SESSION['PayerTaxID'];
+
+$sql = "SELECT r.RecID, r.PayTime, r.CusID, r.RecvID, p.PayerFName, p.PayerLName, p.Sex, p.Tel, p.Address
+        FROM receipt r 
+        JOIN payer p ON r.RecID = '$receiptCode' AND p.TaxID = '$payerTaxID'";
 
 $result = mysqli_query($connectDB, $sql);
 ?>
@@ -64,17 +65,13 @@ $result = mysqli_query($connectDB, $sql);
         <?php
         if (mysqli_num_rows($result) > 0) {
             $row = mysqli_fetch_assoc($result);
-            $cusID = $row["CusID"];
-            $cusAddress = $row['Address'];
-            $cusFName = $row['RecvFName'];
-            $cusLName = $row['RecvLName'];
-            $cusSex = $row['Sex'];
-            $cusTel = $row['Tel'];
+            $payerAddress = $row['Address'];
+            $payerFName = $row['PayerFName'];
+            $payerLName = $row['PayerLName'];
+            $payerSex = $row['Sex'];
+            $payerTel = $row['Tel'];
 
-            $sql = "SELECT paytime FROM receipt WHERE RecID = '$receiptCode'";
-            $result = mysqli_query($connectDB, $sql);
-            $row = mysqli_fetch_assoc($result);
-            $payTime = $row['paytime'];
+            $payTime = $row['PayTime'];
             $payDate = date('Y-m-d', strtotime($payTime));
 
             echo "<div style='margin: 15px;'>";
@@ -100,10 +97,10 @@ $result = mysqli_query($connectDB, $sql);
 
             echo "<div class='d-flex justify-content-between' style='margin-top: 15px'>";
             echo "<div class='d-flex flex-column flex-grow-1 me-3 justify-content-left' style=''>";
-            echo "<h8 class='text-start'><b>ลูกค้า</b> " . $cusFName . " " . $cusLName . " </h8>";
-            echo "<h8 class='text-start'><b>ที่อยู่</b> " . $cusAddress . "</h8>";
+            echo "<h8 class='text-start'><b>ลูกค้า</b> " . $payerFName . " " . $payerLName . " </h8>";
+            echo "<h8 class='text-start'><b>ที่อยู่</b> " . $payerAddress . "</h8>";
             echo "<h8 class='text-start'><b>เลขประจำตัวผู้เสียภาษี</b> 123456789123</h8>";
-            echo "<h8 class='text-start'><b>โทร</b> " . $cusTel  . " <b>อีเมล </b> testuser@test.com </h8>";
+            echo "<h8 class='text-start'><b>โทร</b> " . $payerTel  . " <b>อีเมล </b> testuser@test.com </h8>";
             echo "</div>";
 
             echo "<div class='d-flex flex-column flex-grow-1 ms-3 ' >";
@@ -134,12 +131,15 @@ $result = mysqli_query($connectDB, $sql);
             $i = 1;
 
             while ($orderProductRow = mysqli_fetch_array($result)) {
+                $productTotalPrice = $orderProductRow['PricePerUnit'] * $orderProductRow['Qty'];
+                $productTotalPrice = number_format($productTotalPrice, 2);
+
                 echo "<tr>";
                 echo "<td>" . $i . "</td>";
                 echo "<td>" . $orderProductRow['ProName'] . "</td>";
                 echo "<td>" . $orderProductRow['Qty'] . "</td>";
                 echo "<td>฿" . $orderProductRow['PricePerUnit'] . "</td>";
-                echo "<td>" . $orderProductRow['PricePerUnit'] * $orderProductRow['Qty'] . " บาท</td>";
+                echo "<td>" . $productTotalPrice . " บาท</td>";
                 $totalPrice += $orderProductRow['PricePerUnit'] * $orderProductRow['Qty'];
                 echo "</tr>";
                 $i++;
@@ -151,6 +151,7 @@ $result = mysqli_query($connectDB, $sql);
             /* --------------------------------------------------------------------------------------------------- */
 
             $vat = $totalPrice * 0.07;
+            $totalPriceFormat = number_format($totalPrice, 2);
 
             echo "<div class='d-flex justify-content-between' style='margin-top: 15px'>";
             echo "<div class='d-flex flex-column flex-grow-1 me-3' style=''>";
@@ -161,9 +162,15 @@ $result = mysqli_query($connectDB, $sql);
             echo "<div class='d-flex flex-column flex-grow-1 ms-3 ' >";
             echo "<table class='table table-borderless'>";
             echo "<tr><td><b>ส่วนลด</b></td><td>0</td><td> บาท</td></tr>";
-            echo "<tr><td><b>รวมเป็นเงิน</b></td><td>" . $totalPrice . "</td><td> บาท</td></tr>";
-            echo "<tr><td><b>ภาษีมูลค่าเพิ่ม 7%</b></td><td>" . $vat . "</td><td> บาท</td></tr>";
-            echo "<tr><td><b>จำนวนเงินทั้งสิ้น</b></td><td>" . ($totalPrice + $vat) . "</td><td> บาท</td></tr>";
+            echo "<tr><td><b>รวมเป็นเงิน</b></td><td>" . $totalPriceFormat . "</td><td> บาท</td></tr>";
+
+            $vatFormat = number_format($vat, 2);
+
+            echo "<tr><td><b>ภาษีมูลค่าเพิ่ม 7%</b></td><td>" . $vatFormat . "</td><td> บาท</td></tr>";
+
+            $totalPrice += $vat;
+            $totalPriceFormat = number_format($totalPrice, 2);
+            echo "<tr><td><b>จำนวนเงินทั้งสิ้น</b></td><td>" . $totalPriceFormat . "</td><td> บาท</td></tr>";
             echo "</table>";
             echo "</div>";
             echo "</div>";
@@ -172,10 +179,11 @@ $result = mysqli_query($connectDB, $sql);
             echo "</div>";
         }
 
-        echo "<div class='d-flex justify-content-center' style='margin-top: 15px;'>
-        <a href='Store.php' class='btn btn-danger' style='font-family:sarabun; margin-right: 10px; font-size:20px;'><b>🧺 กลับไปหน้าร้านค้า</b></a>
-        <a href='ExportToPDF.php' class='btn btn-primary' style='font-family:sarabun; margin-left: 10px; font-size:20px;'>📁 <b>PDF FILE</b></a>
-    </div>";
+        echo "<div class='d-flex justify-content-center' style='margin-top: 15px;'>";
+        echo "<a href='Store.php' class='btn btn-danger' style='font-family:sarabun; margin-right: 10px; font-size:20px;'><b>🧺 กลับไปหน้าร้านค้า</b></a>";
+        // echo "<a href='ExportToPDF.php' class='btn btn-primary' style='font-family:sarabun; margin-left: 10px; font-size:20px;'>📁 <b>PDF FILE</b></a>";
+        echo "<a href='ExportToPDF.php' target='_blank' class='btn btn-primary' style='font-family:sarabun; margin-left: 10px; font-size:20px;'>📁 <b>PDF FILE</b></a>";
+        echo "</div>";
         ?>
         <br>
     </div>
