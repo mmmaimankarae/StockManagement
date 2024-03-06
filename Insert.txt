@@ -32,22 +32,22 @@
     INSERT INTO PRODUCT (ProName, PricePerUnit, CostPerUnit, StockQty, Description, ImageSource, Status, Update_Day) VALUES ('CPP Book', 250.00, 100.00, 89, 'CPP language Programming', '../pictures/CPP.png', 'Active', '2024-02-15 00:00:00');
     INSERT INTO PRODUCT (ProName, PricePerUnit, CostPerUnit, StockQty, Description, ImageSource, Status, Update_Day) VALUES ('Golang Book', 300.00, 200.00, 1000, 'Go language Programming', '../pictures/Golang.png', 'Pending', '2024-03-15 00:00:00');
     INSERT INTO PRODUCT (ProName, PricePerUnit, CostPerUnit, StockQty, Description, ImageSource, Status, Update_Day) VALUES ('Python Book', 200.00, 100.00, 0, 'Python language Programming', '../pictures/Python.png', 'OutStock', '2024-01-27 09:09:09');
-    INSERT INTO PRODUCT (ProName, PricePerUnit, CostPerUnit, StockQty, Description, ImageSource, Status, Update_Day) VALUES ('Java Book', 250.00, 50.00, 70, 'Java language Programming', '../pictures/Java.png', 'Aactive', '2024-02-15 00:00:00');
+    INSERT INTO PRODUCT (ProName, PricePerUnit, CostPerUnit, StockQty, Description, ImageSource, Status, Update_Day) VALUES ('Java Book', 250.00, 50.00, 70, 'Java language Programming', '../pictures/Java.png', 'Active', '2024-02-15 00:00:00');
     INSERT INTO PRODUCT (ProName, PricePerUnit, CostPerUnit, StockQty, Description, ImageSource, Status, Update_Day) VALUES ('JS Book', 200.00, 90.00, 0, 'JS language Programming', '../pictures/JS.png', 'OutStock', '2024-01-27 09:09:09');
     INSERT INTO PRODUCT (ProName, PricePerUnit, CostPerUnit, StockQty, Description, ImageSource, Status, Update_Day) VALUES ('Rust Book', 200.00, 100.00, 90, 'Rust language Programming', '../pictures/RUST.png', 'Pending', '2024-03-15 00:00:00');
-    INSERT INTO PRODUCT (ProName, PricePerUnit, CostPerUnit, StockQty, Description, ImageSource, Status, Update_Day) VALUES ('PHP Book', 200.00, 100.00, 0, 'PHP language Programming', '../pictures/PHP.png', 'Inctive', '2024-01-15 00:00:00');
+    INSERT INTO PRODUCT (ProName, PricePerUnit, CostPerUnit, StockQty, Description, ImageSource, Status, Update_Day) VALUES ('PHP Book', 200.00, 100.00, 0, 'PHP language Programming', '../pictures/PHP.png', 'Inactive', '2024-01-15 00:00:00');
 
 -- Insert ข้อมูลใบเสร็จ --
-    INSERT INTO RECEIPT (RecID, PayTime, CusID, TaxID, RecvID) VALUES ('R1', NOW(), 3, '1234567890123', 1);
-    INSERT INTO RECEIPT (RecID, PayTime, CusID, TaxID, RecvID) VALUES ('R2', NOW(), 3, '0987654321098', 2);
-    INSERT INTO RECEIPT (RecID, PayTime, CusID, TaxID, RecvID, Status) VALUES ('R3', NOW(), 4, 'xxxxxxxxxxxxx', 1, 'COD');
-    INSERT INTO RECEIPT (RecID, PayTime, CusID, TaxID, RecvID, Status) VALUES ('R4', NOW(), 4, '0987654321098', 2, 'Paid');
-    INSERT INTO RECEIPT (RecID, PayTime, CusID, TaxID, RecvID, Status) VALUES ('R5', NOW(), 3, '1234567890123', 2, 'Delivered');
-    INSERT INTO RECEIPT (RecID, PayTime, CusID, TaxID, RecvID, Status) VALUES ('R6', NOW(), 3, 'xxxxxxxxxxxxx', 2, 'DI');
-    INSERT INTO RECEIPT (RecID, PayTime, CusID, TaxID, RecvID, Status) VALUES ('R7', NOW(), 4, '1234567890123', 2, 'Completed');
-    INSERT INTO RECEIPT (RecID, PayTime, CusID, TaxID, RecvID, Status) VALUES ('R8', NOW(), 4, '1234567890123', 1, 'Returned');
-    INSERT INTO RECEIPT (RecID, PayTime, CusID, TaxID, RecvID, Status) VALUES ('R9', NOW(), 3, '0987654321098', 2, 'Cancel');
-    INSERT INTO RECEIPT (RecID, PayTime, CusID, TaxID, RecvID, Status) VALUES ('R10', NOW(), 3, '0987654321098', 2, 'Delivered');
+    INSERT INTO RECEIPT (RecID, PayTime, CusID, TaxID, RecvID, Channel) VALUES ('R1', NOW(), 3, '1234567890123', 1, "Transfer");
+    INSERT INTO RECEIPT (RecID, PayTime, CusID, TaxID, RecvID, Channel) VALUES ('R2', NOW(), 3, '0987654321098', 2, 'COD');
+    INSERT INTO RECEIPT (RecID, PayTime, CusID, TaxID, RecvID, Status, Channel) VALUES ('R3', NOW(), 4, 'xxxxxxxxxxxxx', 1, 'COD', 'COD');
+    INSERT INTO RECEIPT (RecID, PayTime, CusID, TaxID, RecvID, Status, Channel) VALUES ('R4', NOW(), 4, '0987654321098', 2, 'Paid', "Transfer", 'COD');
+    INSERT INTO RECEIPT (RecID, PayTime, CusID, TaxID, RecvID, Status, Channel) VALUES ('R5', NOW(), 3, '1234567890123', 2, 'Delivered', 'COD');
+    INSERT INTO RECEIPT (RecID, PayTime, CusID, TaxID, RecvID, Status, Channel) VALUES ('R6', NOW(), 3, 'xxxxxxxxxxxxx', 2, 'DI', 'COD');
+    INSERT INTO RECEIPT (RecID, PayTime, CusID, TaxID, RecvID, Status, Channel) VALUES ('R7', NOW(), 4, '1234567890123', 2, 'Completed', "Transfer");
+    INSERT INTO RECEIPT (RecID, PayTime, CusID, TaxID, RecvID, Status, Channel) VALUES ('R8', NOW(), 4, '1234567890123', 1, 'Returned', 'COD');
+    INSERT INTO RECEIPT (RecID, PayTime, CusID, TaxID, RecvID, Status, Channel) VALUES ('R9', NOW(), 3, '0987654321098', 2, 'Cancel', "Transfer");
+    INSERT INTO RECEIPT (RecID, PayTime, CusID, TaxID, RecvID, Status, Channel) VALUES ('R10', NOW(), 3, '0987654321098', 2, 'Delivered', "Transfer");
 
 -- Insert ข้อมูลรายละเอียดของใบเสร็จ --
     INSERT INTO RECEIPT_LIST (RecID, NumID, ProID, Qty) VALUES ('R1', 1, 1, 3);

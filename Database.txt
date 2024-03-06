@@ -79,6 +79,10 @@ CREATE TABLE PRODUCT (
      -- Completed = กระบวนการทั้งหมดเสร็จสิ้น
      -- Returned = สินค้าถูกส่งคืน
      -- Cancel = ยกเลิก
+
+-- Channel มีรูปแบบ ดังนี้
+     -- Transfer = โอนเงิน
+     -- COD = เก็บเงินปลายทาง
 --
 CREATE TABLE RECEIPT (
      RecID	CHAR(10)	PRIMARY KEY,
@@ -87,6 +91,7 @@ CREATE TABLE RECEIPT (
      TaxID	CHAR(13)	NOT NULL,
      RecvID	INT		NOT NULL,
      Status    VARCHAR(10)    DEFAULT 'Pending',
+     Channel   VARCHAR(10)    NOT NULL,
     FOREIGN KEY (CusID) REFERENCES CUSTOMER(CusID),
     FOREIGN KEY (TaxID) REFERENCES PAYER(TaxID),
     FOREIGN KEY (RecvID) REFERENCES RECEIVER(RecvID)

@@ -33,7 +33,7 @@
             </div>
           </div>
           <div class='col my-3'>
-            <?php include "../admin/DatePicker.html"; ?>
+            <?php include "../components/DatePicker.html"; ?>
           </div>
         </div>
   
