@@ -168,11 +168,11 @@
 
             echo "<td class='text-center'>";
               echo "<form method='post' action='../frontStore/ExportToPDF.php'>";
-                echo "<input type='hidden' name='recID' value='{$row['ReceiptID']}'>";
+                echo "<input type='hidden' name='recID' value='{$row['RecvID']}'>";
                 echo "<button type='submit' style='border: none; background: none;'><img src='../pictures/admin/pen.png' width='30'></button>";
               echo "</form>";
               echo "<form method='post' action='../frontStore/ExportToPDF.php'>";
-                echo "<input type='hidden' name='recID' value='{$row['ReceiptID']}'>";
+                echo "<input type='hidden' name='recID' value='{$row['RecID']}'>";
                 echo "<button type='submit' style='border: none; background: none;'><img src='../pictures/admin/observation.png' width='30'></button>";
               echo "</form>";
             echo "</td>";
