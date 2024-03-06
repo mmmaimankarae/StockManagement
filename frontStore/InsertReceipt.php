@@ -1,8 +1,11 @@
 <?php
 session_start();
 require '../components/ConnectDB.php';
+require 'Insert_log.php';
 
 date_default_timezone_set('Asia/Bangkok');
+
+$userID = $_SESSION['userID'];
 
 $RecvID = $_POST['recvID'];
 
@@ -45,5 +48,7 @@ while ($row = mysqli_fetch_array($result)) {
 }
 
 $_SESSION['ReceiptCode'] = $newRecID;
+
+InsertLog($userID, "Create receipt code: " . $newRecID, "InsertReceipt.php");
 header("Location: ./ShowReceipt.php");
 ?>

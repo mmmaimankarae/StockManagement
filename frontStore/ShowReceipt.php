@@ -1,10 +1,14 @@
 <?php
 session_start();
 require '../components/ConnectDB.php';
+require 'Insert_log.php';
 
+$userID = $_SESSION['userID'];
 $RecvID = $_SESSION['RecvID'];
 $receiptCode = $_SESSION['ReceiptCode'];
 $payerTaxID = $_SESSION['PayerTaxID'];
+
+InsertLog($userID, "Show Receipt: " . $receiptCode, "ShowReceipt.php");
 
 $sql = "SELECT r.RecID, r.PayTime, r.CusID, r.RecvID, p.PayerFName, p.PayerLName, p.Sex, p.Tel, p.Address
         FROM receipt r 
@@ -187,6 +191,11 @@ $result = mysqli_query($connectDB, $sql);
         ?>
         <br>
     </div>
+
+    <script>
+        
+    </script>
+
 </body>
 
 </html>

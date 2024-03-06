@@ -571,7 +571,8 @@ $userID = $_SESSION['userID'];
         url: "Insert_log.php", // URL of the PHP file that will insert the log
         data: {
           userID: '<?php echo $userID; ?>',
-          insertType: 'Access confirm Order'
+          insertType: 'access confirm Order',
+          fileLocation: 'OrderSummary.php'
         },
         success: function(data) {
           document.getElementById('to-payment').submit();

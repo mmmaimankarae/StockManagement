@@ -193,9 +193,10 @@ $userID = $_SESSION['userID'];
         echo "<div class='d-flex justify-content-center'>
         <a href='Store.php' class='btn btn-danger' style='font-family:sarabun; margin-right: 10px; font-size:20px;'><b>🧺 กลับไปหน้าร้านค้า</b></a>
         <form id='show-receipt' method='POST' action='InsertReceipt.php'>
-            <input type='hidden' name='recvID' value='" . $RecvID . "'>
-            <button type='submit' class='btn btn-primary' style='font-family:sarabun; font-size:20px;'><b>🧾 ดูใบเสร็จ</b></button>
-        </form>
+            <input type='hidden' name='recvID' value='" . $RecvID . "'>";
+        // echo "<button type='button' class='btn btn-primary' style='font-family:sarabun; font-size:20px;' onclick='insertLog()'><b>🧾 ดูใบเสร็จ</b></button>";
+        echo "<button type='submit' class='btn btn-primary' style='font-family:sarabun; font-size:20px;'><b>🧾 ดูใบเสร็จ</b></button>";
+        echo "</form>
     </div>";
         ?>
 
@@ -203,9 +204,9 @@ $userID = $_SESSION['userID'];
 
     </center>
 </body>
-<script>
+<!-- <script>
     function insertLog() {
-        var userID = <?php echo $_SESSION['userID'] ?>;
+        var userID = <?php //echo $userID ?>;
         var insertType = "Show Receipt";
         $.ajax({
             type: "POST",
@@ -219,6 +220,6 @@ $userID = $_SESSION['userID'];
             }
         });
     }
-</script>
+</script> -->
 
 </html>

@@ -1,16 +1,18 @@
 <?php
 require '../components/ConnectDB.php';
+require 'Insert_log.php';
 
-var_dump($_POST['ProName']);
-var_dump($_POST['Quantity']);
+// var_dump($_POST['ProName']);
+// var_dump($_POST['Quantity']);
 
 session_start();
 $productInCart = false;
 
+$userID = $_SESSION['userID'];
+
 if (!isset($_SESSION['cart'])) {
     $_SESSION['cart'] = array();
 }
-
 
 if (isset($_POST['ProName']) && isset($_POST['Quantity'])) {
     $ProName = $_POST['ProName'];
@@ -40,6 +42,7 @@ if (isset($_POST['ProName']) && isset($_POST['Quantity'])) {
         );
         array_push($_SESSION['cart'], $cart);
     }
+    InsertLog($userID, "add to cart: " . $ProName, "AddtoCart.php");
     header("Location: Cart.php");
     exit();
 }
