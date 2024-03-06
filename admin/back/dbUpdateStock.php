@@ -3,6 +3,6 @@
   $msresults = mysqli_query($connectDB, $msquery);
   while ($row = mysqli_fetch_assoc($msresults)) {
     $msqueryNew = "UPDATE PRODUCT SET StockQty = StockQty - {$row['Qty']} WHERE ProID = {$row['ProID']};";
-    $msresults = mysqli_query($connectDB, $msqueryNew);
+    $msresultsNew = mysqli_query($connectDB, $msqueryNew);
   }
 ?>

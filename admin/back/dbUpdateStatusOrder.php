@@ -4,7 +4,7 @@
   $msresults = mysqli_query($connectDB, $msquery);
 
   if ($_POST['status'] == "Paid" or $_POST['status'] == "DI")
-    require '../admin/back/dbUpdateStock.php';
+    require 'dbUpdateStock.php';
   mysqli_close($connectDB);
   header("Location: ../Test.php");
 ?>
