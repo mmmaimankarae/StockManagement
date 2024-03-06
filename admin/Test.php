@@ -76,7 +76,7 @@
           <div class="card-body">
             <img src="../pictures/admin/truck.png" width="40">
             <span style="font-size: 150%; margin-left: 5%; display: inline-block; vertical-align: middle;"><?php echo $_SESSION['Delivered']?></span>
-            <p class="my-3" style="font-size: 89%;">รอจัดส่ง</p>
+            <p class="my-3" style="font-size: 89%;">จัดส่งแล้ว</p>
           </div>
         </div>
       </div>
@@ -86,7 +86,7 @@
           <div class="card-body">
             <img src="../pictures/admin/cancelled.png" width="40">
             <span style="font-size: 150%; margin-left: 5%; display: inline-block; vertical-align: middle;"><?php echo $_SESSION['Cancel']?></span>
-            <p class="my-3" style="font-size: 89%;">รอจัดส่ง</p>
+            <p class="my-3" style="font-size: 89%;">ยกเลิกคำสั่งซื้อ</p>
           </div>
         </div>
       </div>
@@ -113,56 +113,14 @@
 
     <input type="hidden" id="manage" name="manage" vale="manage">
   </form>
-  <div class="container my-4">
-    <table class="table table-bordered" id="dataTable">
-        <thead>
-            <tr>
-                <th>ReceiptID</th>
-                <th>Tel</th>
-                <th>ReceiptDate</th>
-                <th>CustomerName</th>
-                <th>TotalPrice</th>
-                <th>Channel</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php
-            // require '../admin/back/dbShowSelectProductOrder.php';
-            // require '../components/connectDB.php';
-            $groupOrder = " GROUP BY R.RecID
-                 ORDER BY CAST(SUBSTRING(R.RecID, 2) AS SIGNED),  R.RecID;";
-            $msquery = "SELECT R.RecID AS ReceiptID, C.Tel AS Tel, R.PayTime AS ReceiptDate, 
-                     CONCAT(C.CusFName, ' ', C.CusLName) AS CustomerName, 
-                     SUM(RO.Qty * P.PricePerUnit) AS TotalPrice, R.Channel AS Channel, R.Status AS Status
-              FROM RECEIPT R JOIN RECEIPT_LIST RO ON R.RecID = RO.RecID
-              JOIN PRODUCT P ON RO.ProID = P.ProID JOIN CUSTOMER C ON R.CusID = C.CusID 
-              WHERE";
-              echo "<input type='hidden' id='status' name='status'>";
-              // . $_SESSION['Status'] . $groupOrder;
-              echo $msquery;
-            // while ($row = mysqli_fetch_assoc($msresults)) {
-            //     echo "<tr>";
-            //     echo "<td>{$row['ReceiptID']}</td>";
-            //     echo "<td>{$row['Tel']}</td>";
-            //     echo "<td>{$row['ReceiptDate']}</td>";
-            //     echo "<td>{$row['CustomerName']}</td>";
-            //     echo "<td>{$row['TotalPrice']}</td>";
-            //     echo "<td>{$row['Channel']}</td>";
-            //     echo "<td>{$row['Status']}</td>";
-            //     echo "</tr>";
-            // }
-            ?>
-        </tbody>
-    </table>
-</div>
+  <?php include "../admin/back/dbShow.php"?>
 </body>
 
 <script>
   $(document).ready(function () {
     /* กำหนดตัวเริ่มต้นให้ allOrder */
     $("#allOrder").addClass("active");
-
+    
     /* เก็บ id ของตัวที่ถูกคลิก */
     var activeCardId = "allOrder";
     $(".card").click(function () {
@@ -177,33 +135,25 @@
       var status;
       switch (activeCardId) {
         case "allOrder":
-          <?php $_SESSION['Status'] = "" ?>
           break;
         case "pending":
-          <?php $_SESSION['Status'] = "Pending" ?>
           status = "Pending";
           break;
         case "paid":
-          <?php $_SESSION['Status'] = "Paid" ?>
           status = "Paid";
           break;
         case "cod":
           status = "COD";
-          <?php $_SESSION['Status'] = "COD" ?>
           break;
         case "delivered":
           status = "Delivered";
-          <?php $_SESSION['Status'] = "Delivered" ?>
           break;
         case "cancel":
-          <?php $_SESSION['Status'] = "Cancel" ?>
           status = "Cancel";
           break;
       }
       /* set ค่า status เพื่อส่งไปพร้อม form */
       $("#status").val(status);
-      // Fetch and update the table using AJAX
-      //refreshTable();
     });
   });
 
@@ -215,28 +165,6 @@
     $("#startDate").val(fromDate);
     if (toDate == "" && fromDate != "") $("#endDate").val(endDate);
     else $("#endDate").val(toDate);
-
-    //refreshTable();
-  }
-
-  function refreshTable() {
-    $.ajax({
-      url: '../admin/back/dbShowSelectProductOrder.php',
-      method: 'POST',
-      data: {
-        status: $("#status").val(),
-        detail: $("#detail").val(),
-        startDate: $("#startDate").val(),
-        endDate: $("#endDate").val(),
-        manage: $("#manage").val()
-      },
-      // success: function (data) {
-      //   $('#dataTable tbody').html(data);
-      // },
-      // error: function () {
-      //   alert('Error fetching data from the server');
-      // }
-    });
   }
 </script>
 </html>

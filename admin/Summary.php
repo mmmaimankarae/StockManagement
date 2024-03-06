@@ -57,6 +57,7 @@
                 JOIN PRODUCT P ON RO.ProID = P.ProID JOIN CUSTOMER C ON R.CusID = C.CusID WHERE R.Status = 'Delivered'";
       $medial = "";
       $id = isset($_GET['search']) ? $_GET['search'] : "";
+      echo $id;
       if ($id != ''){
         echo "<p class='mx-2' style='color: #ff0000;'><small>Search ID: R" . $id . "</small></p>";
         $medial = "AND R.RecID = 'R" . $id . "'";

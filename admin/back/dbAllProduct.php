@@ -22,18 +22,18 @@
   while ($row = mysqli_fetch_array($msresults)) {
   /* while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) { */
     switch ($row['Status']) {
-        case "Active":
-            $qtyActive = $row['QtyProduct'];
-            break;
-        case "Inactive":
-            $qtyInactive = $row['QtyProduct'];
-            break;
-        case "Pending":
-            $qtyPendingProduct = $row['QtyProduct'];
-            break;
-        case "OutStock":
-            $qtyOutStock = $row['QtyProduct'];
-            break;
+      case "Active":
+          $qtyActive = $row['QtyProduct'];
+          break;
+      case "Inactive":
+          $qtyInactive = $row['QtyProduct'];
+          break;
+      case "Pending":
+          $qtyPendingProduct = $row['QtyProduct'];
+          break;
+      case "OutStock":
+          $qtyOutStock = $row['QtyProduct'];
+          break;
     }
   }
   /* ปิด CONNECTION */

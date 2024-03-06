@@ -29,7 +29,7 @@
 <body style="margin-top: 7%">
   <?php include "../components/HeaderAdmin.html"; ?>
   <h4 class="text-center"> -- รายการสินค้า --</h4>
-  <form method="post" action="../admin/back/dbAllProduct.php">
+  <form method="post" action="../admin/back/dbShowProduct.php">
   <div class="container my-4">
     <div class="row row-cols-2 row-cols-lg-4 g-2 g-lg-3">
       <div class="col text-center">
@@ -89,6 +89,7 @@
 
     <input type="hidden" id="manage" name="manage" vale="manage">
   </form>
+  <?php include "../admin/back/dbShowListProduct.php"?>
 </body>
 
 <script>
@@ -110,16 +111,16 @@
       var status;
       switch (activeCardId) {
         case "activeProduct":
-          $_SESSION['Status'] = "Active";
+          status = "Active";
           break;
         case "outStock":
-          $_SESSION['Status'] = "OutStock";
+          status = "OutStock";
           break;
         case "inactive":
-          $_SESSION['Status'] = "Inactive";
+          status = "Inactive";
           break;
         case "pending":
-          $_SESSION['Status'] = "Pending";
+          status = "Pending";
           break;
       }
       /* set ค่า status เพื่อส่งไปพร้อม form */
@@ -128,12 +129,3 @@
   });
 </script>
 </html>
-
-<?php
-  session_start();
-  $msquery = "SELECT ImageSource, ProID, ProName, PricePerUnit, CostPerUnit
-              FROM PRODUCT 
-              WHERE Status = '" . $_SESSION['Status'] . "' 
-              ORDER BY ProID;";
-  echo $msquery;
-?>
