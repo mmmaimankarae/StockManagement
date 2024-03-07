@@ -1,6 +1,5 @@
 <?php
-session_start();
-
+  require '../components/connectDB.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -16,76 +15,122 @@ session_start();
 
 <body style="margin-top: 7%">
   <?php include "../components/HeaderAdmin.html"; ?>
+</head>
 
-  <?php
-  $totalSales = 0;
-  $totalQty = 0;
-  $totalOfMonth = 0;
-  $msconnect = mysqli_connect("localhost", "root", "", "mystore");
-  $msquery = "SELECT P.ProID, P.ProName, SUM(RO.Qty) AS TotalQty, SUM(RO.Qty * P.PricePerUnit) AS TotalSales
-                FROM PRODUCT P JOIN RECEIPT_LIST RO ON P.ProID = RO.ProID JOIN RECEIPT R ON RO.RecID = R.RecID
-                WHERE R.Status = 'Delivered' GROUP BY P.ProID, P.ProName;";
-  $msresults = mysqli_query($msconnect, $msquery);
-  while ($row = mysqli_fetch_array($msresults)) {
-    $totalSales += $row['TotalSales'];
-  }
-
-  $msquery = "SELECT P.ProID, P.ProName, SUM(RO.Qty) AS TotalQty, SUM(RO.Qty * P.PricePerUnit) AS TotalSales
-                FROM PRODUCT P JOIN RECEIPT_LIST RO ON P.ProID = RO.ProID JOIN RECEIPT R ON RO.RecID = R.RecID
-                WHERE YEAR(R.PayTime) = YEAR(CURRENT_DATE) AND MONTH(R.PayTime) = MONTH(CURRENT_DATE) 
-                AND R.Status = 'Delivered' GROUP BY P.ProID, P.ProName;";
-  $msresults = mysqli_query($msconnect, $msquery);
-  while ($row = mysqli_fetch_array($msresults)) {
-    $totalOfMonth += $row['TotalSales'];
-    $totalQty += $row['TotalQty'];
-  }
-  mysqli_close($msconnect);
-
-  $_SESSION['total'] = $totalSales;
-  ?>
-  <div class="container">
+<body>
+  <div class="container-fluid">
     <div class="row">
-      <div class="col">
-        <div class="card shadow shadow-sm" style="width: 30rem;">
-          <div class="card-body">
-            <img src="../pictures/boxes.png" class="rounded float-end ml-3" width="90">
-            <h6 class="card-title"><strong>ยอดขายทั้งหมด</strong></h6>
-            <h5 class="card-subtitle my-2 text-danger">฿
-              <?php echo $totalSales ?>
-            </h5>
-            <div class="text-center">
-              <a href="../admin/Summary.php" class="btn btn-danger btn-sm" tabindex="-1" role="button" aria-disabled="true">ดูยอดขาย</a>
-            </div>
+      <div class="col-lg-4">
+
+      <!-- querry -->
+      <?php
+        $msquery = "SELECT COUNT(*) AS TotalActiveProducts FROM PRODUCT WHERE Status = 'Active';";
+        $msresults = mysqli_query($connectDB, $msquery);
+        if ($row = mysqli_fetch_assoc($msresults)) {
+          $allPD = $row['TotalActiveProducts'];
+        }
+      ?>
+      <!-- show -->
+        <div class="card shadow shadow-sm">
+          <div class="card-header text-center" style="background-color: #C68484; color: white;">
+          <img src="../pictures/admin/boxes.png" width="30">
+            <strong><u> สินค้า</u></strong>
+          <img src="../pictures/admin/boxes.png" width="30">
+          </div>
+          <div class="card-body" style="min-height: 200px;">
+            <p class="text-center">ขายสินค้าอยู่ <?php echo $allPD;?> แบบ</p>
+            <?php
+              $msquery = "SELECT PRODUCT.ImageSource, PRODUCT.ProName, SUM(RECEIPT_LIST.Qty) AS TotalSoldQuantity
+                          FROM RECEIPT_LIST
+                          INNER JOIN PRODUCT ON RECEIPT_LIST.ProID = PRODUCT.ProID
+                          GROUP BY PRODUCT.ProID, PRODUCT.ProName
+                          ORDER BY TotalSoldQuantity DESC;";
+              $msresults = mysqli_query($connectDB, $msquery);
+              while ($row = mysqli_fetch_assoc($msresults)) {
+                echo "<p class='my-3'><img src='{$row['ImageSource']}' width='30'>";
+                $proName = $row['ProName'];
+                $totalSoldQuantity = $row['TotalSoldQuantity'];
+                echo " - $proName: $totalSoldQuantity ชิ้น</p>";
+              }
+            ?>
           </div>
         </div>
       </div>
 
-      <div class="col-md-auto">
-        <div class="card shadow shadow-sm" style="width: 18rem;">
-          <div class="card-body">
-            <img src="../pictures/transaction.png" class="rounded float-start" width="20">
-            <h6 class="card-title"><strong>ยอดขายใหม่</strong></h6>
-            <div class="text-center">
-              <h5 class="card-subtitle my-2">฿
-                <?php echo $totalOfMonth ?>
-              </h5>
-              <button type="button" class="btn btn-success btn-sm">ยอดขายเดือนนี้</button>
-            </div>
+      <!-- querry -->
+      <?php
+        $msquery = "SELECT SUM(CASE WHEN RECEIPT.Status IN ('Paid', 'COD', 'Delivered', 'DI', 'Completed') 
+                            THEN PRODUCT.PricePerUnit * RECEIPT_LIST.Qty ELSE 0 END) AS TotalSales,
+                           SUM(CASE WHEN RECEIPT.Status IN ('Paid', 'Delivered', 'Completed') AND RECEIPT.Channel = 'Transfer' 
+                            THEN PRODUCT.PricePerUnit * RECEIPT_LIST.Qty ELSE 0 END) AS Transfer,
+                           SUM(CASE WHEN RECEIPT.Status IN ('COD', 'Delivered', 'DI', 'Completed') AND RECEIPT.Channel = 'COD' 
+                            THEN PRODUCT.PricePerUnit * RECEIPT_LIST.Qty ELSE 0 END) AS COD
+                    FROM RECEIPT
+                    JOIN RECEIPT_LIST ON RECEIPT.RecID = RECEIPT_LIST.RecID
+                    JOIN PRODUCT ON RECEIPT_LIST.ProID = PRODUCT.ProID;";
+        $msresults = mysqli_query($connectDB, $msquery);
+      ?>
+      <!-- show -->
+      <div class="col-lg-4">
+        <div class="card shadow shadow-sm">
+          <div class="card-header text-center" style="background-color: #11235A; color: white;">
+            <img src="../pictures/admin/transfer.png" width="30">
+              <strong><u> ยอดขาย</u></strong>
+            <img src="../pictures/admin/transfer.png" width="30">
+          </div>
+          <div class="card-body" style="min-height: 200px;">
+          <?php
+            while ($row = mysqli_fetch_assoc($msresults)) {
+              if ($row['TotalSales']) {
+                echo "<p class='my-3'><img src='../pictures/admin/salary.png' width='30'>";
+                echo " - ยอดขายทั้งหมด: {$row['TotalSales']} บาท</p>";
+              } 
+              if ($row['Transfer']) {
+                echo "<p class='my-3'><img src='../pictures/admin/transfer.png' width='30'>";
+                echo " - ยอดขายจากการโอน: {$row['Transfer']} บาท</p>";
+              }
+              if ($row['COD']) {
+                echo "<p class='my-3'><img src='../pictures/admin/truck.png' width='30'>";
+                echo " - ยอดขายจากการเก็บเงินปลายทาง: {$row['COD']} บาท</p>";
+              }
+            }
+          ?>
           </div>
         </div>
       </div>
 
-      <div class="col col-lg-3">
-        <div class="card shadow shadow-sm" style="width: 18rem;">
-          <div class="card-body">
-            <img src="../pictures/logo.png" class="rounded float-start" width="20">
-            <h6 class="card-title"><strong>ยอดสินค้า</strong></h6>
-            <div class="text-center">
-              <h5 class="card-subtitle my-2">
-                <?php echo $totalQty ?> ชิ้น
-              </h5>
-              <button type="button" class="btn btn-success btn-sm">ยอดขายเดือนนี้</button>
-            </div>
+      <!-- querry -->
+      <?php
+        $msquery = "SELECT COUNT(*) AS TotalLoginAttempts FROM ACCESS_LOG;";
+        $msresults = mysqli_query($connectDB, $msquery);
+        if ($row = mysqli_fetch_assoc($msresults)) {
+          $count = $row['TotalLoginAttempts'];
+        }
+      ?>
+      <!-- show -->
+      <div class="col-lg-4">
+        <div class="card shadow shadow-sm">
+        <div class="card-header text-center" style="background-color: #5A8F7B; color: white;">
+          <img src="../pictures/admin/observation.png" width="30">
+            <strong><u> ยอดผู้เข้าชม</u></strong>
+          <img src="../pictures/admin/observation.png" width="30">
+          </div>
+          <div class="card-body" style="min-height: 200px;">
+            <p class="text-center">มีผู้เข้าใช้งานเว็บไซต์ <?php echo $count;?> ครั้ง</p>
+            <?php
+              $msquery = "SELECT CUSTOMER.CusFName, COUNT(*) AS TotalActions 
+                          FROM ACCESS_LOG 
+                          JOIN CUSTOMER ON ACCESS_LOG.CusID = CUSTOMER.CusID 
+                          GROUP BY CUSTOMER.CusFName 
+                          ORDER BY TotalActions DESC;";
+              $msresults = mysqli_query($connectDB, $msquery);
+              while ($row = mysqli_fetch_assoc($msresults)) {
+                echo "<p class='my-3'><img src='../pictures/admin/teamwork.png' width='30'>";
+                $name = $row['CusFName'];
+                $total = $row['TotalActions'];
+                echo " - $name: เข้าถึง $total ครั้ง</p>";
+              }
+            ?>
           </div>
         </div>
       </div>

@@ -22,9 +22,6 @@
             <label class='my-2'>รูปภาพสินค้า</label>
             <img src='../pictures/admin/photos.png' width='500' height='500' class='img-thumbnail shadow-sm' style='margin-left: 2%'>
           </div>
-          <div class='col my-3'>
-            <?php include "../components/DatePicker.html"; ?>
-          </div>
         </div>
   
         <div class='col'>
