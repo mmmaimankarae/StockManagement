@@ -25,7 +25,7 @@
         echo "<div class='container'>";
           echo "<div class='row'>";
             echo "<div class='col'>";
-              echo "<img src='" .$row['ImageSource']. "' width='500' height='500' class='img-thumbnail shadow-sm'>";
+              echo "<label class='my-2'><img src='" .$row['ImageSource']. "' width='500' height='500' class='img-thumbnail shadow-sm'></label><br>";
 
               echo "<label class='my-2'>สถานะสินค้า</label><br>";
               foreach ($status as $arr) {

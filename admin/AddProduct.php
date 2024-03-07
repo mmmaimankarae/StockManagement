@@ -18,13 +18,13 @@
     <div class='container'>
       <div class='row'>
         <div class='col'>
-          <div class='col'>
+          <div class='row'>
             <label class='my-2'>รูปภาพสินค้า</label>
-            <img src='../pictures/admin/photos.png' width='500' height='500' class='img-thumbnail shadow-sm' style='margin-left: 2%'>
+            <label class='my-2'><img src='../pictures/admin/photos.png' width='500' height='500' class='img-thumbnail shadow-sm' style='margin-left: 2%'></label>
           </div>
-          <div class='col my-3'>
-            <?php include "../components/DatePicker.html"; ?>
-          </div>
+          <!-- <div class='col my-3'>
+            <?php //include "../components/DateTimePicker.html"; ?>
+          </div> -->
         </div>
   
         <div class='col'>

@@ -1,5 +1,5 @@
 <?php
-  require '../components/connectDB.php';
+  require 'C:\xampp\htdocs\StockManagement\components\connectDB.php';
   $where = " ";
   $groupOrder = " GROUP BY R.RecID
                  ORDER BY CAST(SUBSTRING(R.RecID, 2) AS SIGNED),  R.RecID;";
@@ -42,5 +42,5 @@
               // echo $msquery;
   $msresults = mysqli_query($connectDB, $msquery);
   mysqli_close($connectDB);
-  // header("Location: ../OrderList.php");
+  header("Location: ../OrderList.php");
 ?>

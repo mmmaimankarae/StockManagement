@@ -35,17 +35,19 @@ require '../admin/back/dbSumOrder.php';
         <div class="col text-center">
           <div class="card shadow shadow-sm" id="allOrder" style="width: 11.5rem; height: 6.5rem">
             <!-- <button type="submit" style="width: 100%; height: 100%; padding: 0; border: none; background: none;"> -->
-            <div class="card-body">
-              <img src="../pictures/admin/product.png" width="40">
-              <span style="font-size: 150%; margin-left: 5%; display: inline-block; vertical-align: middle;"><?php echo $_SESSION['Qty'] ?></span>
-              <p class="my-3" style="font-size: 89%;">รายการทั้งหมด</p>
-            </div>
+            <a href="OrderList.php" style="text-decoration: none; color: black;">
+              <div class="card-body">
+                <img src="../pictures/admin/product.png" width="40">
+                <span style="font-size: 150%; margin-left: 5%; display: inline-block; vertical-align: middle;"><?php echo $_SESSION['Qty'] ?></span>
+                <p class="my-3" style="font-size: 89%;">รายการทั้งหมด</p>
+              </div>
+            </a>
             <!-- </button> -->
           </div>
         </div>
 
         <div class="col text-center">
-          <a href="PendingList.php" style="text-decoration: none; color: black;">
+          <a>
             <div class="card shadow shadow-sm" id="pending" style="width: 11.5rem; height: 6.5rem">
               <!-- <button type="submit" style="width: 100%; height: 100%; padding: 0; border: none; background: none;"> -->
               <div class="card-body">
@@ -61,7 +63,7 @@ require '../admin/back/dbSumOrder.php';
         <div class="col text-center">
           <div class="card shadow shadow-sm" id="paid" style="width: 11.5rem; height: 6.5rem">
             <!-- <button type="submit" style="width: 100%; height: 100%; padding: 0; border: none; background: none;"> -->
-            <a href="PaidList.php" style="text-decoration: none; color: black">
+            <a href="PaidList.php" style="text-decoration: none; color: black;">
               <div class="card-body">
                 <img src="../pictures/admin/express-delivery.png" width="40">
                 <span style="font-size: 150%; margin-left: 5%; display: inline-block; vertical-align: middle;"><?php echo $_SESSION['Paid'] ?></span>
@@ -89,7 +91,7 @@ require '../admin/back/dbSumOrder.php';
         <div class="col text-center">
           <div class="card shadow shadow-sm" id="delivered" style="width: 11.5rem; height: 6.5rem">
             <!-- <button type="submit" style="width: 100%; height: 100%; padding: 0; border: none; background: none;"> -->
-            <a href="DeliveredList.php" style="text-decoration: none; color:black;">
+            <a href="DeliveredList.php" style="text-decoration: none; color: black;">
               <div class="card-body">
                 <img src="../pictures/admin/truck.png" width="40">
                 <span style="font-size: 150%; margin-left: 5%; display: inline-block; vertical-align: middle;"><?php echo $_SESSION['Delivered'] ?></span>
@@ -103,7 +105,7 @@ require '../admin/back/dbSumOrder.php';
         <div class="col text-center">
           <div class="card shadow shadow-sm" id="cancel" style="width: 11.5rem; height: 6.5rem">
             <!-- <button type="submit" style="width: 100%; height: 100%; padding: 0; border: none; background: none;"> -->
-            <a href="CancelList.php" style="text-decoration: none; color:black;">
+            <a href="CancelList.php" style="text-decoration: none; color: black;">
               <div class="card-body">
                 <img src="../pictures/admin/cancelled.png" width="40">
                 <span style="font-size: 150%; margin-left: 5%; display: inline-block; vertical-align: middle;"><?php echo $_SESSION['Cancel'] ?></span>
@@ -138,13 +140,13 @@ require '../admin/back/dbSumOrder.php';
 
     <input type="hidden" id="manage" name="manage" vale="manage">
   </form>
-  <?php include "ShowOrderList.php" ?>
+  <?php include "ShowPendingList.php" ?>
 </body>
 
 <script>
   $(document).ready(function() {
     /* กำหนดตัวเริ่มต้นให้ allOrder */
-    $("#allOrder").addClass("active");
+    $("#pending").addClass("active");
 
     /* เก็บ id ของตัวที่ถูกคลิก */
     var activeCardId = "allOrder";

@@ -1,5 +1,5 @@
 <?php 
-  require '../components/connectDB.php';
+  require '../../components/connectDB.php';
   $msquery = "INSERT INTO PRODUCT (ProName, PricePerUnit, CostPerUnit, StockQty, 
                                    Description, ImageSource, Status, Update_Day) 
               VALUES ('{$_POST['proName']}', {$_POST['pricePerUnit']}, {$_POST['costPerUnit']}, {$_POST['stockQty']}, 

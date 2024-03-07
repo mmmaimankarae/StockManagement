@@ -1,22 +1,25 @@
 <?php
-    require '../components/connectDB.php';
+    // require '../../components/connectDB.php';
+    require 'C:\xampp\htdocs\StockManagement\components\connectDB.php';
     $msquery = "";
     $index = 0;
     $num = 0;
-    if ($_SESSION['data'] == "update"){
-        $start = "UPDATE PRODUCT SET ";
-    } elseif ($_SESSION['data'] == "new"){
-        $start = "INSERT INTO PRODUCT (ProName, PricePerUnit, CostPerUnit, StockQty,
-                  Description, ImageSource, Status, Update_Day) VALUES ('" . $_POST['proName'] . "', 
-                  ". $_POST['pricePerUnit'] . ", " . $_POST['costPerUnit'] . ", ".$_POST['stockQty']. 
-                  ", '" . $_POST['description'] . "', '". $_POST['imageSource'] . "', '" . $_POST['status'] . "',
-                  '".date('Y-m-d h:i:s'). "');";
-        $msquery = $start;
-        $msresults = mysqli_query($msconnectDB, $msquery);
-        mysqli_close($msconnectDB);
-        header("Location: ../admin/ProductList.php");
-        exit;
-    }
+    // if ($_SESSION['data'] == "update"){
+    //     $start = "UPDATE PRODUCT SET ";
+    // } elseif ($_SESSION['data'] == "new"){
+    //     $start = "INSERT INTO PRODUCT (ProName, PricePerUnit, CostPerUnit, StockQty,
+    //               Description, ImageSource, Status, Update_Day) VALUES ('" . $_POST['proName'] . "', 
+    //               ". $_POST['pricePerUnit'] . ", " . $_POST['costPerUnit'] . ", ".$_POST['stockQty']. 
+    //               ", '" . $_POST['description'] . "', '". $_POST['imageSource'] . "', '" . $_POST['status'] . "',
+    //               '".date('Y-m-d h:i:s'). "');";
+    //     $msquery = $start;
+    //     $msresults = mysqli_query($msconnectDB, $msquery);
+    //     mysqli_close($msconnectDB);
+    //     header("Location: ../admin/ProductList.php");
+    //     exit;
+    // }
+
+    $start = "UPDATE PRODUCT SET ";
 
     $condition = " WHERE ProID = ";
     $comma = ", ";
@@ -65,7 +68,7 @@
             $status = $comma .$status .$quote .$_POST['status'] .$quote;
         }
 
-        if ($_POST['status'] == "Pending" or $_POST['status'] == "OutStock") {
+        if ($_POST['status'] == "Inactive" or $_POST['status'] == "OutStock") {
             $num++;
         }
         $index += 1;
@@ -112,8 +115,8 @@
         $day = "Update_Day = ";
         $day = $comma .$day .$quote .date("Y-m-d h:i:s") .$quote;
         $msquery = $start .$name .$price .$cost .$stock .$des .$image .$status .$day .$condition .$_POST['proID'] .$end;
-        $msresults = mysqli_query($msconnectDB, $msquery);
-        mysqli_close($msconnectDB);
+        $msresults = mysqli_query($connectDB, $msquery);
+        mysqli_close($connectDB);
     }
-    header("Location: ../admin/ProductList.php");
+    header("Location: ../ProductList.php");
 ?>
