@@ -51,20 +51,10 @@
           วิเคราะห์
         </button>
 
-        <div class="dropdown">
-          <a class="btn btn-outline-light border-0 dropdown-toggle mx-5" href="#" role="button" id="order"
-            data-bs-toggle="dropdown" data-bs-target="#orderDropdown" aria-expanded="false">
-            คำสั่งซื้อ
-          </a>
-
-          <ul class="dropdown-menu" aria-labelledby="order" id="orderDropdown">
-            <li><a class="dropdown-item" href="../admin/NewOrder.php">คำสั่งซื้อใหม่</a></li>
-            <li><a class="dropdown-item" href="../admin/OnProcessOrder.php">ดำเนินการอยู่</a></li>
-            <li><a class="dropdown-item" href="../admin/Summary.php">ดำเนินการเสร็จสิ้น</a></li>
-            <li><a class="dropdown-item" href="../admin/StuckOrder.php">รอการแก้ไข</a></li>
-          </ul>
-        </div>
-        
+        <button type="button" class="btn btn-outline-light border-0 mx-5" onclick="window.location.href='../admin/OrderList.php'">
+          รายการสั่งซื้อ
+        </button>
+                
         <div class="dropdown">
           <a class="btn btn-outline-light border-0 dropdown-toggle mx-5" role="button" id="product"
             data-bs-toggle="dropdown" data-bs-target="#productDropdown" aria-expanded="false">
@@ -72,14 +62,14 @@
           </a>
 
           <ul class="dropdown-menu" aria-labelledby="product" id="productDropdown">
-            <li><a class="dropdown-item" href="../admin/AllProduct.php">สินค้าทั้งหมด</a></li>
-            <!-- <li><a class="dropdown-item" href="#">สินค้ารอลงขาย</a></li>
-            <li><a class="dropdown-item" href="#">สินค้าในคลัง</a></li> -->
+            <li><a class="dropdown-item" href="../admin/ProductList.php">สินค้าทั้งหมด</a></li>
             <li><a class="dropdown-item" href="../admin/AddProduct.php">เพิ่มสินค้าใหม่</a></li>
           </ul>
         </div>
         <button type="button" class="btn btn-outline-light border-0 mx-5">ตั้งค่า</button>
-        <button type="button" class="btn btn-outline-light border-0 mx-5">จัดการบัญชี</button>
+        <button type="button" class="btn btn-outline-light border-0 mx-5" onclick="window.location.href='../admin/User.php'">
+          จัดการบัญชี
+        </button>
       </div>
 
       <form class="form-inline ml-auto">

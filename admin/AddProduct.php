@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,23 +13,14 @@
 
 <body class="p-3" style="margin-top: 6%">
   <?php include "../components/HeaderAdmin.html"; ?>
+  <h4 class="text-center"> -- เพิ่มสินค้าใหม่ --</h4><br>
   <form action='../admin/ConfirmAddProduct.php' method='post'>
     <div class='container'>
       <div class='row'>
         <div class='col'>
           <div class='col'>
-            <img src='' width='500' height='500' class='img-thumbnail shadow-sm'>
-            <div class="form-check form-check-inline my-4">
-              <input class="form-check-input" type="radio" name="status" id="Active" value="Active" checked>
-              <label class="form-check-label" for="inlineRadio1">ลงขายทันที</label>
-            </div>
-          </div>
-
-          <div class='col'>
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" name="status" id="Pending" value="Pending">
-              <label class="form-check-label" for="inlineRadio2">กำหนดวันที่ลงขาย</label>
-            </div>
+            <label class='my-2'>รูปภาพสินค้า</label>
+            <img src='../pictures/admin/photos.png' width='500' height='500' class='img-thumbnail shadow-sm' style='margin-left: 2%'>
           </div>
           <div class='col my-3'>
             <?php include "../components/DatePicker.html"; ?>
@@ -83,6 +73,21 @@
           </div>
         </div>
       </div>
+
+      <div class="form-check form-check-inline my-4">
+        <input class="form-check-input" type="radio" name="status" id="Active" value="Active" checked>
+        <label class="form-check-label" for="inlineRadio1">ลงขายทันที</label>
+      </div>
+
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="status" id="Pending" value="Pending">
+        <input type="hidden" name="day" id="day"> 
+        <label class="form-check-label" for="inlineRadio2">กำหนดวันที่ลงขาย</label>
+      </div>
+
+      <div id="datetimepicker-container" style="margin-left: 11%; width: 15%;">
+      <?php include "../components/DateTimePicker.html"; ?>
+      </div>
     </div>
 
     <div class='d-grid gap-2 d-md-flex mx-5 my-3'>
@@ -91,4 +96,19 @@
   </form>
 </body>
 
+<script>
+  $(document).ready(function(){
+    // ซ่อน DateTimePicker เมื่อหน้าเว็บโหลด
+    $('#datetimepicker-container').hide();
+
+    // ตรวจสอบการเลือก checkbox เพื่อแสดง/ซ่อน DateTimePicker
+    $('input[name="status"]').change(function(){
+      if ($(this).val() == 'Pending') {
+        $('#datetimepicker-container').show();
+      } else {
+        $('#datetimepicker-container').hide();
+      }
+    });
+  });
+</script>
 </html>

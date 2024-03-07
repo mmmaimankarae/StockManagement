@@ -80,6 +80,8 @@
                   foreach ($status as $arr) {
                     if ($_POST['status'] == $arr) {
                       echo "<div class='mx-3 text-danger'>" . $statusT[$index] . "</div>";
+                      echo $_POST['day'];
+                      echo "<input type='hidden' name='update_day' value='" . $_POST['day'] . "'>";
                       echo "<input type='hidden' name='status' value='" . $_POST['status'] . "'>";
                     }
                     $index += 1;

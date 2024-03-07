@@ -1,26 +1,24 @@
 <?php
   require '../components/connectDB.php';
-  $where = "";
-  $count = 0;
-  if (isset($_POST['status'])) {
-    $where = " WHERE Status = '" . $_POST['status'] . "'";
-    $count++;
+  $where = "Active";
+  $condition = "";
+  if (isset($_POST['status']) && !empty($_POST['status'])) {
+    $where = $_POST['status'];
   }
 
-  if (isset($_POST['detail'])) {
+  if (isset($_POST['detail']) && !empty($_POST['detail'])) {
     $detail = $_POST['detail'];
-    if ($count == 0) $where = "WHERE ";
-    else $where .= " AND ";
+    $condition .= " AND ";
 
     if (preg_match("/^[0-9\s]+$/", $detail)) {
-        $where .= "ProID = '" . $detail . "'";
+        $condition .= "ProID = '" . $detail . "'";
     } elseif (preg_match('/\p{Thai}/u', $detail) or preg_match("/^[a-zA-Z\s]+$/", $detail)) {
-        $where .= "ProName = '" . $detail . "'";
+        $condition .= "ProName = '" . $detail . "'";
     }
   }
 
   $msquery = "SELECT ImageSource, ProID, ProName, PricePerUnit, CostPerUnit, Update_Day
-              FROM PRODUCT {$where} 
+              FROM PRODUCT WHERE Status = '{$where}' {$condition}
               ORDER BY ProID;";
   // echo $msquery;
   $msresults = mysqli_query($connectDB, $msquery);

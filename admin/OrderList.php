@@ -101,7 +101,7 @@
       </div>
 
       <div class='col'>
-        <?php include "../components/DatePicker.html"; ?>
+        <?php include "../components/DatePickerRange.html"; ?>
         <input type="hidden" id="startDate" name="startDate">
         <input type="hidden" id="endDate" name="endDate">
       </div>

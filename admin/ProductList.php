@@ -89,7 +89,12 @@
 
     <input type="hidden" id="manage" name="manage" vale="manage">
   </form>
-  <?php include "../admin/back/dbShowListProduct.php"?>
+  
+  <div class="container my-4">
+    <button class='btn btn-primary btn-sm float-start' style="margin-bottom: 2%;" onclick="window.location.href='AddProduct.php'">+ เพิ่มสินค้า</button>
+    <button id='export' class='btn btn-secondary btn-sm float-end' style="margin-bottom: 2%">ส่งออกเป็น Excel</button>
+    <?php include "../admin/back/dbShowListProduct.php"?>
+  </div>
 </body>
 
 <script>
