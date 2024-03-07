@@ -23,9 +23,9 @@
       <th class='text-center'>เพศ</th>
       <th class='text-center'>เบอร์โทรศัพ์</th>
       <th class='text-center'>ที่อยู่</th>
-      <th class='text-center'></th>
-      <th class='text-center'></th>
-      <th class='text-center'></th>
+      <th class='text-center'>แก้ไข</th>
+      <th class='text-center'>Log</th>
+      <th class='text-center'>ลบ</th>
     </tr>
   </thead>
 
@@ -45,21 +45,21 @@
 
           echo "<td class='text-center'>";
             echo "<form method='post' action='UpdateProduct.php'>";
-              echo "<input type='hidden' name='ProID' value='{$row['ProID']}'>";
+              echo "<input type='hidden' name='ProID' value='{$row['CusID']}'>";
               echo "<button type='submit' style='border: none; background: none;'><img src='../pictures/admin/pen.png' width='30'></button>";
             echo "</form>";
           echo "</td>";
 
           echo "<td class='text-center'>";
-            echo "<form method='post' action='UpdateProduct.php'>";
-              echo "<input type='hidden' name='ProID' value='{$row['ProID']}'>";
+            echo "<form method='post' action='./ShowLogList.php'>";
+              echo "<input type='hidden' name='customerID' value='{$row['CusID']}'>";
               echo "<button type='submit' style='border: none; background: none;'><img src='../pictures/admin/search-normal.png' width='30'></button>";
             echo "</form>";
           echo "</td>";
 
           echo "<td class='text-center'>";
           echo "<form method='get' action='../frontStore/Product_Detail.php'>";
-            echo "<input type='hidden' name='id' value='{$row['ProID']}'>";
+            echo "<input type='hidden' name='id' value='{$row['CusID']}'>";
             echo "<button type='submit' style='border: none; background: none;'><img src='../pictures/admin/trash.png' width='30'></button>";
           echo "</form>";
           echo "</td>";

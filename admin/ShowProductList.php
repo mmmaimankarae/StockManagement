@@ -60,26 +60,6 @@
 </table>
 
 
-<<<<<<< HEAD
-            echo "<td class='text-center'>";
-              echo "<form method='post' action='../frontStore/ExportToPDF.php'>";
-                echo "<input type='hidden' name='recID' value='{$row['RecvID']}'>";
-                echo "<button type='submit' style='border: none; background: none;'><img src='../pictures/admin/pen.png' width='30'></button>";
-              echo "</form>";
-              echo "<form method='post' action='../frontStore/ExportToPDF.php'>";
-                echo "<input type='hidden' name='recID' value='{$row['RecID']}'>";
-                echo "<button type='submit' style='border: none; background: none;'><img src='../pictures/admin/observation.png' width='30'></button>";
-              echo "</form>";
-            echo "</td>";
-          echo "</tr>";
-        }
-      ?>
-        </tbody>
-    </table>
-</div>
-
-=======
->>>>>>> 79a77bf16c4470c562c888a27b73a3be50a3efa2
 <script>
   $(document).ready(function () {
     /* ถ้ากด id selectAllCheckbox */

@@ -2,23 +2,24 @@
 <html lang="en">
 
 <head>
-<meta charset="UTF-8">
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.17.3/dist/xlsx.full.min.js"></script>
-  <title>รายการสั่งซื้อ</title>
+  <title>User</title>
   <style>
-  .card.active {
-    background-color: #45474B;
-    color: #fff;
-  }
-  .card.active img {
-  filter: brightness(0) invert(1);
-}
-</style>
+    .card.active {
+      background-color: #45474B;
+      color: #fff;
+    }
+
+    .card.active img {
+      filter: brightness(0) invert(1);
+    }
+  </style>
 </head>
 
 <body style="margin-top: 7%">
@@ -27,6 +28,15 @@
   <form method="post" action="../admin/back/dbShowProduct.php">
     <div class="container my-4">
       <div class="row">
+        <!-- <div class="col text-center">
+          <div class="card shadow shadow-sm mx-auto" id="member" style="width: 11.5rem; height: 6.5rem">
+            <div class="card-body">
+              <img src="../pictures/admin/member-card.png" width="40">
+              <span style="font-size: 150%; display: inline-block; vertical-align: middle;"></span>
+              <p class="my-3">สมาชิก</p>
+            </div>
+          </div>
+        </div> -->
         <div class="col text-center">
           <div class="card shadow shadow-sm mx-auto" id="member" style="width: 11.5rem; height: 6.5rem">
             <div class="card-body">
@@ -39,16 +49,18 @@
 
         <div class="col text-center">
           <div class="card shadow shadow-sm mx-auto" id="customer" style="width: 11.5rem; height: 6.5rem">
-            <div class="card-body">
-              <img src="../pictures/admin/new-account.png" width="40">
-              <span style="font-size: 150%; display: inline-block; vertical-align: middle;"></span>
-              <p class="my-3">ลูกค้าทั่วไป</p>
-            </div>
+            <a href="ShowGuestLogList.php" style="text-decoration: none; color: black;">
+              <div class="card-body">
+                <img src="../pictures/admin/new-account.png" width="40">
+                <span style="font-size: 150%; display: inline-block; vertical-align: middle;"></span>
+                <p class="my-3">ลูกค้าทั่วไป</p>
+              </div>
+            </a>
           </div>
         </div>
       </div>
     </div>
-    
+
     <div class="row">
       <div class="col" style="margin-left: 5%;">
         <label>ค้นหา</label>
@@ -63,22 +75,22 @@
 
     <input type="hidden" id="manage" name="manage" vale="manage">
   </form>
-  
+
   <div class="container my-4">
     <button class='btn btn-primary btn-sm float-start' style="margin-bottom: 2%;" onclick="window.location.href='AddProduct.php'">+ สมาชิก</button>
     <button id='export' class='btn btn-secondary btn-sm float-end' style="margin-bottom: 2%">ส่งออกเป็น Excel</button>
-    <?php include "../admin/back/dbUser.php"?>
+    <?php include "../admin/back/dbUser.php" ?>
   </div>
 </body>
 
 <script>
-  $(document).ready(function () {
+  $(document).ready(function() {
     /* กำหนดตัวเริ่มต้นให้ allOrder */
     $("#member").addClass("active");
 
     /* เก็บ id ของตัวที่ถูกคลิก */
     var activeCardId = "member";
-    $(".card").click(function () {
+    $(".card").click(function() {
       /* ลบ active ของตัวเก่า */
       $(".card").removeClass("active");
       /* เพิ่ม active ให้ id ตัวใหม่ */
@@ -106,5 +118,36 @@
       $("#status").val(status);
     });
   });
+
+  $(document).ready(function() {
+    /* ถ้ากด id selectAllCheckbox */
+    $('#selectAllCheckbox').change(function() {
+      $('.selectCheckbox').prop('checked', $(this).prop('checked'));
+    });
+
+    $('.selectCheckbox').change(function() {
+      if ($('.selectCheckbox:checked').length == $('.selectCheckbox').length) {
+        $('#selectAllCheckbox').prop('checked', true);
+      } else {
+        $('#selectAllCheckbox').prop('checked', false);
+      }
+    });
+
+    /* export Report */
+    $('#export').click(function() {
+      var csvContent = "\uFEFFเลขที่ใบเสร็จ,วันที่สั่งซื้อ,ชื่อผู้สั่ง,ราคาทั้งหมด,การชำระเงิน,สถานะ\n";
+      $('#dataTable tbody tr').each(function() {
+        var rowData = $(this).find('th,td:not([^id="remove"])').map(function() {
+          return $(this).text();
+        }).get().join(",");
+        csvContent += rowData + "\n";
+      });
+      var blob = new Blob([csvContent], {
+        type: 'text/csv;charset=utf-8;'
+      });
+      saveAs(blob, 'log_data.csv');
+    });
+  });
 </script>
+
 </html>
