@@ -42,5 +42,5 @@
               // echo $msquery;
   $msresults = mysqli_query($connectDB, $msquery);
   mysqli_close($connectDB);
-  header("Location: ../OrderList.php");
+  // header("Location: ../OrderList.php");
 ?>

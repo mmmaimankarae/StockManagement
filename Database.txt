@@ -132,6 +132,8 @@ CREATE TABLE ACCESS_LOG (
      NumID		INT		     NOT NULL,
      Action		VARCHAR(80)	NOT NULL, 
      Period	     DATETIME       NOT NULL,
+     IPaddr         varchar(255)   NOT NULL,
+     File_location  varchar(255)   NOT NULL,
     FOREIGN KEY (CusID) REFERENCES CUSTOMER(CusID),
     CONSTRAINT AccessList PRIMARY KEY (CusID, NumID)
 );
