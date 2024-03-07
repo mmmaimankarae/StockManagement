@@ -1,30 +1,20 @@
-<?php 
-  session_start();
-  $proID = $_SESSION['proID'];
-  if($_POST['proID'] == '') {
-    $_POST['proID'] = $proID;
-  }
-?>
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.17.3/dist/xlsx.full.min.js"></script>
-  <title>Document</title>
+  <title>อัปเดทข้อมูลสินค้า</title>
 </head>
 
 <body class="p-3" style="margin-top: 6%">
   <?php include "../components/HeaderAdmin.html"; ?>
   <?php
     $msconnect = mysqli_connect("localhost", "root", "", "myStore");
-    $msquery = "SELECT * FROM PRODUCT WHERE ProID = " . $_POST['proID'] . ";";
+    $msquery = "SELECT * FROM PRODUCT WHERE ProID = " . $_POST['ProID'] . ";";
     $msresults = mysqli_query($msconnect, $msquery);
     $row = mysqli_fetch_array($msresults);
     $status = array("Active", "OutOfStock", "Pending", "Inactive");
@@ -51,8 +41,8 @@
             echo "</div>";
 
             echo "<div class='col'>";
-              echo "<div class='alert alert-primary' role='alert'><strong>Product ID: </strong>" . $_POST['proID']; 
-                echo "<input type='hidden' name='proID' value='" . $_POST['proID'] . "'>";
+              echo "<div class='alert alert-primary' role='alert'><strong>Product ID: </strong>" . $_POST['ProID']; 
+                echo "<input type='hidden' name='proID' value='" . $_POST['ProID'] . "'>";
               echo "</div>";
 
               echo "<div class='mb-3'>";

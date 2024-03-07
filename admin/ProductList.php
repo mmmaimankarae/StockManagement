@@ -1,7 +1,7 @@
 <?php
   session_start();
   $_SESSION['Status'] = "Active";
-  require '../admin/back/dbAllProduct.php';
+  require '../admin/back/dbSumProduct.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -14,7 +14,7 @@
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.17.3/dist/xlsx.full.min.js"></script>
-  <title>รายการสั่งซื้อ</title>
+  <title>รายการสินค้า</title>
   <style>
   .card.active {
     background-color: #45474B;
@@ -29,7 +29,7 @@
 <body style="margin-top: 7%">
   <?php include "../components/HeaderAdmin.html"; ?>
   <h4 class="text-center"> -- รายการสินค้า --</h4>
-  <form method="post" action="../admin/back/dbShowProduct.php">
+  <form method="post" action="../admin/back/dbSelectProduct.php">
   <div class="container my-4">
     <div class="row row-cols-2 row-cols-lg-4 g-2 g-lg-3">
       <div class="col text-center">
@@ -93,7 +93,7 @@
   <div class="container my-4">
     <button class='btn btn-primary btn-sm float-start' style="margin-bottom: 2%;" onclick="window.location.href='AddProduct.php'">+ เพิ่มสินค้า</button>
     <button id='export' class='btn btn-secondary btn-sm float-end' style="margin-bottom: 2%">ส่งออกเป็น Excel</button>
-    <?php include "../admin/back/dbShowListProduct.php"?>
+    <?php include "ShowProductList.php"?>
   </div>
 </body>
 

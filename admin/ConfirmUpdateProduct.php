@@ -134,7 +134,7 @@
               echo "<div class='modal-content'>";
                 echo "<div class='modal-body'> เมื่อคุณย้อนกลับข้อมูลการแก้ไขจะถูกรีเซ็ตใหม่ทั้งหมด</div>";
                 echo "<div class='modal-footer'>";
-                  echo "<button type='button' class='btn btn-danger btn-sm' onclick=\"window.location.href='../admin/AddProduct.php'\">ตกลง</button>";
+                  echo "<button type='button' class='btn btn-danger btn-sm' onclick=\"window.location.href='../admin/UpdateProduct.php'\">ตกลง</button>";
                   echo "<button type='button' class='btn btn-success btn-sm' data-bs-dismiss='modal'>ยกเลิก</button>";
                 echo "</div>";
               echo "</div>";

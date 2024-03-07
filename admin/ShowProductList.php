@@ -1,5 +1,5 @@
 <?php 
-  require '../admin/back/dbShowProduct.php';
+  require '../admin/back/dbSelectProduct.php';
 ?>
 
 <table class="table" id="dataTable">
@@ -36,8 +36,8 @@
           echo "<td class='text-center'>{$newDate}</td>";
 
           echo "<td class='text-center'>";
-            echo "<form method='post' action='../frontStore/ExportToPDF.php'>";
-              echo "<input type='hidden' name='recID' value='{$row['ProID']}'>";
+            echo "<form method='post' action='UpdateProduct.php'>";
+              echo "<input type='hidden' name='ProID' value='{$row['ProID']}'>";
               echo "<button type='submit' style='border: none; background: none;'><img src='../pictures/admin/pen.png' width='30'></button>";
             echo "</form>";
             

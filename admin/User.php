@@ -1,8 +1,3 @@
-<?php
-  session_start();
-  $_SESSION['Status'] = "Active";
-  require '../admin/back/dbAllProduct.php';
-?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -33,20 +28,20 @@
     <div class="container my-4">
       <div class="row">
         <div class="col text-center">
-          <div class="card shadow shadow-sm mx-auto" id="activeProduct" style="width: 11.5rem; height: 6.5rem">
+          <div class="card shadow shadow-sm mx-auto" id="member" style="width: 11.5rem; height: 6.5rem">
             <div class="card-body">
               <img src="../pictures/admin/member-card.png" width="40">
-              <span style="font-size: 150%; margin-left: 5%; display: inline-block; vertical-align: middle;"><?php echo $_SESSION['Active']?></span>
+              <span style="font-size: 150%; display: inline-block; vertical-align: middle;"></span>
               <p class="my-3">สมาชิก</p>
             </div>
           </div>
         </div>
 
         <div class="col text-center">
-          <div class="card shadow shadow-sm mx-auto" id="outStock" style="width: 11.5rem; height: 6.5rem">
+          <div class="card shadow shadow-sm mx-auto" id="customer" style="width: 11.5rem; height: 6.5rem">
             <div class="card-body">
               <img src="../pictures/admin/new-account.png" width="40">
-              <span style="font-size: 150%; margin-left: 5%; display: inline-block; vertical-align: middle;"><?php echo $_SESSION['OutStock']?></span>
+              <span style="font-size: 150%; display: inline-block; vertical-align: middle;"></span>
               <p class="my-3">ลูกค้าทั่วไป</p>
             </div>
           </div>
@@ -72,17 +67,17 @@
   <div class="container my-4">
     <button class='btn btn-primary btn-sm float-start' style="margin-bottom: 2%;" onclick="window.location.href='AddProduct.php'">+ สมาชิก</button>
     <button id='export' class='btn btn-secondary btn-sm float-end' style="margin-bottom: 2%">ส่งออกเป็น Excel</button>
-    <?php include "../admin/back/dbShowListProduct.php"?>
+    <?php include "../admin/back/dbUser.php"?>
   </div>
 </body>
 
 <script>
   $(document).ready(function () {
     /* กำหนดตัวเริ่มต้นให้ allOrder */
-    $("#activeProduct").addClass("active");
+    $("#member").addClass("active");
 
     /* เก็บ id ของตัวที่ถูกคลิก */
-    var activeCardId = "activeProduct";
+    var activeCardId = "member";
     $(".card").click(function () {
       /* ลบ active ของตัวเก่า */
       $(".card").removeClass("active");
@@ -94,7 +89,7 @@
       /* กำหนดค่า status */
       var status;
       switch (activeCardId) {
-        case "activeProduct":
+        case "customer":
           status = "Active";
           break;
         case "outStock":

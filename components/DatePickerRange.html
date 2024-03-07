@@ -1,85 +1,44 @@
-<!-- components Date Picker -->
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
-  <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
-  <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
-  <style>
-    .ui-datepicker-header {
-      background-color: #007bff; /* สีพื้นหลังส่วนหัวของปฏิทิน */
-      color: #fff; /* สีตัวอักษรส่วนหัวของปฏิทิน */
-    }
-  </style>
-  
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 </head>
-<body> 
-  <div class="container">
-    <div class="row">
-      <div class="col">
-        <label for="from">ช่วงวันที่ตั้งแต่</label>
-        <input class="form-control mx-2 my-1" type="text" id="from" name="from" readonly placeholder="คลิกเลือกวันที่" style="background-color: #fff;">
-      </div>
-      <div class="col">
-        <label for="to">ถึง</label>
-        <input class="form-control mx-2 my-1" type="text" id="to" name="to" readonly placeholder="คลิกเลือกวันที่" style="background-color: #fff;">
-      </div>
-    </div>
-  </div>
+
+<body>
+  <input type="text" class="form-control mx-2 my-1" name="datefilter" value="" placeholder="เลือกวันที่"/>
 </body>
 
-<script>
-  $( function() {
-    /* ตั้งค่า Format วันที่ */
-    var dateFormat = "dd/mm/yy",
-      from = $( "#from" )
-        .datepicker({
-          changeMonth: true,
-          minDate: "-3m", /* วันย้อนหลังไม่เกิน 3 เดือน */
-          maxDate: 0, /* วันมากสุดไม่เกินวันที่ปัจจุบัน */
-          dateFormat: dateFormat, /* เลือกformat */
-          /* set ตำแหน่งให้อยู่ล่าง input field */
-          beforeShow: function(input, inst) {
-            setTimeout(function() {
-              inst.dpDiv.css({
-                top: input.offsetTop + input.offsetHeight,
-                left: input.offsetLeft
-              });
-            }, 0);
-          }
-        })
-        .on( "change", function() { /* ถ้าเปลี่ยนวัน จะเรียก function get*/
-          to.datepicker( "option", "minDate", getDate( this ) );
-        }),
-      to = $( "#to" ).datepicker({
-        changeMonth: true,
-        minDate: "-3m", /* วันย้อนหลังไม่เกิน 3 เดือน */
-        maxDate: 0, /* วันมากสุดไม่เกินวันที่ปัจจุบัน */
-        dateFormat: dateFormat, /* เลือกformat */
-        /* set ตำแหน่งให้อยู่ล่าง input field */
-        beforeShow: function(input, inst) {
-          setTimeout(function() {
-            inst.dpDiv.css({
-              top: input.offsetTop + input.offsetHeight,
-              left: input.offsetLeft
-            });
-          }, 0);
-        }
-      })
-      .on( "change", function() { /* ถ้าเปลี่ยนวัน จะเรียก function get*/
-        from.datepicker( "option", "maxDate", getDate( this ) );
-      });
- 
-    function getDate( element ) {
-      var date;
-      try { /* set ค่าvalue ให้ element ที่กด */
-        date = $.datepicker.parseDate( dateFormat, element.value );
-      } catch( error ) {
-        date = null;
+<script type="text/javascript">
+  $(function() {
+    var today = moment().subtract(3, 'months');
+    var nextThreeMonths = moment().add(3, 'months');
+
+    $('input[name="datefilter"]').daterangepicker({
+      autoUpdateInput: false,
+      minDate: today,
+      maxDate: nextThreeMonths,
+      locale: {
+        cancelLabel: 'Clear',
+        format: 'D/M/YYYY',
+        "daysOfWeek": [ "อา", "จ", "อ", "พ", "พฤ", "ศ", "ส" ],
+        "monthNames": [ "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน",
+                        "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"]
       }
-      return date;
-    }
-  } );
-  </script>
+    });
+
+    $('input[name="datefilter"]').on('apply.daterangepicker', function(ev, picker) {
+      $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
+    });
+
+    $('input[name="datefilter"]').on('cancel.daterangepicker', function(ev, picker) {
+      $(this).val('');
+    });
+  });
+</script>
 </html>

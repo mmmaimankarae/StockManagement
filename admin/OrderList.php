@@ -1,6 +1,6 @@
 <?php
   session_start();
-  require '../admin/back/dbShowSumProductOrder.php';
+  require '../admin/back/dbSumOrder.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -28,66 +28,78 @@
 <body style="margin-top: 7%">
   <?php include "../components/HeaderAdmin.html"; ?>
   <h4 class="text-center"> -- รายการสั่งซื้อ --</h4>
-  <form method="post" action="../admin/back/dbShowSelectProductOrder.php">
+  <form method="post" action="../admin/back/dbSelectOrder.php">
   <div class="container my-4">
     <div class="row row-cols-2 row-cols-lg-6 g-2 g-lg-3">
       <div class="col text-center">
         <div class="card shadow shadow-sm" id="allOrder" style="width: 11.5rem; height: 6.5rem">
+        <!-- <button type="submit" style="width: 100%; height: 100%; padding: 0; border: none; background: none;"> -->
           <div class="card-body">
             <img src="../pictures/admin/product.png" width="40">
             <span style="font-size: 150%; margin-left: 5%; display: inline-block; vertical-align: middle;"><?php echo $_SESSION['Qty']?></span>
             <p class="my-3" style="font-size: 89%;">รายการทั้งหมด</p>
           </div>
+        <!-- </button> -->
         </div>
       </div>
 
       <div class="col text-center">
         <div class="card shadow shadow-sm" id="pending" style="width: 11.5rem; height: 6.5rem">
+        <!-- <button type="submit" style="width: 100%; height: 100%; padding: 0; border: none; background: none;"> -->
           <div class="card-body">
             <img src="../pictures/admin/salary.png" width="40">
             <span style="font-size: 150%; margin-left: 5%; display: inline-block; vertical-align: middle;"><?php echo $_SESSION['Pending']?></span>
             <p class="my-3" style="font-size: 89%;">ชำระเงินแล้ว รอตรวจสอบ</p>
           </div>
+        <!-- </button> -->
         </div>
       </div>
 
       <div class="col text-center">
         <div class="card shadow shadow-sm" id="paid" style="width: 11.5rem; height: 6.5rem">
+        <!-- <button type="submit" style="width: 100%; height: 100%; padding: 0; border: none; background: none;"> -->
           <div class="card-body">
             <img src="../pictures/admin/express-delivery.png" width="40">
             <span style="font-size: 150%; margin-left: 5%; display: inline-block; vertical-align: middle;"><?php echo $_SESSION['Paid']?></span>
             <p class="my-3" style="font-size: 89%;">รอจัดส่ง</p>
           </div>
+        <!-- </button> -->
         </div>
       </div>
 
       <div class="col text-center">
         <div class="card shadow shadow-sm" id="cod" style="width: 11.5rem; height: 6.5rem">
+        <!-- <button type="submit" style="width: 100%; height: 100%; padding: 0; border: none; background: none;"> -->
           <div class="card-body">
             <img src="../pictures/admin/search.png" width="40">
             <span style="font-size: 150%; margin-left: 5%; display: inline-block; vertical-align: middle;"><?php echo $_SESSION['COD']?></span>
             <p class="my-3" style="font-size: 89%;">เก็บเงินปลายทาง รอจัดส่ง</p>
           </div>
+        <!-- </button> -->
         </div>
       </div>
 
       <div class="col text-center">
         <div class="card shadow shadow-sm" id="delivered" style="width: 11.5rem; height: 6.5rem">
+        <!-- <button type="submit" style="width: 100%; height: 100%; padding: 0; border: none; background: none;"> -->
           <div class="card-body">
             <img src="../pictures/admin/truck.png" width="40">
             <span style="font-size: 150%; margin-left: 5%; display: inline-block; vertical-align: middle;"><?php echo $_SESSION['Delivered']?></span>
             <p class="my-3" style="font-size: 89%;">จัดส่งแล้ว</p>
           </div>
+        <!-- </button> -->
         </div>
       </div>
 
       <div class="col text-center">
         <div class="card shadow shadow-sm" id="cancel" style="width: 11.5rem; height: 6.5rem">
+        <!-- <button type="submit" style="width: 100%; height: 100%; padding: 0; border: none; background: none;"> -->
           <div class="card-body">
             <img src="../pictures/admin/cancelled.png" width="40">
             <span style="font-size: 150%; margin-left: 5%; display: inline-block; vertical-align: middle;"><?php echo $_SESSION['Cancel']?></span>
             <p class="my-3" style="font-size: 89%;">ยกเลิกคำสั่งซื้อ</p>
           </div>
+        <!-- </button> -->
         </div>
       </div>
 
@@ -101,8 +113,10 @@
       </div>
 
       <div class='col'>
+       <label for="from">ช่วงวันที่</label>
         <?php include "../components/DatePickerRange.html"; ?>
         <input type="hidden" id="startDate" name="startDate">
+        <input type="hidden" id="status" name="status">
         <input type="hidden" id="endDate" name="endDate">
       </div>
 
@@ -113,7 +127,7 @@
 
     <input type="hidden" id="manage" name="manage" vale="manage">
   </form>
-  <?php include "../admin/back/dbShow.php"?>
+  <?php include "ShowOrderList.php"?>
 </body>
 
 <script>
