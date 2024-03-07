@@ -24,11 +24,11 @@
     $msquery = "SELECT * FROM PRODUCT WHERE ProID = " . $_POST['proID'] . ";";
     $msresults = mysqli_query($msconnect, $msquery);
     $row = mysqli_fetch_array($msresults);
-    $status = array("Active", "OutOfStock", "Pending", "Inactive");
+    $status = array("Active", "OutStock", "Pending", "Inactive");
     $statusT = array("กำลังขายอยู่", "คลังสินค้าหมด", "รอดำเนินการ", "ยกเลิกการขาย");
     $index = 0;
     if ($row) {
-      echo "<form action='../admin/DBupdateProduct.php' method='post'>";
+      echo "<form action='../admin/back/dbUpdateProduct.php' method='post'>";
         echo "<div class='container'>";
           echo "<div class='row'>";
             echo "<div class='col'>";

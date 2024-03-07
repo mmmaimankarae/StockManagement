@@ -96,7 +96,8 @@
 </body>
 
 <script>
-  $(document).ready(function(){
+  $(document).ready(function() {
+    $('#day').val(moment().format('YYYY-MM-DD HH:mm:ss'));
     /* ซ่อน date picker */
     $('#datetimepicker-container').hide();
     /* กด Checkbox แสดง date picker */
@@ -106,10 +107,6 @@
       } else {
         $('#datetimepicker-container').hide();
       }
-    });
-    
-    $('#datetimepicker').on('apply.daterangepicker', function(ev, picker) {
-      $('#day').val(picker.startDate.format('YYYY-MM-DD'));
     });
   });
 </script>
