@@ -42,7 +42,7 @@ if (isset($_POST['ProName']) && isset($_POST['Quantity'])) {
         );
         array_push($_SESSION['cart'], $cart);
     }
-    InsertLog($userID, "add to cart: " . $ProName, "AddtoCart.php");
+    InsertLog($userID, "Add to cart: " . $ProName, "AddtoCart.php");
     header("Location: Cart.php");
     exit();
 }

@@ -1,6 +1,7 @@
 <?php
 session_start();
 require '../components/ConnectDB.php';
+require 'Insert_log.php';
 
 date_default_timezone_set('Asia/Bangkok');
 
@@ -117,5 +118,6 @@ $_SESSION['PayerTaxID'] = $payerTaxID;
 $_SESSION['paymentMethod'] = $payment_Method;
 $_SESSION['cart'] = array();
 
+InsertLog($customerID, "Order(HIS, PAYER, RECEIVER) Insert: " . $newHisID, "OrderInsert.php");
 
 header("Location: ./ShowConfirmOrder.php");

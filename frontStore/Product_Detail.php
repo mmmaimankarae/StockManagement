@@ -12,8 +12,9 @@ $msresults = mysqli_query($connectDB, $msquery);
 $row = mysqli_fetch_array($msresults);
 
 $proName = $row['ProName'];
+$stock = $row['StockQty'];
 
-InsertLog($userID, 'access product detail id ' . $proName, 'Product_Detail.php');
+InsertLog($userID, 'Access product detail: ' . $proName, 'Product_Detail.php');
 // -------------------------------------- Insert Access Log --------------------------------------
 // $sql = "SELECT `NumID` FROM `access_log` WHERE `CusID` = '$userID' ORDER BY `NumID` DESC LIMIT 1";
 // $result = mysqli_query($connectDB, $sql);
@@ -30,6 +31,14 @@ InsertLog($userID, 'access product detail id ' . $proName, 'Product_Detail.php')
 // $result = mysqli_query($connectDB, $sql);
 
 // -------------------------------------- Insert Access Log --------------------------------------
+
+
+$sql = "SELECT hl.Qty FROM history h JOIN history_list hl ON h.HisID = hl.HisID WHERE h.Status = 'Ordered' AND hl.ProID = '$prodID'";
+$result = mysqli_query($connectDB, $sql);
+
+while ($stockCal = mysqli_fetch_array($result)) {
+    $stock -= $stockCal['Qty'];
+}
 
 ?>
 
@@ -91,11 +100,11 @@ InsertLog($userID, 'access product detail id ' . $proName, 'Product_Detail.php')
     echo "<label class='my-2' style='font-family:sarabun; font-size: 20px;'><b>จำนวนสินค้าที่ต้องการ</b></label>";
     echo "</div>";
     echo "<div class='col-auto'>";
-    echo "<input type='number' id='Quantity' name='Quantity' class='form-control' value='1' min='1' max='" . $row['StockQty'] . "'>";
+    echo "<input type='number' id='Quantity' name='Quantity' class='form-control' value='1' min='1' max='" . $stock . "'>";
     echo "</div>";
     echo "<div class='col-auto'>";
     echo "<span id='StockQty' class='form-text' style='font-family:sarabun;'>";
-    echo "จำนวนสินค้าคงเหลือ " . $row['StockQty'] . " หน่วย";
+    echo "จำนวนสินค้าคงเหลือ " . $stock . " หน่วย";
     echo "</span>";
     echo "</div>";
     echo "</div>";

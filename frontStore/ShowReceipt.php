@@ -185,16 +185,30 @@ $result = mysqli_query($connectDB, $sql);
 
         echo "<div class='d-flex justify-content-center' style='margin-top: 15px;'>";
         echo "<a href='Store.php' class='btn btn-danger' style='font-family:sarabun; margin-right: 10px; font-size:20px;'><b>🧺 กลับไปหน้าร้านค้า</b></a>";
-        // echo "<a href='ExportToPDF.php' class='btn btn-primary' style='font-family:sarabun; margin-left: 10px; font-size:20px;'>📁 <b>PDF FILE</b></a>";
-        echo "<a href='ExportToPDF.php' target='_blank' class='btn btn-primary' style='font-family:sarabun; margin-left: 10px; font-size:20px;'>📁 <b>PDF FILE</b></a>";
+        echo "<a href='ExportToPDF.php' target='_blank' class='btn btn-primary' style='font-family:sarabun; margin-left: 10px; font-size:20px;'><i class='fas fa-file-pdf'></i> <b>PDF FILE</b></a>";        // echo "<button class='btn btn-success me-5' type='button' onclick='insertLog()'><i class='fas fa-file-pdf'></i> <b>PDF FILE</b></button>";
         echo "</div>";
         ?>
         <br>
     </div>
 
-    <script>
-        
-    </script>
+    <!-- <script>
+        function insertLog() {
+            // Call Insert Log function using AJAX
+            $.ajax({
+                type: "POST",
+                url: "Insert_log.php", // URL of the PHP file that will insert the log
+                data: {
+                    userID: '<?php //echo $userID; ?>',
+                    insertType: 'Export to PDF Receipt: <?php //echo $receiptCode; ?>',
+                    fileLocation: 'ShowReceipt.php'
+                },
+                success: function(data) {
+                    console.log(data);
+                    window.location.href = "OrderSummary.php";
+                }
+            });
+        }
+    </script> -->
 
 </body>
 

@@ -168,7 +168,7 @@ $userID = $_SESSION['userID'];
                 url: "Insert_log.php", // URL of the PHP file that will insert the log
                 data: {
                     userID: '<?php echo $userID; ?>',
-                    insertType: 'access order summary',
+                    insertType: 'Access order summary',
                     fileLocation: 'Cart.php'
                 },
                 success: function(data) {

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
+    <title>Login Page</title>
+    <style>
+        #strengthBar {
+            width: 0%;
+            height: 10px;
+            background-color: red;
+        }
+    </style>
+</head>
+<body class="bg-gray-200 flex items-center justify-center h-screen">
+    <div class="bg-white rounded-lg shadow-lg p-5 md:p-20 mx-2">
+        <h2 class="text-center text-3xl text-gray-800">Login</h2>
+        <form action="login.php" method="post" class="pt-6 pb-8 mb-4">
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
+                    Username:
+                </label>
+                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="username" name="username" type="text" required>
+            </div>
+            <div class="mb-6">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
+                    Password:
+                </label>
+                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="password" name="password" type="password" required oninput="checkPasswordStrength(this.value)">
+                <div id="strengthBar"></div>
+            </div>
+            <div class="flex items-center justify-between">
+                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+                    Login
+                </button>
+            </div>
+        </form>
+    </div>
+    <script>
+        // function checkPasswordStrength(password) {
+        //     let strength = 0;
+        //     if (password.length > 8) strength += 25;
+        //     if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength += 25;
+        //     if (/\d/.test(password)) strength += 25;
+        //     if (/\W/.test(password)) strength += 25;
+
+        //     const strengthBar = document.getElementById('strengthBar');
+        //     strengthBar.style.width = strength + '%';
+        //     if (strength < 50) {
+        //         strengthBar.style.backgroundColor = 'red';
+        //     } else if (strength < 75) {
+        //         strengthBar.style.backgroundColor = 'yellow';
+        //     } else if (strength == 100) {
+        //         strengthBar.style.backgroundColor = 'green';
+        //     }
+        // }
+    </script>
+</body>
+</html>

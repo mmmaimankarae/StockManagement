@@ -13,7 +13,7 @@ if (isset($_POST['ProName'])) {
         }
     }
 
-    InsertLog($_SESSION['userID'], 'increase quantity of product name ' . $ProName . ' to ' . $item['quantity'], 'increase_quantity.php');
+    InsertLog($_SESSION['userID'], 'Increase quantity of product: ' . $ProName . ' to ' . $item['quantity'], 'increase_quantity.php');
 }
 
 header("Location: Cart.php");

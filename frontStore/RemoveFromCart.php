@@ -14,7 +14,7 @@ if (isset($_GET['ProName'])) {
         }
     }
 
-    InsertLog($userID, 'remove from cart product name ' . $ProNameToDelete, 'RemoveFromCart.php');
+    InsertLog($userID, 'Remove product from cart: ' . $ProNameToDelete, 'RemoveFromCart.php');
 }
 
 header("Location: Cart.php");

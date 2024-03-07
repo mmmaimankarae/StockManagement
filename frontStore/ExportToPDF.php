@@ -3,8 +3,7 @@ require_once('../vendor/autoload.php');
 
 session_start();
 require '../components/ConnectDB.php';
-
-
+require 'Insert_log.php';
 
 if (empty($_POST["recID"])) {
     $receiptCode = $_SESSION['ReceiptCode'];
@@ -20,6 +19,8 @@ if (empty($_POST["recID"])) {
     $row = mysqli_fetch_assoc($result);
     $RecvID = $row['RecvID'];
 }
+
+InsertLog($_SESSION['userID'], "Export to PDF: " . $receiptCode, "ExportToPDF.php");
 
 $sql = "SELECT TaxID FROM receipt WHERE RecID = '$receiptCode'";
 $result = mysqli_query($connectDB, $sql);

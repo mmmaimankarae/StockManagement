@@ -11,7 +11,7 @@ if (!isset($_SESSION['userType'])) {
 
 $userID = $_SESSION['userID'];
 
-InsertLog($userID, 'access store', 'Store.php');
+InsertLog($userID, 'Access store', 'Store.php');
 
 $sql = "SELECT * FROM product;";
 $result = mysqli_query($connectDB, $sql);
