@@ -60,6 +60,15 @@ if ($msresults) {
 
 /*--------------------------------------- Insert Payer ---------------------------------------*/
 
+$sql = "SELECT `TaxID` FROM `payer` WHERE `TaxID` = '$payerTaxID'";
+$result = mysqli_query($connectDB, $sql);
+$row = mysqli_fetch_assoc($result);
+
+if ($row) {
+    $payerTaxID = $row['TaxID'];
+} else {
+    
+
 // Insert ข้อมูลลงตาราง Payer
 $sql = "INSERT INTO `payer`(`TaxID`, `PayerFName`, `PayerLName`, `Sex`, `Tel`, `Address`) VALUES ('$payerTaxID','$payerFirstName','$payerLastName','$payerGender','$payerTelNumber', '$payerAddr');";
 $results = mysqli_query($connectDB, $sql);
@@ -80,6 +89,7 @@ if ($row) {
 // Insert ข้อมูลลงตาราง Payer-list
 $sql = "INSERT INTO `payer_list`(`CusID`, `NumID`, `TaxID`) VALUES ('$customerID','$newPayerListNumID','$payerTaxID')";
 $msresults = mysqli_query($connectDB, $sql);
+}
 
 /*--------------------------------------- Insert Receiver ---------------------------------------*/
 
