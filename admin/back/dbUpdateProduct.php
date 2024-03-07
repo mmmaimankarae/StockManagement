@@ -59,6 +59,28 @@
         $index += 1;
     }
 
+    $des = "";
+    if (isset($_POST['description']) && !empty($_POST['description'])) {
+        $des = "Description = ";
+        if ($index == 0) {
+            $des = $des .$quote .$_POST['description'] .$quote;
+        } else {
+            $des = $comma .$des .$quote .$_POST['description'] .$quote;
+        }
+        $index += 1;
+    } 
+
+    $image = "";
+    if (isset($_POST['imageSource']) && !empty($_POST['imageSource'])) {
+        $image = "ImageSource = ";
+        if ($index == 0) {
+            $image = $image .$quote .$_POST['imageSource'] .$quote;
+        } else {
+            $image = $comma .$image .$quote .$_POST['imageSource'] .$quote;
+        }
+        $index += 1;
+    }
+
     $status = "";
     if (isset($_POST['status']) && !empty($_POST['status'])) {
         $status = "Status = ";
@@ -88,33 +110,11 @@
         $index += 1;
     } 
 
-    $des = "";
-    if (isset($_POST['description']) && !empty($_POST['description'])) {
-        $des = "Description = ";
-        if ($index == 0) {
-            $des = $des .$quote .$_POST['description'] .$quote;
-        } else {
-            $des = $comma .$des .$quote .$_POST['description'] .$quote;
-        }
-        $index += 1;
-    } 
-
-    $image = "";
-    if (isset($_POST['imageSource']) && !empty($_POST['imageSource'])) {
-        $image = "ImageSource = ";
-        if ($index == 0) {
-            $image = $image .$quote .$_POST['imageSource'] .$quote;
-        } else {
-            $image = $comma .$image .$quote .$_POST['imageSource'] .$quote;
-        }
-        $index += 1;
-    }
-
     $day = "";
     if ($index != 0) {
         $day = "Update_Day = ";
         $day = $comma .$day .$quote .date("Y-m-d h:i:s") .$quote;
-        $msquery = $start .$name .$price .$cost .$stock .$des .$image .$status .$day .$condition .$_POST['proID'] .$end;
+        $msquery = $start .$name .$price .$cost .$des .$image .$status .$stock .$day .$condition .$_POST['proID'] .$end;
         $msresults = mysqli_query($connectDB, $msquery);
         mysqli_close($connectDB);
     }

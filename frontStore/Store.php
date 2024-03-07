@@ -2,12 +2,19 @@
 session_start();
 require '../components/ConnectDB.php';
 require '../components/HeaderStore.html';
-$sql = "SELECT * FROM product;";
-$result = mysqli_query($connectDB, $sql);
+require 'Insert_log.php';
+
 if (!isset($_SESSION['userType'])) {
     $_SESSION['userType'] = "guest";
-    $_SESSION['userID'] = "0";
+    $_SESSION['userID'] = "1";
 }
+
+$userID = $_SESSION['userID'];
+
+InsertLog($userID, 'Access store', 'Store.php');
+
+$sql = "SELECT * FROM product;";
+$result = mysqli_query($connectDB, $sql);
 ?>
 
 <!DOCTYPE html>
@@ -59,6 +66,7 @@ if (!isset($_SESSION['userType'])) {
     <!-- <center> -->
     <div class='row row-cols-1 row-cols-md-4 g-4' style="margin-left: 80px; margin-right: 80px;">
         <?php
+
         if ($result->num_rows > 0) {
             while ($row = mysqli_fetch_array($result)) {
                 $index = $row["ProID"];

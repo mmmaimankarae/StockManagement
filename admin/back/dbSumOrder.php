@@ -2,10 +2,7 @@
   /* ดึงข้อมูล DB */
   require '../components/connectDB.php';
   /* กำหนดคำสั่ง SQL */
-  $msquery = "SELECT SUM(RO.Qty) AS TotalQty, R.Status
-              FROM RECEIPT_LIST RO 
-              JOIN RECEIPT R ON RO.RecID = R.RecID
-              GROUP BY R.Status;";
+  $msquery = "SELECT COUNT(Status) AS TotalQty, Status FROM RECEIPT GROUP BY Status;";
   /* $stmt = $pdo->prepare("SELECT SUM(RO.Qty) AS TotalQty, R.Status
               FROM RECEIPT_LIST RO 
               JOIN RECEIPT R ON RO.RecID = R.RecID

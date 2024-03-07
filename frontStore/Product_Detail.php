@@ -1,6 +1,45 @@
 <?php
 session_start();
-// echo $_SESSION['total'];
+require '../components/ConnectDB.php';
+include "../components/HeaderStore.html";
+require 'Insert_log.php';
+
+$prodID = $_GET['id'];
+$userID = $_SESSION['userID'];
+
+$msquery = "SELECT * FROM PRODUCT WHERE ProID = " . $prodID . ";";
+$msresults = mysqli_query($connectDB, $msquery);
+$row = mysqli_fetch_array($msresults);
+
+$proName = $row['ProName'];
+$stock = $row['StockQty'];
+
+InsertLog($userID, 'Access product detail: ' . $proName, 'Product_Detail.php');
+// -------------------------------------- Insert Access Log --------------------------------------
+// $sql = "SELECT `NumID` FROM `access_log` WHERE `CusID` = '$userID' ORDER BY `NumID` DESC LIMIT 1";
+// $result = mysqli_query($connectDB, $sql);
+// $row = mysqli_fetch_assoc($result);
+
+// if ($row) {
+//   $NumID = $row['NumID'];
+//   $NumID += 1;
+// } else {
+//   $NumID = 1;
+// }
+
+// $sql = "INSERT INTO `access_log`(`CusID`, `NumID`, `Action`, `Period`) VALUES ('$userID','$NumID', 'access product detail id $prodID', NOW())";
+// $result = mysqli_query($connectDB, $sql);
+
+// -------------------------------------- Insert Access Log --------------------------------------
+
+
+$sql = "SELECT hl.Qty FROM history h JOIN history_list hl ON h.HisID = hl.HisID WHERE h.Status = 'Ordered' AND hl.ProID = '$prodID'";
+$result = mysqli_query($connectDB, $sql);
+
+while ($stockCal = mysqli_fetch_array($result)) {
+    $stock -= $stockCal['Qty'];
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -29,16 +68,10 @@ session_start();
 </style>
 
 <body class="p-3" style="margin-top: 6%">
-  <?php include "../components/HeaderStore.html";
-  require '../components/ConnectDB.php';
-  ?>
   <?php
   echo "<a href='Store.php' class='backButton' style='margin-left: 7%;font-family:sarabun;  color:green; text-decoration:none;'><b>⬅️ กลับไปหน้าร้านค้า</b></a>";
-  $msquery = "SELECT * FROM PRODUCT WHERE ProID = " . $_GET['id'] . ";";
-  $msresults = mysqli_query($connectDB, $msquery);
-  $row = mysqli_fetch_array($msresults);
   if ($row) {
-    echo "<form action='AddtoCart.php' method='POST'>";
+    echo "<form id='add-to-cart-form' action='AddtoCart.php' method='POST'>";
     echo "<div class='container'>";
     echo "<div class='row'>";
     echo "<div class='col'>";
@@ -67,11 +100,11 @@ session_start();
     echo "<label class='my-2' style='font-family:sarabun; font-size: 20px;'><b>จำนวนสินค้าที่ต้องการ</b></label>";
     echo "</div>";
     echo "<div class='col-auto'>";
-    echo "<input type='number' id='Quantity' name='Quantity' class='form-control' value='1' min='1' max='" . $row['StockQty'] . "'>";
+    echo "<input type='number' id='Quantity' name='Quantity' class='form-control' value='1' min='1' max='" . $stock . "'>";
     echo "</div>";
     echo "<div class='col-auto'>";
     echo "<span id='StockQty' class='form-text' style='font-family:sarabun;'>";
-    echo "จำนวนสินค้าคงเหลือ " . $row['StockQty'] . " หน่วย";
+    echo "จำนวนสินค้าคงเหลือ " . $stock . " หน่วย";
     echo "</span>";
     echo "</div>";
     echo "</div>";
@@ -80,6 +113,8 @@ session_start();
     echo "<div class='col'>";
     echo "<input type='hidden' name='ProName' value='" . $row['ProName'] . "'>";
     echo "<button class='btn btn-success me-5' type='submit'><i class='fas fa-shopping-cart'></i> เพิ่มสินค้าลงตะกร้า</button>";
+    // echo "<button class='btn btn-success me-5' type='button' onclick='insertLog()'><i class='fas fa-shopping-cart'></i> เพิ่มสินค้าลงตะกร้า</button>";
+
     echo "</div>";
     echo "</div>";
 
@@ -91,6 +126,36 @@ session_start();
   }
   mysqli_close($connectDB);
   ?>
+
+  <!-- <script>
+    function insertLog() {
+
+      var quantity = parseInt(document.getElementById('Quantity').value);
+      var stockQty = parseInt('<?php //echo $row['StockQty']; 
+                                ?>');
+
+      if (quantity > stockQty) {
+        alert('จำนวนสินค้าที่คุณเลือกมากกว่าจำนวนสินค้าในสต็อก');
+        return;
+      }
+
+      $.ajax({
+        type: "POST",
+        url: "Insert_log.php", // URL of the PHP file that will insert the log
+        data: {
+          userID: '<?php //echo $userID; 
+                    ?>',
+          insertType: 'add to cart product id <?php //echo $prodID; 
+                                              ?>',
+          fileLocation: 'Product_Detail.php'
+        },
+        success: function(data) {
+          document.getElementById('add-to-cart-form').submit();
+        }
+      });
+    }
+  </script> -->
+
 </body>
 
 </html>

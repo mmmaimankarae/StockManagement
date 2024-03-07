@@ -3,6 +3,7 @@ session_start();
 require '../components/ConnectDB.php';
 require '../components/HeaderStore.html';
 
+$userID = $_SESSION['userID'];
 ?>
 
 <!DOCTYPE html>
@@ -86,16 +87,6 @@ require '../components/HeaderStore.html';
         font-family: sarabun;
     }
 
-    /* .form-check {
-        border: 1px solid #f5f5f5;
-        padding-top: 10px;
-        padding-bottom: 10px;
-        padding-left: 40px;
-        margin-bottom: 10px;
-        border-radius: 5px;
-        font-family: sarabun;
-    } */
-
     .form-check {
         border: 1px solid #f5f5f5;
         padding-top: 10px;
@@ -130,6 +121,42 @@ require '../components/HeaderStore.html';
     #telNumber::placeholder {
         font-family: sarabun;
     }
+
+    @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800&display=swap");
+
+    .container {
+
+        height: 100vh;
+    }
+
+    .progresses {
+        display: flex;
+        align-items: center;
+    }
+
+    .line {
+
+        width: 120px;
+        height: 6px;
+        background: #63d19e;
+    }
+
+    .steps {
+
+        display: flex;
+        background-color: #63d19e;
+        color: #fff;
+        font-size: 14px;
+        width: 40px;
+        height: 40px;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+    }
+
+    .my-custom-hr {
+        border-top: 2px solid #000000;
+    }
 </style>
 
 <body>
@@ -144,132 +171,20 @@ require '../components/HeaderStore.html';
     <b class='item-count' style='font-family:sarabun; font-size:30px'>" . count($_SESSION['cart']) . " Item</b>
     </div>
     ";
-    echo "<form action='OrderInsert.php' method='POST'>";
+    echo "<form id='to-payment' action='OrderInsert.php' method='POST'>";
     echo "<div class='container'>";
     echo "<div class='row'>";
-    echo "<div class='col-md-8' style='margin-right: 20px;'>"; // Add margin to the right side of the left column
+
     if ($_SESSION['userType'] == 'member') {
         displayMemberCartTable($_SESSION['cart'], count($_SESSION['cart']) > 0);
     } else if ($_SESSION['userType'] == 'guest') {
         displayGuestCartTable($_SESSION['cart'], count($_SESSION['cart']) > 0);
     }
-    echo "</div>";
-    echo "<div class='col-md-3'>"; // Reduce the width of the right column to account for the margin
-    displayOrderSummary($_SESSION['cart']);
-    echo "</div>";
+
     echo "</div>";
     echo "</div>";
     echo "</div>";
     echo "</form>";
-
-    function displayMemberCartTable($cartItems, $hasItem)
-    {
-        require '../components/ConnectDB.php';
-        $totalPrice = 0;
-        foreach ($cartItems as $cart) {
-            $totalPrice += $cart['ProPrice'] * $cart['quantity'];
-        }
-
-        $sql = "SELECT * FROM customer WHERE CusID = " . $_SESSION['userID'];
-        $result = mysqli_query($connectDB, $sql);
-        $row = mysqli_fetch_array($result);
-
-
-        echo "<div class='row' style='margin-top: 15px'>";
-        echo "<div class='col'>";
-        echo "<label for='firstName' class='form-label'><b>ชื่อ</b></label>";
-        echo "<input type='text' class='form-control' placeholder='กรุณากรอกชื่อจริง' id='firstName' name='firstName' value='" . $row['CusFName'] ."' required>";
-        echo "</div>";
-        echo "<div class='col'>";
-        echo "<label for='lastName' class='form-label'><b>นามสกุล</b></label>";
-        echo "<input type='text' class='form-control' placeholder='กรุณากรอกนามสกุล' id='lastName' name='lastName' value='" . $row['CusLName'] ."' value required>";
-        echo "</div>";
-        echo "</div>";
-
-        echo "<div class='row' style='margin-top: 15px'>";
-        echo "<div class='col'>";
-        echo "<label for='telNumber' class='form-label'><b>เบอร์โทรศัพท์</b></label>";
-        echo "<input type='text' class='form-control' placeholder='กรุณากรอกเบอร์โทร' id='telNumber' name='telNumber' value='" . $row['Tel'] ."' required>";
-        echo "</div>";
-        echo "<div class='col'>";
-        echo "<label for='gender' class='form-label'><b>เพศ</b></label>";
-        echo "<div>";
-        echo "<input class='form-check-input' type='radio' name='gender' id='male' value='M' " . ($row['Sex'] == 'M' ? 'checked' : '') . " required>";
-        echo "<label class='form-check-label' for='M' style='font-family: sarabun; margin-left: 10px'>ชาย</label>";
-        echo "</div>";
-        echo "<div>";
-        echo "<input class='form-check-input' type='radio' name='gender' id='female' value='F' " . ($row['Sex'] == 'F' ? 'checked' : '') . " required>";        echo "<label class='form-check-label' for='F' style='font-family: sarabun; margin-left: 10px'>หญิง</label>";
-        echo "</div>";
-        echo "</div>";
-        echo "</div>";
-
-        echo "<label for='recieverAddr' style='margin-top: 15px;' class='form-label'><b>ที่อยู่ผู้รับ</b></label>";
-        echo "<input type='text' class='form-control' id='recieverAddr' name='recieverAddress' placeholder='กรุณากรอกที่อยู่ผู้รับ'>";
-
-        // echo "<label for='recieptAddr' style='margin-top: 15px' class='form-label'><b>ที่อยู่ใบเสร็จ</b></label>";
-        // echo "<input type='text' class='form-control' id='recieptAddr' name='recieptAddr' placeholder='กรุณากรอกที่อยู่ของใบเสร็จ'>";
-
-        // echo "<label for='payerAddr' style='margin-top: 15px' class='form-label'><b>ที่อยู่ผู้ชำระเงิน</b></label>";
-        // echo "<input type='text' class='form-control' id='payerAddr' name='payerAddr' placeholder='กรุณากรอกที่อยู่ผู้ชำระเงิน'>";
-
-        echo "<div class'row'>";
-        echo "<label for='paymentMethod' style='margin-top: 15px;' class='form-label'><b>ช่องทางการชำระเงิน</b></label>";
-        echo "<div class='form-check'>";
-        echo "<div>";
-        echo "<input class='form-check-input' type='radio' name='paymentMethod' id='creditCard' value='Creditcard' required>";
-        echo "<label class='form-check-label' for='creditCard'>Credit Card</label>";
-        echo "</div>";
-        echo "<i class='far fa-credit-card'></i>";
-        echo "</div>";
-
-        echo "<div class='form-check'>";
-        echo "<div>";
-        echo "<input class='form-check-input' type='radio' name='paymentMethod' id='debitCard' value='debitCard' required>";
-        echo "<label class='form-check-label' for='debitCard'>โอนผ่านช่องทางธนาคาร</label>";
-        echo "</div>";
-        echo "<i class='fas fa-university'></i>";
-        echo "</div>";
-
-        echo "<div class='form-check'>";
-        echo "<div>";
-        echo "<input class='form-check-input' type='radio' name='paymentMethod' id='paypal' value='paypal' required>";
-        echo "<label class='form-check-label' for='paypal'>ชำระเงินปลายทาง</label>";
-        echo "</div>";
-        echo "<i class='fas fa-shipping-fast'></i>";
-        echo "</div>";
-        echo "</div>";
-
-        echo "<div class='row'>";
-        echo "<label for='itemList' style='margin-top: 15px;' class='form-label'><b>รายการสินค้า</b></label>";
-        echo "</div>";
-
-        echo "<table>";
-        if ($hasItem) {
-            echo "<tr>";
-            echo "<th class='img'></th>";
-            echo "<th>Name</th>";
-            echo "<th>Price</th>";
-            echo "<th>Quantity</th>";
-            echo "</tr>";
-            foreach ($cartItems as $cart) {
-                echo "<tr class='product'>";
-                echo "<td class='img'><img src='" . $cart['ProPic'] . "' width='100' height='100'></td>";
-                echo "<td>" . $cart['ProName'] . "</td>";
-                echo "<td>฿" . $cart['ProPrice'] . "</td>";
-
-                echo "<td>";;
-                echo "" . $cart['quantity']  . "";
-                echo "</td>";
-                echo "</tr>";
-            }
-        } else {
-            echo "<tr>";
-            echo "<td colspan='6' style='text-align:center; font-size: 30px'><b>ไม่มีสินค้าในตะกร้า</b></td>";
-            echo "</tr>";
-        }
-
-        echo "</table>";
-    }
 
     function displayGuestCartTable($cartItems, $hasItem)
     {
@@ -278,46 +193,90 @@ require '../components/HeaderStore.html';
             $totalPrice += $cart['ProPrice'] * $cart['quantity'];
         }
 
+        echo "<div class='col-md-8' style='margin-right: 20px;'>";
+
         echo "<div class='row' style='margin-top: 15px'>";
+
+        echo "<div class'row'>";
+        echo "<label style='font-size: 20px;' class='form-label'><b>ข้อมูลผู้ส่ง</b></label>";
+        echo "</div>";
+
         echo "<div class='col'>";
-        echo "<label for='firstName' class='form-label'><b>ชื่อ</b></label>";
-        echo "<input type='text' class='form-control' placeholder='กรุณากรอกชื่อจริง' id='firstName' name='firstName' required>";
+        echo "<label for='payerFirstName' class='form-label'><b>ชื่อ</b></label>";
+        echo "<input type='text' class='form-control' placeholder='กรุณากรอกชื่อจริง' id='payerFname' name='payerFname' required>";
         echo "</div>";
         echo "<div class='col'>";
-        echo "<label for='lastName' class='form-label'><b>นามสกุล</b></label>";
-        echo "<input type='text' class='form-control' placeholder='กรุณากรอกนามสกุล' id='lastName' name='lastName' required>";
+        echo "<label for='payerLastName' class='form-label'><b>นามสกุล</b></label>";
+        echo "<input type='text' class='form-control' placeholder='กรุณากรอกนามสกุล' id='payerLname' name='payerLname' required>";
         echo "</div>";
         echo "</div>";
 
         echo "<div class='row' style='margin-top: 15px'>";
         echo "<div class='col'>";
-        echo "<label for='telNumber' class='form-label'><b>เบอร์โทรศัพท์</b></label>";
-        echo "<input type='text' class='form-control' placeholder='กรุณากรอกเบอร์โทร' id='telNumber' name='telNumber' required>";
+        echo "<label for='payerTelNumber' class='form-label'><b>เบอร์โทรศัพท์</b></label>";
+        echo "<input type='text' class='form-control' placeholder='กรุณากรอกเบอร์โทร' id='payerTelNumber' name='payerTelNumber' required>";
         echo "</div>";
         echo "<div class='col'>";
-        echo "<label for='gender' class='form-label'><b>เพศ</b></label>";
+        echo "<label for='payerGender' class='form-label'><b>เพศ</b></label>";
         echo "<div>";
-        echo "<input class='form-check-input' type='radio' name='gender' id='male' value='M' required>";
+        echo "<input class='form-check-input' type='radio' name='payerGender' id='male' value='M' required>";
         echo "<label class='form-check-label' for='M' style='font-family: sarabun; margin-left: 10px'>ชาย</label>";
         echo "</div>";
         echo "<div>";
-        echo "<input class='form-check-input' type='radio' name='gender' id='female' value='F' required>";
+        echo "<input class='form-check-input' type='radio' name='payerGender' id='female' value='F' required>";
         echo "<label class='form-check-label' for='F' style='font-family: sarabun; margin-left: 10px'>หญิง</label>";
         echo "</div>";
         echo "</div>";
         echo "</div>";
 
-        echo "<label for='recieverAddr' style='margin-top: 15px;' class='form-label'><b>ที่อยู่ผู้รับ</b></label>";
-        echo "<input type='text' class='form-control' id='recieverAddr' name='recieverAddress' placeholder='กรุณากรอกที่อยู่ผู้รับ'>";
+        echo "<label for='payer_TaxID' style='margin-top: 15px;' class='form-label'><b>เลขประจำตัวผู้เสียภาษี</b></label>";
+        echo "<input type='text' class='form-control' id='payer_TaxID' name='payer_TaxID' placeholder='กรุณากรอกเลขประจำตัวผู้เสียภาษี'>";
 
-        // echo "<label for='recieptAddr' style='margin-top: 15px' class='form-label'><b>ที่อยู่ใบเสร็จ</b></label>";
-        // echo "<input type='text' class='form-control' id='recieptAddr' name='recieptAddr' placeholder='กรุณากรอกที่อยู่ของใบเสร็จ'>";
+        echo "<label for='payerAddr' style='margin-top: 15px;' class='form-label'><b>ที่อยู่ผู้ส่ง</b></label>";
+        echo "<input type='text' class='form-control' id='payerAddress' name='payerAddress' placeholder='กรุณากรอกที่อยู่ผู้ส่ง'>";
 
-        // echo "<label for='payerAddr' style='margin-top: 15px' class='form-label'><b>ที่อยู่ผู้ชำระเงิน</b></label>";
-        // echo "<input type='text' class='form-control' id='payerAddr' name='payerAddr' placeholder='กรุณากรอกที่อยู่ผู้ชำระเงิน'>";
+        echo "<hr class='my-custom-hr'>";
 
         echo "<div class'row'>";
-        echo "<label for='paymentMethod' style='margin-top: 15px;' class='form-label'><b>ช่องทางการชำระเงิน</b></label>";
+        echo "<label style='font-size: 20px;' class='form-label'><b>ข้อมูลผู้รับ</b></label>";
+        echo "</div>";
+
+        echo "<div class='row' style='margin-top: 15px'>";
+        echo "<div class='col'>";
+        echo "<label for='receiverFirstName' class='form-label'><b>ชื่อ</b></label>";
+        echo "<input type='text' class='form-control' placeholder='กรุณากรอกชื่อจริง' id='receiverFname' name='receiverFname' required>";
+        echo "</div>";
+        echo "<div class='col'>";
+        echo "<label for='receiverLastName' class='form-label'><b>นามสกุล</b></label>";
+        echo "<input type='text' class='form-control' placeholder='กรุณากรอกนามสกุล' id='receiverLname' name='receiverLname' required>";
+        echo "</div>";
+        echo "</div>";
+
+        echo "<div class='row' style=''>";
+        echo "<div class='col'>";
+        echo "<label for='receiverTelNumber' class='form-label'><b>เบอร์โทรศัพท์</b></label>";
+        echo "<input type='text' class='form-control' placeholder='กรุณากรอกเบอร์โทร' id='receiverTelNumber' name='receiverTelNumber' required>";
+        echo "</div>";
+        echo "<div class='col'>";
+        echo "<label for='receiverGender' class='form-label'><b>เพศ</b></label>";
+        echo "<div>";
+        echo "<input class='form-check-input' type='radio' name='receiverGender' id='male' value='M' required>";
+        echo "<label class='form-check-label' for='M' style='font-family: sarabun; margin-left: 10px'>ชาย</label>";
+        echo "</div>";
+        echo "<div>";
+        echo "<input class='form-check-input' type='radio' name='receiverGender' id='female' value='F' required>";
+        echo "<label class='form-check-label' for='F' style='font-family: sarabun; margin-left: 10px'>หญิง</label>";
+        echo "</div>";
+        echo "</div>";
+        echo "</div>";
+
+        echo "<label for='receiverAddr' style='margin-top: 15px;' class='form-label'><b>ที่อยู่ผู้ส่ง</b></label>";
+        echo "<input type='text' class='form-control' id='receiverAddress' name='receiverAddress' placeholder='กรุณากรอกที่อยู่ผู้รับ'>";
+
+        echo "<hr class='my-custom-hr'>";
+
+        echo "<div class'row'>";
+        echo "<label for='paymentMethod' style='font-size:20px' class='form-label'><b>ช่องทางการชำระเงิน</b></label>";
         echo "<div class='form-check'>";
         echo "<div>";
         echo "<input class='form-check-input' type='radio' name='paymentMethod' id='creditCard' value='Creditcard' required>";
@@ -336,8 +295,8 @@ require '../components/HeaderStore.html';
 
         echo "<div class='form-check'>";
         echo "<div>";
-        echo "<input class='form-check-input' type='radio' name='paymentMethod' id='paypal' value='paypal' required>";
-        echo "<label class='form-check-label' for='paypal'>ชำระเงินปลายทาง</label>";
+        echo "<input class='form-check-input' type='radio' name='paymentMethod' id='COD' value='COD' required>";
+        echo "<label class='form-check-label' for='COD'>ชำระเงินปลายทาง</label>";
         echo "</div>";
         echo "<i class='fas fa-shipping-fast'></i>";
         echo "</div>";
@@ -374,15 +333,179 @@ require '../components/HeaderStore.html';
         }
 
         echo "</table>";
+        echo "</div>";
+        echo "<div class='col-md-3'>";
+        displayOrderSummary($_SESSION['cart']);
+        echo "</div>";
     }
 
-    function displayOrderSummary($cartItems)
+    function displayMemberCartTable($cartItems, $hasItem)
+    {
+        require '../components/ConnectDB.php';
+        $totalPrice = 0;
+        foreach ($cartItems as $cart) {
+            $totalPrice += $cart['ProPrice'] * $cart['quantity'];
+        }
+
+        $sql = "SELECT * FROM customer WHERE CusID = " . $_SESSION['userID'];
+        $result = mysqli_query($connectDB, $sql);
+        $row = mysqli_fetch_array($result);
+
+
+        echo "<div class='col-md-8' style='margin-right: 20px;'>";
+
+        echo "<div class='row' style='margin-top: 15px'>";
+
+        echo "<div class'row'>";
+        echo "<label style='font-size: 20px;' class='form-label'><b>ข้อมูลผู้ส่ง</b></label>";
+        echo "</div>";
+
+        echo "<div class='col'>";
+        echo "<label for='payerFirstName' class='form-label'><b>ชื่อ</b></label>";
+        echo "<input type='text' class='form-control' placeholder='กรุณากรอกชื่อจริง' id='payerFname' name='payerFname' value='" . $row['CusFName'] . "' required>";
+        echo "</div>";
+        echo "<div class='col'>";
+        echo "<label for='payerLastName' class='form-label'><b>นามสกุล</b></label>";
+        echo "<input type='text' class='form-control' placeholder='กรุณากรอกนามสกุล' id='payerLname' name='payerLname' value='" . $row['CusLName'] . "' required>";
+        echo "</div>";
+        echo "</div>";
+
+        echo "<div class='row' style='margin-top: 15px'>";
+        echo "<div class='col'>";
+        echo "<label for='payerTelNumber' class='form-label'><b>เบอร์โทรศัพท์</b></label>";
+        echo "<input type='text' class='form-control' placeholder='กรุณากรอกเบอร์โทร' id='payerTelNumber' name='payerTelNumber' value='" . $row['Tel'] . "' required>";
+        echo "</div>";
+        echo "<div class='col'>";
+        echo "<label for='payerGender' class='form-label'><b>เพศ</b></label>";
+        echo "<div>";
+        echo "<input class='form-check-input' type='radio' name='payerGender' id='male' value='M' " . ($row['Sex'] == 'M' ? 'checked' : '') . "  required>";
+        echo "<label class='form-check-label' for='M' style='font-family: sarabun; margin-left: 10px'>ชาย</label>";
+        echo "</div>";
+        echo "<div>";
+        echo "<input class='form-check-input' type='radio' name='payerGender' id='female' value='F' value='F' " . ($row['Sex'] == 'F' ? 'checked' : '') . " required>";
+        echo "<label class='form-check-label' for='F' style='font-family: sarabun; margin-left: 10px'>หญิง</label>";
+        echo "</div>";
+        echo "</div>";
+        echo "</div>";
+
+        echo "<label for='payer_TaxID' style='margin-top: 15px;' class='form-label'><b>เลขประจำตัวผู้เสียภาษี</b></label>";
+        echo "<input type='text' class='form-control' id='payer_TaxID' name='payer_TaxID' placeholder='กรุณากรอกเลขประจำตัวผู้เสียภาษี'>";
+
+        echo "<label for='payerAddr' style='margin-top: 15px;' class='form-label'><b>ที่อยู่ผู้ส่ง</b></label>";
+        echo "<input type='text' class='form-control' id='payerAddr' name='payerAddress' placeholder='กรุณากรอกที่อยู่ผู้ส่ง' value='" . $row['Address'] . "'>";
+
+        echo "<hr class='my-custom-hr'>";
+
+        echo "<div class'row'>";
+        echo "<label style='font-size: 20px;' class='form-label'><b>ข้อมูลผู้รับ</b></label>";
+        echo "</div>";
+
+        echo "<div class='row' style=''>";
+        echo "<div class='col'>";
+        echo "<label for='receiverFirstName' class='form-label'><b>ชื่อ</b></label>";
+        echo "<input type='text' class='form-control' placeholder='กรุณากรอกชื่อจริง' id='receiverFname' name='receiverFname' required>";
+        echo "</div>";
+        echo "<div class='col'>";
+        echo "<label for='receiverLastName' class='form-label'><b>นามสกุล</b></label>";
+        echo "<input type='text' class='form-control' placeholder='กรุณากรอกนามสกุล' id='receiverLname' name='receiverLname' required>";
+        echo "</div>";
+        echo "</div>";
+
+        echo "<div class='row' style='margin-top: 15px'>";
+        echo "<div class='col'>";
+        echo "<label for='receiverTelNumber' class='form-label'><b>เบอร์โทรศัพท์</b></label>";
+        echo "<input type='text' class='form-control' placeholder='กรุณากรอกเบอร์โทร' id='receiverTelNumber' name='receiverTelNumber' required>";
+        echo "</div>";
+        echo "<div class='col'>";
+        echo "<label for='receiverGender' class='form-label'><b>เพศ</b></label>";
+        echo "<div>";
+        echo "<input class='form-check-input' type='radio' name='receiverGender' id='male' value='M' required>";
+        echo "<label class='form-check-label' for='M' style='font-family: sarabun; margin-left: 10px'>ชาย</label>";
+        echo "</div>";
+        echo "<div>";
+        echo "<input class='form-check-input' type='radio' name='receiverGender' id='female' value='F' required>";
+        echo "<label class='form-check-label' for='F' style='font-family: sarabun; margin-left: 10px'>หญิง</label>";
+        echo "</div>";
+        echo "</div>";
+        echo "</div>";
+
+        echo "<label for='receiverAddr' style='margin-top: 15px;' class='form-label'><b>ที่อยู่ผู้รับ</b></label>";
+        echo "<input type='text' class='form-control' id='receiverAddress' name='receiverAddress' placeholder='กรุณากรอกที่อยู่ผู้รับ'>";
+
+        echo "<hr class='my-custom-hr'>";
+
+        echo "<div class'row'>";
+        echo "<label for='paymentMethod' style='font-size:20px' class='form-label'><b>ช่องทางการชำระเงิน</b></label>";
+        echo "<div class='form-check'>";
+        echo "<div>";
+        echo "<input class='form-check-input' type='radio' name='paymentMethod' id='creditCard' value='Creditcard' required>";
+        echo "<label class='form-check-label' for='creditCard'>Credit Card</label>";
+        echo "</div>";
+        echo "<i class='far fa-credit-card'></i>";
+        echo "</div>";
+
+        echo "<div class='form-check'>";
+        echo "<div>";
+        echo "<input class='form-check-input' type='radio' name='paymentMethod' id='debitCard' value='debitCard' required>";
+        echo "<label class='form-check-label' for='debitCard'>โอนผ่านช่องทางธนาคาร</label>";
+        echo "</div>";
+        echo "<i class='fas fa-university'></i>";
+        echo "</div>";
+
+        echo "<div class='form-check'>";
+        echo "<div>";
+        echo "<input class='form-check-input' type='radio' name='paymentMethod' id='COD' value='COD' required>";
+        echo "<label class='form-check-label' for='COD'>ชำระเงินปลายทาง</label>";
+        echo "</div>";
+        echo "<i class='fas fa-shipping-fast'></i>";
+        echo "</div>";
+        echo "</div>";
+
+        echo "<div class='row'>";
+        echo "<label for='itemList' style='margin-top: 15px;' class='form-label'><b>รายการสินค้า</b></label>";
+        echo "</div>";
+
+        echo "<table>";
+        if ($hasItem) {
+            echo "<tr>";
+            echo "<th class='img'></th>";
+            echo "<th>Name</th>";
+            echo "<th>Price</th>";
+            echo "<th>Quantity</th>";
+            echo "</tr>";
+            foreach ($cartItems as $cart) {
+                echo "<tr class='product'>";
+                echo "<td class='img'><img src='" . $cart['ProPic'] . "' width='100' height='100'></td>";
+                echo "<td>" . $cart['ProName'] . "</td>";
+                echo "<td>฿" . $cart['ProPrice'] . "</td>";
+                // echo "<td>" . $cart['quantity'] . "</td>";
+
+                echo "<td>";;
+                echo "" . $cart['quantity']  . "";
+                echo "</td>";
+                echo "</tr>";
+            }
+        } else {
+            echo "<tr>";
+            echo "<td colspan='6' style='text-align:center; font-size: 30px'><b>ไม่มีสินค้าในตะกร้า</b></td>";
+            echo "</tr>";
+        }
+
+        echo "</table>";
+        echo "</div>";
+        echo "<div class='col-md-3'>";
+        displayOrderSummary($_SESSION['cart']);
+        echo "</div>";
+    }
+
+    function displayOrderSummary($cartItems,)
     {
         $totalPrice = 0;
         $discount = 0; // Replace this with your discount calculation
         foreach ($cartItems as $cart) {
             $totalPrice += $cart['ProPrice'] * $cart['quantity'];
         }
+
         echo "<table class='orderSummary'>";
         echo "<tr>";
         echo "<td style='text-align:left; padding-left: 20px; padding-top: 15px;'>";
@@ -396,17 +519,34 @@ require '../components/HeaderStore.html';
         echo "<td style='text-align:left; padding-left: 20px; padding-top: 15px;'>";
         echo "<p><b>Discount:</b></p>";
         echo "</td>";
+
+        $totalPrice -= $discount;
         echo "<td style='text-align:right; padding-right: 20px; padding-top: 15px;'>";
         echo "<p>฿" . $discount . "</p>";
         echo "</td>";
+
+        echo "</tr>";
+        echo "<tr>";
+        echo "<td style='text-align:left; padding-left: 20px; padding-top: 15px;'>";
+        echo "<p><b>Vat(7%):</b></p>";
+        echo "</td>";
+
+        $vat = $totalPrice * 0.07;
+        echo "<td style='text-align:right; padding-right: 20px; padding-top: 15px;'>";
+        echo "<p>฿" . $vat . "</p>";
+        echo "</td>";
+
         echo "</tr>";
         echo "<tr>";
         echo "<td style='text-align:left; padding-left: 20px; padding-top: 15px;'>";
         echo "<p><b>Final Price:</b></p>";
         echo "</td>";
+
+        $totalPrice += $vat;
         echo "<td style='text-align:right; padding-right: 20px; padding-top: 15px;'>";
         echo "<p>฿" . ($totalPrice - $discount) . "</p>";
         echo "</td>";
+
         echo "</tr>";
 
         echo "<tr>";
@@ -414,14 +554,32 @@ require '../components/HeaderStore.html';
 
 
         echo "<div style='text-align:center; margin-top: 20px'>";
-        echo "<button type='submit' class='btn btn-success w-75' style='font-family:sarabun; font-size: 20px'>ชำระเงิน</button>";
+        echo "<button type='button' class='btn btn-success w-75' style='font-family:sarabun; font-size: 20px' onclick='insertLog()'>ชำระเงิน</button>";
+        // echo "<button type='submit' class='btn btn-success w-75' style='font-family:sarabun; font-size: 20px' >ชำระเงิน</button>";
         echo "</td>";
         echo "</tr>";
 
         echo "</table>";
+        
     }
-
     ?>
+
+<script>
+    function insertLog() {
+        $.ajax({
+        type: "POST",
+        url: "Insert_log.php", // URL of the PHP file that will insert the log
+        data: {
+          userID: '<?php echo $userID; ?>',
+          insertType: 'Access confirm order',
+          fileLocation: 'OrderSummary.php'
+        },
+        success: function(data) {
+          document.getElementById('to-payment').submit();
+        }
+      });
+    }
+</script>
 
 </body>
 
