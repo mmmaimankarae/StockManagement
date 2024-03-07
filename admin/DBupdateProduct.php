@@ -1,6 +1,5 @@
 <?php
-    session_start();
-    $_SESSION['update'] = "ok";
+    require '../components/connectDB.php';
     $msquery = "";
     $index = 0;
     if ($_SESSION['data'] == "update"){
@@ -12,10 +11,9 @@
                   ", '" . $_POST['description'] . "', '". $_POST['imageSource'] . "', '" . $_POST['status'] . "',
                   '".date('Y-m-d h:i:s'). "');";
         $msquery = $start;
-        $msconnect = mysqli_connect("localhost", "root", "", "myStore");
-        $msresults = mysqli_query($msconnect, $msquery);
-        mysqli_close($msconnect);
-        header("Location: ../admin/AllProduct.php");
+        $msresults = mysqli_query($msconnectDB, $msquery);
+        mysqli_close($msconnectDB);
+        header("Location: ../admin/ProductList.php");
         exit;
     }
 
@@ -106,9 +104,8 @@
         $day = "Update_Day = ";
         $day = $comma .$day .$quote .date("Y-m-d h:i:s") .$quote;
         $msquery = $start .$name .$price .$cost .$stock .$des .$image .$status .$day .$condition .$_POST['proID'] .$end;
-        $msconnect = mysqli_connect("localhost", "root", "", "myStore");
-        $msresults = mysqli_query($msconnect, $msquery);
-        mysqli_close($msconnect);
+        $msresults = mysqli_query($msconnectDB, $msquery);
+        mysqli_close($msconnectDB);
     }
-    header("Location: ../admin/AllProduct.php");
+    header("Location: ../admin/ProductList.php");
 ?>

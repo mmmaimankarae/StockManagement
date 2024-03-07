@@ -39,6 +39,8 @@
               FROM RECEIPT R JOIN RECEIPT_LIST RO ON R.RecID = RO.RecID
               JOIN PRODUCT P ON RO.ProID = P.ProID JOIN CUSTOMER C ON R.CusID = C.CusID "
               . $where . $groupOrder;
+              // echo $msquery;
   $msresults = mysqli_query($connectDB, $msquery);
   mysqli_close($connectDB);
+  // header("Location: ../OrderList.php");
 ?>

@@ -8,7 +8,7 @@
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.17.3/dist/xlsx.full.min.js"></script>
-  <title>Document</title>
+  <title>เพิ่มสินค้าใหม่</title>
 </head>
 
 <body class="p-3" style="margin-top: 6%">
@@ -84,7 +84,6 @@
         <input type="hidden" name="day" id="day"> 
         <label class="form-check-label" for="inlineRadio2">กำหนดวันที่ลงขาย</label>
       </div>
-
       <div id="datetimepicker-container" style="margin-left: 11%; width: 15%;">
       <?php include "../components/DateTimePicker.html"; ?>
       </div>
@@ -98,16 +97,19 @@
 
 <script>
   $(document).ready(function(){
-    // ซ่อน DateTimePicker เมื่อหน้าเว็บโหลด
+    /* ซ่อน date picker */
     $('#datetimepicker-container').hide();
-
-    // ตรวจสอบการเลือก checkbox เพื่อแสดง/ซ่อน DateTimePicker
+    /* กด Checkbox แสดง date picker */
     $('input[name="status"]').change(function(){
       if ($(this).val() == 'Pending') {
         $('#datetimepicker-container').show();
       } else {
         $('#datetimepicker-container').hide();
       }
+    });
+    
+    $('#datetimepicker').on('apply.daterangepicker', function(ev, picker) {
+      $('#day').val(picker.startDate.format('YYYY-MM-DD'));
     });
   });
 </script>
