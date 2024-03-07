@@ -48,10 +48,21 @@
           echo "</td>";
 
           echo "<td class='text-center'>";
-          echo "<form method='get' action='../frontStore/Product_Detail.php'>";
-            echo "<input type='hidden' name='id' value='{$row['ProID']}'>";
-            echo "<button type='submit' style='border: none; background: none;'><img src='../pictures/admin/trash.png' width='30'></button>";
-          echo "</form>";
+          echo "<button type='button' class='btn' data-bs-toggle='modal' data-bs-target='#deleteModal{$row['ProID']}'><img src='../pictures/admin/trash.png' width='32'></button>";
+          echo "<div class='modal fade' id='deleteModal{$row['ProID']}' tabindex='-1' aria-labelledby='deleteLabel' aria-hidden='true'>";
+            echo "<div class='modal-dialog'>";
+              echo "<div class='modal-content'>";
+                echo "<div class='modal-body'> คุณแน่ใจว่าจะลบสินค้าตัวนี้?</div>";
+                  echo "<div class='modal-footer'>";
+                    echo "<form id='deleteForm{$row['ProID']}' action='../admin/back/dbDeleteProduct.php' method='post'>";
+                        echo "<input type='hidden' name='ProID' id='proIDToDelete' value='{$row['ProID']}'>";
+                        echo "<button type='submit' class='btn btn-danger btn-sm mx-2'>ตกลง</button>";
+                        echo "<button type='button' class='btn btn-success btn-sm' data-bs-dismiss='modal'>ยกเลิก</button>";
+                      echo "</form>";
+                    echo "</div>";
+                  echo "</div>";
+                echo "</div>";
+              echo "</div>";
           echo "</td>";
         echo "</tr>";
       }
@@ -59,7 +70,23 @@
   </tbody>
 </table>
 
-
+<!-- echo "<td class='text-center'>";
+            echo "<button type='button' class='btn btn-danger btn-circle' data-bs-toggle='modal' data-bs-target='#deleteModal" . $proID . "'><i class='fa-solid fa-trash'></i></button>";
+              echo "<div class='modal fade' id='deleteModal" . $proID . "' tabindex='-1' aria-labelledby='deleteLabel' aria-hidden='true'>";
+                echo "<div class='modal-dialog'>";
+                  echo "<div class='modal-content'>";
+                    echo "<div class='modal-body'> คุณแน่ใจว่าจะลบสินค้าตัวนี้?</div>";
+                    echo "<div class='modal-footer'>";
+                      echo "<form id='deleteForm" . $proID . "' action='../admin/DeleteProduct.php' method='post'>";
+                        echo "<input type='hidden' name='proID' id='proIDToDelete' value='" . $row['ProID'] . "'>";
+                        echo "<button type='submit' class='btn btn-danger btn-sm mx-2'>ตกลง</button>";
+                        echo "<button type='button' class='btn btn-success btn-sm' data-bs-dismiss='modal'>ยกเลิก</button>";
+                      echo "</form>";
+                    echo "</div>";
+                  echo "</div>";
+                echo "</div>";
+              echo "</div>";
+            echo "</td>"; -->
 <script>
   $(document).ready(function () {
     /* ถ้ากด id selectAllCheckbox */

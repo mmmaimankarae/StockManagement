@@ -2,6 +2,7 @@
     require '../components/connectDB.php';
     $msquery = "";
     $index = 0;
+    $num = 0;
     if ($_SESSION['data'] == "update"){
         $start = "UPDATE PRODUCT SET ";
     } elseif ($_SESSION['data'] == "new"){
@@ -23,7 +24,7 @@
     $end = ";";
 
     $name = "";
-    if ($_POST['proName'] != '') {
+    if (isset($_POST['proName']) && !empty($_POST['proName'])) {
         $name = "ProName = ";
         if ($index == 0) {
             $name = $name .$quote .$_POST['proName'] .$quote;
@@ -34,7 +35,7 @@
     } 
 
     $price = "";
-    if ($_POST['pricePerUnit'] != '') {
+    if (isset($_POST['pricePerUnit']) && !empty($_POST['pricePerUnit'])) {
         $price = "PricePerUnit = ";
         if ($index == 0) {
             $price = $price .$_POST['pricePerUnit'];
@@ -45,7 +46,7 @@
     } 
 
     $cost = "";
-    if ($_POST['costPerUnit'] != '') {
+    if (isset($_POST['costPerUnit']) && !empty($_POST['costPerUnit'])) {
         $cost = "CostPerUnit = ";
         if ($index == 0) {
             $cost = $cost .$_POST['costPerUnit'];
@@ -55,8 +56,26 @@
         $index += 1;
     }
 
+    $status = "";
+    if (isset($_POST['status']) && !empty($_POST['status'])) {
+        $status = "Status = ";
+        if ($index == 0) {
+            $status = $status .$quote .$_POST['status'] .$quote;
+        } else {
+            $status = $comma .$status .$quote .$_POST['status'] .$quote;
+        }
+
+        if ($_POST['status'] == "Pending" or $_POST['status'] == "OutStock") {
+            $num++;
+        }
+        $index += 1;
+    }
+
     $stock = "";
-    if ($_POST['stockQty'] != '') {
+    if (isset($_POST['stockQty']) && !empty($_POST['stockQty'])) {
+        if ($num == 1) {
+            $_POST['stockQty'] = 0;
+        }
         $stock = "StockQty = ";
         if ($index == 0) {
             $stock = $stock .$_POST['stockQty'];
@@ -67,7 +86,7 @@
     } 
 
     $des = "";
-    if ($_POST['description'] != '') {
+    if (isset($_POST['description']) && !empty($_POST['description'])) {
         $des = "Description = ";
         if ($index == 0) {
             $des = $des .$quote .$_POST['description'] .$quote;
@@ -78,23 +97,12 @@
     } 
 
     $image = "";
-    if ($_POST['imageSource'] != '') {
+    if (isset($_POST['imageSource']) && !empty($_POST['imageSource'])) {
         $image = "ImageSource = ";
         if ($index == 0) {
             $image = $image .$quote .$_POST['imageSource'] .$quote;
         } else {
             $image = $comma .$image .$quote .$_POST['imageSource'] .$quote;
-        }
-        $index += 1;
-    }
-
-    $status = "";
-    if ($_POST['status'] != '') {
-        $status = "Status = ";
-        if ($index == 0) {
-            $status = $status .$quote .$_POST['status'] .$quote;
-        } else {
-            $status = $comma .$status .$quote .$_POST['status'] .$quote;
         }
         $index += 1;
     }

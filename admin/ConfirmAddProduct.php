@@ -13,7 +13,7 @@
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.17.3/dist/xlsx.full.min.js"></script>
-  <title>Document</title>
+  <title>ยืนยันข้อมูลสินค้าใหม่</title>
 </head>
 
 <body class="p-3" style="margin-top: 6%">
@@ -22,13 +22,12 @@
     $status = array("Active", "Pending");
     $statusT = array("กำลังขายอยู่", "รอดำเนินการ");
     $index = 0;
-    echo "<form action='../admin/DBupdateProduct.php' method='post'>";
+    echo "<form action='../admin/back/dbAddProduct.php' method='post'>";
       echo "<div class='container'>";
         echo "<div class='row'>";
           echo "<div class='col'>";
-            echo "<input type='hidden' name='proID' value='" . $_POST['proID'] . "'>";
-              echo "<img src='" . $_POST['imageSource'] . "' width='500' height='500' class='img-thumbnail shadow-sm'>";
-              echo "<input type='hidden' name='imageSource' value='" . $_POST['imageSource'] . "'>";
+            echo "<img src='" . $_POST['imageSource'] . "' width='500' height='500' class='img-thumbnail shadow-sm'>";
+            echo "<input type='hidden' name='imageSource' value='" . $_POST['imageSource'] . "'>";
           echo "</div>";
 
           echo "<div class='col'>";
@@ -79,8 +78,7 @@
               echo "<div class='col card mx-2'>";
                 foreach ($status as $arr) {
                   if ($_POST['status'] == $arr) {
-                    echo "<div class='mx-3 text-danger'>" . $statusT[$index] . "</div>";
-                    echo $_POST['day'];
+                    echo "<div class='mx-3 text-danger'>" . $statusT[$index] . " วันที่: {$_POST['day']}</div>";
                     echo "<input type='hidden' name='update_day' value='" . $_POST['day'] . "'>";
                     echo "<input type='hidden' name='status' value='" . $_POST['status'] . "'>";
                   }
