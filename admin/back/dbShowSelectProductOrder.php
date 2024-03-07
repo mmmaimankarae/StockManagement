@@ -4,12 +4,12 @@
   $groupOrder = " GROUP BY R.RecID
                  ORDER BY CAST(SUBSTRING(R.RecID, 2) AS SIGNED),  R.RecID;";
   $count = 0;
-  if (isset($_POST['status'])) {
+  if (isset($_POST['status']) && !empty($_POST['status'])) {
     $where = "WHERE R.Status = '" . $_POST['status'] . "'";
     $count++;
   }
 
-  if (isset($_POST['detail'])) {
+  if (isset($_POST['detail']) && !empty($_POST['detail'])) {
     $detail = $_POST['detail'];
     if ($count == 0) $where = "WHERE ";
     else $where .= " AND ";
@@ -25,7 +25,7 @@
     }
   }
 
-  if (isset($_POST['startDate'])) {
+  if (isset($_POST['startDate']) && !empty($_POST['startDate'])) {
     if ($count == 0) $where = "WHERE ";
     else $where .= " AND ";
 
